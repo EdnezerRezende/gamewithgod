@@ -182,9 +182,34 @@ um extra (ex.: ilustração da cena ou comentário sobre a passagem no "Livro").
 | Objetos | Funda, pedras, armadura de Saul, escudo e lança de Golias, jarros-alvo, cesto de mantimentos |
 | Áudio | Narração dos versículos, falas de Golias e Davi, trilha épica, sons de exército e natureza |
 
+## Dificuldade
+
+Em todas as dificuldades Davi tem **5 pedras**, como no texto. O que muda é a
+margem de erro ao redor delas.
+
+| Parâmetro | Pastor (fácil) | Guerreiro (normal) | Valente (difícil) |
+|---|---|---|---|
+| Tempo da testa exposta | 3 s | 2 s | 1 s |
+| Indicador do tiro perfeito | Grande e visível | Visível | Apenas som sutil |
+| Linha de trajetória | Prévia curta | Não | Não |
+| Balanço da mira (Coragem baixa) | Leve | Médio | Forte |
+| Coragem perdida no rugido | Baixa | Média | Alta |
+| Dano do dardo e da lança | Baixo | Médio | Alto |
+| Leão e urso no treino | Lentos | Normais | Rápidos |
+| Ao perder as 5 pedras | Recomeça no duelo | Recomeça no duelo | Recomeça no ribeiro |
+| Multiplicador de pontos | ×1 | ×1,5 | ×2 |
+
+- O bônus de **Fidelidade ao relato** vale igual em todas as dificuldades.
+- A dificuldade pode ser trocada entre fases, não durante o duelo.
+
+## Texto bíblico
+
+- Versão: **Almeida em edição de domínio público** (edições antigas, anteriores
+  às revisões modernas protegidas por direitos autorais).
+- Antes de publicar, confirmar a edição exata e a fonte do texto, e revisar
+  todas as citações deste documento contra ela (as citações atuais são
+  provisórias).
+
 ## Pontos em aberto
 
-- Versão da Bíblia para os textos na tela (verificar direitos de uso; versões
-  em domínio público, como a Almeida antiga, evitam custo de licença).
-- Dificuldade selecionável (ex.: número de pedras ou janela de abertura).
 - Se o acampamento terá falas opcionais com outros soldados.

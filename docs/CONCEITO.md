@@ -20,6 +20,8 @@ bíblico de um valente, jogado de forma fiel ao texto.
 | Armas | Funda, arco, lança, espada, escudo |
 | Cenas | Animadas no próprio motor (Timeline + Cinemachine) |
 | Animação de personagens | Mixamo + captura de movimento via celular |
+| Texto bíblico | Almeida em edição de domínio público |
+| Dificuldade | Selecionável: Pastor, Guerreiro, Valente |
 
 ## Estrutura de cada fase
 
