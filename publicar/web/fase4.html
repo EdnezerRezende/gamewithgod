@@ -1,4 +1,12 @@
-<title>Mão Pegada à Espada</title>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>A Água de Belém</title>
+</head>
+<body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -120,6 +128,21 @@
   .listen{margin-left:10px;font:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid rgba(234,220,189,.3);color:var(--bronze-hi);padding:2px 8px;border-radius:3px;cursor:pointer}
   .listen:hover{border-color:var(--bronze-hi)}
   @media (prefers-reduced-motion:reduce){#game,#toast,#fade,#cine-q{transition:none}}
+  /* ---------- Mapa das fases ---------- */
+  .phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:0 0 8px;padding:0;list-style:none}
+  .phases li{display:flex}
+  .sect{margin:6px 0 -4px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--parch-dim)}
+  .phase{position:relative;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1px solid var(--line);border-radius:3px;background:rgba(33,24,16,.75);color:var(--parch);text-decoration:none;flex:1}
+  .phase b{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--bronze-hi);font-weight:400}
+  .phase strong{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.15}
+  .phase small{color:var(--parch-dim);font-size:13px}
+  .phase .ps{font-size:13px;color:var(--parch-dim)}
+  .phase .ps em{font-style:normal;color:var(--bronze-hi);letter-spacing:.08em}
+  a.phase:hover{border-color:var(--bronze-hi);background:rgba(200,144,63,.12)}
+  .phase.cur{border-color:var(--bronze-hi);background:rgba(200,144,63,.18)}
+  .phase.locked{opacity:.5;border-style:dashed}
+  .phase.locked strong::before{content:"🔒 ";font-size:15px}
+  .lockmsg{padding:14px 16px;border:1px dashed var(--bronze);border-radius:3px;background:rgba(33,24,16,.6)}
 
   /* ---------- Fase 2 ---------- */
   .hud-tc{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;text-shadow:0 1px 3px rgba(0,0,0,.7);pointer-events:none}
@@ -140,28 +163,15 @@
   #tpray.on{background:rgba(236,189,106,.85);color:#1b120a}
   .phase-link{color:var(--bronze-hi)}
 
-  /* ---------- Fase 3 ---------- */
-  .bar.fad i{background:#d08a4a}
-  #stuckfx{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.2s;background:radial-gradient(ellipse at center,transparent 50%,rgba(40,10,5,.75))}
-  #stuckfx.on{opacity:1}
-  #tswap{font-size:14px !important;width:74px !important}
-  #thorn{position:absolute;left:calc(22px + env(safe-area-inset-left,0px));top:calc(64px + env(safe-area-inset-top,0px));width:84px;height:40px;border-radius:3px;
+  /* ---------- Fase 4 ---------- */
+  .bar.agua i{background:#6aa6cf}
+  .bar.alarme i{background:#c0533a}
+  #tdash{position:absolute;right:calc(40px + env(safe-area-inset-right,0px));bottom:calc(206px + env(safe-area-inset-bottom,0px));width:86px;height:44px;border-radius:3px;
     background:rgba(20,15,10,.6);border:1px solid rgba(234,220,189,.4);color:var(--parch);font-size:14px}
-  /* ---------- Mapa das fases ---------- */
-  .phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:0 0 8px;padding:0;list-style:none}
-  .phases li{display:flex}
-  .sect{margin:6px 0 -4px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--parch-dim)}
-  .phase{position:relative;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1px solid var(--line);border-radius:3px;background:rgba(33,24,16,.75);color:var(--parch);text-decoration:none;flex:1}
-  .phase b{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--bronze-hi);font-weight:400}
-  .phase strong{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.15}
-  .phase small{color:var(--parch-dim);font-size:13px}
-  .phase .ps{font-size:13px;color:var(--parch-dim)}
-  .phase .ps em{font-style:normal;color:var(--bronze-hi);letter-spacing:.08em}
-  a.phase:hover{border-color:var(--bronze-hi);background:rgba(200,144,63,.12)}
-  .phase.cur{border-color:var(--bronze-hi);background:rgba(200,144,63,.18)}
-  .phase.locked{opacity:.5;border-style:dashed}
-  .phase.locked strong::before{content:"🔒 ";font-size:15px}
-  .lockmsg{padding:14px 16px;border:1px dashed var(--bronze);border-radius:3px;background:rgba(33,24,16,.6)}
+  #tswap{font-size:15px !important;width:74px !important}
+  #tact{position:absolute;right:calc(146px + env(safe-area-inset-right,0px));bottom:calc(186px + env(safe-area-inset-bottom,0px));width:96px;height:48px;border-radius:3px;
+    background:rgba(106,166,207,.35);border:2px solid rgba(160,205,235,.8);color:var(--parch);font-size:15px;font-weight:700}
+  #tact.on{background:rgba(106,166,207,.9);color:#10202c}
 </style>
 
 <canvas id="game"></canvas>
@@ -172,16 +182,16 @@
   <div class="hud-tr">
     <div class="stat" id="st-vida"><span class="lbl">Vida</span><div class="bar"><i id="vida"></i></div></div>
     <div class="stat" id="st-cor"><span class="lbl">Coragem</span><div class="bar cor"><i id="cor"></i></div></div>
-    <div class="stat" id="st-fad"><span class="lbl">Cansaço</span><div class="bar fad"><i id="fad"></i></div></div>
+    <div class="stat" id="st-agua"><span class="lbl">Água</span><div class="bar agua"><i id="agua"></i></div></div>
+    <div class="stat" id="st-alarme"><span class="lbl">Alarme</span><div class="bar alarme"><i id="alarme"></i></div></div>
     <div class="stat" id="st-score"><span class="lbl">Pontos</span><span id="score" class="num">0</span></div>
   </div>
   <div id="cross"></div>
-  <div id="zone" hidden>Você recuou para trás do estandarte. Eleazar não voltou atrás.</div>
+  <div id="zone" hidden></div>
   <canvas id="gauge" width="280" height="280"></canvas>
   <div id="toast"></div>
-  <div id="stuckfx"></div>
   <div id="hurt"></div>
-  <div class="esc-hint">Esc · pausa · botão direito · aparar · Espaço · desviar · F · orar · T · trombeta · M · música · N · narração</div>
+  <div class="esc-hint">Esc · pausa · botão direito · escudo · Espaço · desviar · Q · ordem · E · ação · F · orar · M · música · N · narração</div>
 </div>
 
 <div id="cine" hidden>
@@ -193,10 +203,11 @@
   <div id="lookpad"></div>
   <div id="stick"><div id="knob"></div></div>
   <button id="fire" type="button" aria-label="Golpear">Golpe</button>
-  <button id="tshield" type="button" aria-label="Aparar com a espada">Aparar</button>
-  <button id="tswap" type="button" aria-label="Desviar">Desviar</button>
+  <button id="tshield" type="button" aria-label="Escudo ou aparar">Escudo</button>
+  <button id="tdash" type="button" aria-label="Desviar">Desviar</button>
+  <button id="tswap" type="button" aria-label="Ordem aos companheiros">Ordem</button>
   <button id="tpray" type="button" aria-label="Segure para orar">Orar</button>
-  <button id="thorn" type="button" aria-label="Tocar a trombeta">Trombeta</button>
+  <button id="tact" type="button" aria-label="Segure para a ação">Ação</button>
   <button id="tpause" type="button" aria-label="Pausa">❚❚</button>
   <div id="rotate">Gire o celular para jogar na horizontal</div>
 </div>
@@ -354,22 +365,24 @@ function makeTerrain(hFn, colFn){
 const cA = new THREE.Color(), cB = new THREE.Color();
 
 
-// ================= Fase 3: textos e dificuldade =================
+// ================= Fase 4: textos e dificuldade =================
 // Texto provisório (Almeida, domínio público) — revisar contra a edição escolhida.
 const VS = {
-  v8:   ['Estes são os nomes dos valentes que Davi teve...', '2 Samuel 23:8'],
-  v1cr: ['Este esteve com Davi em Pas-Damim, quando os filisteus se ajuntaram ali à peleja...', '1 Crônicas 11:13'],
-  v9:   ['E depois dele Eleazar, filho de Dodô, filho de Aoí, entre os três valentes que estavam com Davi, quando provocaram os filisteus que se ajuntaram ali à peleja, e subiram os homens de Israel.', '2 Samuel 23:9'],
-  v10a: ['Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada;', '2 Samuel 23:10'],
-  vhand:['...até que a sua mão se cansou e ficou pegada à espada.', '2 Samuel 23:10'],
-  v10b: ['...e naquele dia o Senhor operou um grande livramento; e o povo voltou após ele somente para despojar.', '2 Samuel 23:10'],
+  v13:  ['Também três dos trinta cabeças desceram, e no tempo da sega vieram a Davi, à caverna de Adulão; e a tropa dos filisteus se acampara no vale de Refaim.', '2 Samuel 23:13'],
+  v14:  ['E Davi estava então no lugar forte, e a guarnição dos filisteus estava então em Belém.', '2 Samuel 23:14'],
+  v15:  ['E teve Davi desejo, e disse: Quem me dera beber da água da cisterna de Belém, que está junto à porta!', '2 Samuel 23:15'],
+  vgate:['...da água da cisterna de Belém, que está junto à porta.', '2 Samuel 23:15'],
+  v16a: ['Então aqueles três valentes romperam pelo arraial dos filisteus, e tiraram água da cisterna de Belém, que está junto à porta, e a tomaram, e a trouxeram a Davi;', '2 Samuel 23:16'],
+  v16b: ['...porém ele não a quis beber, mas derramou-a perante o Senhor.', '2 Samuel 23:16'],
+  v17:  ['E disse: Guarda-me, ó Senhor, de que tal faça; beberia eu o sangue dos homens que foram a risco da sua vida? De maneira que não a quis beber.', '2 Samuel 23:17'],
+  v17b: ['Isto fizeram aqueles três valentes.', '2 Samuel 23:17'],
 };
 const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]} <button class="listen" data-act="speak" data-k="${k}" aria-label="Ouvir o versículo">▶ Ouvir</button></cite></blockquote>`;
 
 const DIFF = {
-  pastor:    {name:'Pastor',    desc:'Janela de aparar folgada, cansaço lento e resistência de 60 s.',  parry:.45, fat:.7, rec:14, count:[6,8,10],   dmg:.6, hold:60,  toLine1:false, mult:1},
-  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',             parry:.3,  fat:1,  rec:10, count:[8,11,14],  dmg:1,  hold:90,  toLine1:false, mult:1.5},
-  valente:   {name:'Valente',   desc:'Janela de aparar curta, cansaço rápido e resistência de 120 s.',  parry:.18, fat:1.3, rec:7, count:[10,14,18], dmg:1.4, hold:120, toLine1:true,  mult:2},
+  pastor:    {name:'Pastor',    desc:'Companheiros resistentes, alarme lento e 5 s para tirar a água.',  parry:.45, spill:8,  allyDmg:.5, selfRevive:true,  camp:.7,  alarm:.6, draw:5, dmg:.6, toStart:false, mult:1},
+  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              parry:.3,  spill:12, allyDmg:.8, selfRevive:false, camp:1,   alarm:1,  draw:7, dmg:1,  toStart:false, mult:1.5},
+  valente:   {name:'Valente',   desc:'Arraial cheio, alarme rápido e 9 s para tirar a água.',            parry:.18, spill:18, allyDmg:1.1,selfRevive:false, camp:1.35,alarm:1.4,draw:9, dmg:1.4, toStart:true,  mult:2},
 };
 let dk = 'guerreiro';
 try { const s = localStorage.getItem('vdd-diff'); if (DIFF[s]) dk = s; } catch(e) {}
@@ -382,59 +395,78 @@ Object.assign(sfx, {
   parry:  () => [880,1320,2210].forEach((f,i) => tone({freq:f, dur:.5-i*.1, gain:.1/(i+1)})),
   arrow:  () => noise({dur:.35, freq:2600, q:3, gain:.08, attack:.05}),
   dash:   () => noise({dur:.2, freq:600, q:.8, gain:.12, attack:.02}),
-  heart:  () => { tone({freq:62, dur:.14, gain:.35}); setTimeout(() => tone({freq:55, dur:.16, gain:.25}), 180); },
-  horn:   () => tone({freq:196, dur:1.8, type:'sawtooth', gain:.2, slide:262, lp:1100, attack:.2}),
-  rumble: () => { tone({freq:55, dur:2.6, type:'sawtooth', gain:.3, slide:40, lp:200, attack:.6}); noise({dur:2.4, freq:120, q:.7, gain:.25, attack:.5}); },
+  horn:   () => tone({freq:130, dur:2, type:'sawtooth', gain:.18, slide:98, lp:900, attack:.25}),
+  water:  () => noise({dur:.3, freq:700, q:2.5, gain:.14, attack:.03}),
+  pour:   () => noise({dur:3, freq:500, q:1.8, gain:.12, attack:.4}),
   pray:   () => tone({freq:392, dur:1.4, type:'triangle', gain:.08, attack:.3}),
   shout:  () => tone({freq:300, dur:.5, type:'sawtooth', gain:.06, slide:220, lp:1200}),
+  step:   () => noise({dur:.08, freq:300, q:1, gain:.05}),
 });
 
-// ================= Terreno: o vale de Pas-Damim =================
-const LINES = [10, 40, 70], FINAL_Z = 88, CAMP_Z = -48;
+// ================= Noite no vale de Refaim =================
+scene.fog.color.set(0x121828); scene.fog.near = 25; scene.fog.far = 170;
+renderer.setClearColor(0x0b0f1a);
+scene.traverse(o => {
+  if (o.isHemisphereLight){ o.color.set(0x7a8ab5); o.groundColor.set(0x241f1a); o.intensity = .5; }
+  if (o.isMesh && o.geometry.attributes.color && o.material.side === THREE.BackSide){
+    const p = o.geometry.attributes.position, c = o.geometry.attributes.color, top = new THREE.Color(0x04060d), hor = new THREE.Color(0x1b2236);
+    for (let i=0;i<p.count;i++){ const y = p.getY(i)/600, k = hor.clone().lerp(top, sstep(-.05,.6,y)); c.setXYZ(i, k.r, k.g, k.b); }
+    c.needsUpdate = true;
+  }
+  if (o.isMesh && o.geometry.parameters && o.geometry.parameters.radius === 18){ o.material.color.set(0xdfe6f5); o.position.set(-160, 190, 320); o.scale.setScalar(.6); }
+});
+sunL.color.set(0xa7b8e0); sunL.intensity = .45; sunL.position.set(-160, 190, 320);
+{ // estrelas
+  const n = 500, pos = [];
+  for (let i=0;i<n;i++){ const a = rand(0, PI*2), e = rand(.12, 1.4); pos.push(Math.cos(a)*Math.cos(e)*560, Math.sin(e)*560, Math.sin(a)*Math.cos(e)*560); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({color:0xdfe6ff, size:1.6, sizeAttenuation:false, fog:false})));
+}
+
+// ================= Terreno: de Adulão a Belém =================
+const JAR_POS = V(-3, 0, -70.5), DAVID_POS = V(2.2, 0, -73.8), CAVE_Z = -70;
+const TR = V(0, 0, -52);                          // área do treino, diante da caverna
+const CAMP = {z0:-26, z1:36, hw:20};              // o arraial filisteu no meio do vale
+const GATE_Z = 88, CISTERN = V(6, 0, 83), FIELD_WELL = V(-30, 0, 50);
+const POSTS = [V(-12,0,-4), V(11,0,14), V(-5,0,30)];   // postes com a trombeta de alarme
 function landH(x,z){
-  const cx = x + 3*Math.sin(z*.03);
-  const walls = 9*sstep(11, 26, Math.abs(cx));
-  const hill = 7*sstep(-12, -34, z);
-  const n = (.4*Math.sin(x*.2 + z*.05) + .3*Math.sin(z*.13)) * sstep(4, 12, Math.abs(cx));
-  return walls + hill + n + .15*Math.sin(z*.07);
+  const ax = Math.abs(x);
+  const hills = 7*sstep(24,44,ax) + 6*sstep(46,80,ax);
+  const cliff = 16*sstep(-75,-90,z) * (1 - .3*sstep(10,30,ax));
+  const town = 5*sstep(62,98,z) * (1 - .5*sstep(40,60,ax));
+  const n = .35*Math.sin(x*.15 + z*.07) + .25*Math.sin(z*.11 - x*.05);
+  return hills + cliff + town + n*sstep(-74,-66,z);
 }
 const groundH = landH;
+function inField(x,z){ return (z > 40 && z < 78 && Math.abs(x) < 34 && !(Math.abs(x) < 3.5)) || (z > -64 && z < -34 && Math.abs(x) > 8 && Math.abs(x) < 22); }
 scene.add(makeTerrain(landH, (x,y,z) => {
-  const cx = x + 3*Math.sin(z*.03);
-  cA.set(0xa8a25a).lerp(cB.set(0xc2ab6a), sstep(4,12,Math.abs(cx))*.7);
-  cA.lerp(cB.set(0x8f6d47), sstep(3,9,y - 7*sstep(-12,-34,z))*.8);
-  if (cx < -4 && cx > -10 && z > -8 && z < 100) cA.lerp(cB.set(0xc9a94e), .6);
+  cA.set(0x7d7650).lerp(cB.set(0x8f8a60), (Math.sin(x*.3)*Math.sin(z*.27) + 1)*.3);
+  if (inField(x,z)) cA.lerp(cB.set(0xc4a24e), .7);
+  cA.lerp(cB.set(0x6b5a44), sstep(3,9,y)*.7);
+  if (Math.abs(x) < 2.6 && (z > 36 || z < -26)) cA.lerp(cB.set(0x9c8a66), .6);   // trilha
   return cA.clone().offsetHSL(0,0,rand(-.03,.03));
 }));
-// Plantação (à esquerda do vale)
+// Cevada na colheita
 {
-  const n = 900, crop = new THREE.InstancedMesh(new THREE.ConeGeometry(.12,.7,5), new THREE.MeshStandardMaterial({color:0xd8b95a, flatShading:true, roughness:1}), n);
-  const m = new THREE.Matrix4(), c = new THREE.Color();
-  for (let i=0;i<n;i++){ const z = rand(-6, 98), x = -9.5 + rand(0,5) - 3*Math.sin(z*.03); m.makeTranslation(x, landH(x,z)+.35, z); crop.setMatrixAt(i, m); crop.setColorAt(i, c.set(i%3 ? 0xd8b95a : 0xc4a24a)); }
+  const n = 1400, crop = new THREE.InstancedMesh(new THREE.ConeGeometry(.12,.75,5), new THREE.MeshStandardMaterial({color:0xd8b95a, flatShading:true, roughness:1}), n);
+  const m = new THREE.Matrix4(), c = new THREE.Color(); let k = 0;
+  while (k < n){ const x = rand(-34,34), z = rand(-64,78); if (!inField(x,z)) continue;
+    m.makeTranslation(x, landH(x,z)+.37, z); crop.setMatrixAt(k, m); crop.setColorAt(k, c.set(k%3 ? 0xd8b95a : 0xc4a24a)); k++; }
   scene.add(crop);
+  for (let i=0;i<40;i++){ const z = rand(42,76), x = rand(-30,30); if (Math.abs(x) < 4) continue; const s = cyl(.35,.4,1,0xc9a94e,6); s.position.set(x, landH(x,z)+.5, z); s.rotation.z = rand(-.2,.2); scene.add(s); }
 }
-for (let i=0;i<80;i++){ const z = rand(-60,130), x = (Math.random() < .5 ? -1 : 1)*rand(12,40); const r = new THREE.Mesh(new THREE.DodecahedronGeometry(rand(.4,1.8),0), cmat(0x8a7556)); r.position.set(x, landH(x,z), z); r.rotation.set(rand(0,3),rand(0,3),0); scene.add(r); }
-// Tropa filisteia ao norte (para a abertura)
-const troop = new THREE.Group(); scene.add(troop);
-{
-  const bodies = new THREE.InstancedMesh(new THREE.CylinderGeometry(.24,.32,1.25,6), new THREE.MeshStandardMaterial({color:0xffffff, flatShading:true}), 140);
-  const heads = new THREE.InstancedMesh(new THREE.SphereGeometry(.17,6,5), cmat(0x8f6444), 140);
-  const m = new THREE.Matrix4(), c = new THREE.Color();
-  for (let i=0;i<140;i++){ const x = rand(-9,9), z = rand(100,125), y = landH(x,z);
-    m.makeTranslation(x,y+.62,z); bodies.setMatrixAt(i,m); bodies.setColorAt(i, c.set([0x8c2f22,0x9b5a2a,0x7a2a1f,0xa06a38][i%4]));
-    m.makeTranslation(x,y+1.42,z); heads.setMatrixAt(i,m); }
-  troop.add(bodies, heads);
-}
+for (let i=0;i<90;i++){ const z = rand(-70,120), x = (Math.random() < .5 ? -1 : 1)*rand(26,60); const r = new THREE.Mesh(new THREE.DodecahedronGeometry(rand(.4,1.8),0), cmat(0x6e604a)); r.position.set(x, landH(x,z), z); r.rotation.set(rand(0,3),rand(0,3),0); scene.add(r); }
 
 // ================= Modelos =================
 function cyl(rt, rb, h, color, seg=8, m){ return new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg), m || cmat(color)); }
 function sph(r, color, m){ return new THREE.Mesh(new THREE.SphereGeometry(r,10,8), m || cmat(color)); }
 function box(x,y,z,color,m){ return new THREE.Mesh(new THREE.BoxGeometry(x,y,z), m || cmat(color)); }
 const bronzeM = mat(0xb07a32, {metalness:.6, roughness:.4});
-function buildMan({robe=0x7b3322, skin=0x9a6b48, h=1.75, plume=false, armor=false}={}){
+const flameM = new THREE.MeshBasicMaterial({color:0xffa53a}), flameM2 = new THREE.MeshBasicMaterial({color:0xfff0b0});
+function buildMan({robe=0x7b3322, skin=0x9a6b48, h=1.75, plume=false}={}){
   const root = new THREE.Group(), k = h/1.75, legs = [];
   for (const sx of [-1,1]){ const hip = new THREE.Group(); hip.position.set(.12*sx*k, .8*k, 0); const l = cyl(.08*k,.07*k,.8*k,skin); l.position.y = -.4*k; hip.add(l); root.add(hip); legs.push(hip); }
-  const body = cyl(.22*k,.3*k,.8*k, armor ? 0 : robe, 8, armor ? bronzeM : null); body.position.y = 1.15*k; root.add(body);
+  const body = cyl(.22*k,.3*k,.8*k, robe); body.position.y = 1.15*k; root.add(body);
   const head = sph(.14*k, skin); head.position.y = 1.66*k; root.add(head);
   if (plume){ for (let i=0;i<9;i++){ const a = (i/8 - .5)*PI*.9, f = box(.035,.22,.02,0xc9b9a0); f.position.set(Math.sin(a)*.12*k, 1.84*k, -Math.cos(a)*.03*k + .02); f.rotation.z = -a*.5; root.add(f); }
     const band = cyl(.15*k,.15*k,.05*k,0xa03a24); band.position.y = 1.74*k; root.add(band); }
@@ -444,27 +476,97 @@ function buildMan({robe=0x7b3322, skin=0x9a6b48, h=1.75, plume=false, armor=fals
 }
 function addSpear(m){ const s = new THREE.Group(); s.add(cyl(.03,.03,2.4,0x5a3d22,5)); const tip = new THREE.Mesh(new THREE.ConeGeometry(.06,.3,5), cmat(0x8b8e92)); tip.position.y = 1.35; s.add(tip); s.position.set(0,-.6*m.k,.12); s.rotation.x = .25; m.armR.add(s); return s; }
 function addTowerShield(m){ const s = box(.8,1.25,.08,0x6d4a2b); s.position.set(.1,-.35*m.k,.32); m.armL.add(s); return s; }
+function addRoundShield(m){ const s = cyl(.34,.34,.06,0,12,bronzeM); s.rotation.x = PI/2; s.position.set(0,-.45*m.k,.25); m.armL.add(s); return s; }
+function addSword(m){ const s = box(.05,.7,.02,0,mat(0xc7c9cc,{metalness:.8,roughness:.3})); s.position.set(0,-.75*m.k,.2); s.rotation.x = .9; m.armR.add(s); return s; }
 function addBow(m){ const b = new THREE.Mesh(new THREE.TorusGeometry(.5,.025,5,12,PI), cmat(0x5a3d22)); b.rotation.z = PI/2; b.position.set(0,-.55*m.k,.25); m.armL.add(b); return b; }
-function addBanner(m, color){ const g = new THREE.Group(); g.add(cyl(.035,.035,3.2,0x4e3620,5)); const cloth = box(.9,.6,.02,color); cloth.position.set(.45,1.2,0); g.add(cloth); g.position.set(0,-.4*m.k,.1); m.armR.add(g); return g; }
 function addStaff(m){ const s = cyl(.03,.03,1.8,0x6b4a2a,5); s.position.set(0,-.55*m.k,.12); s.rotation.x = .3; m.armR.add(s); return s; }
+function addTorch(m){ const t = new THREE.Group(); t.add(cyl(.03,.03,.7,0x4e3620,5)); const f = new THREE.Mesh(new THREE.ConeGeometry(.12,.35,6), flameM); f.position.y = .5; t.add(f); t.position.set(0,-.62*m.k,.08); t.rotation.x = -.5; m.armL.add(t); return t; }
+function makeJar(){ const g = new THREE.Group(), c = mat(0xb5603a); const b = sph(.2,0,c); b.scale.set(1,1.15,1); g.add(b);
+  const n = cyl(.08,.1,.18,0,8,c); n.position.y = .26; g.add(n); const l = cyl(.11,.09,.04,0,8,c); l.position.y = .36; g.add(l); return g; }
 
-// Mão de Eleazar com a espada
+// Tendas, fogueiras e postes de alarme do arraial
+const fires = [], fireLights = [], tents = [];
+{
+  let tries = 0;
+  while (tents.length < 16 && tries++ < 500){
+    const x = rand(-CAMP.hw, CAMP.hw), z = rand(CAMP.z0, CAMP.z1);
+    if (Math.abs(x) < 3 || tents.some(t => Math.hypot(t.x - x, t.z - z) < 7) || POSTS.some(p => Math.hypot(p.x - x, p.z - z) < 4)) continue;
+    const t = new THREE.Mesh(new THREE.ConeGeometry(2.4, 2.6, 4), cmat([0x8a6f4c,0x7b5e42,0x9a7e57][tents.length%3]));
+    t.position.set(x, landH(x,z)+1.3, z); t.rotation.y = rand(0,PI); scene.add(t); tents.push({x, z});
+  }
+  for (let i=0;i<7;i++){
+    const tt = tents[i*2 % tents.length], x = tt.x + rand(-3.5,3.5), z = tt.z + (Math.random() < .5 ? -4 : 4);
+    const g = new THREE.Group(); g.position.set(x, landH(x,z), z); scene.add(g);
+    for (let j=0;j<5;j++){ const l = box(.8,.12,.12,0x3a2618); l.position.y = .08; l.rotation.y = j*PI/5; g.add(l); }
+    const f = new THREE.Mesh(new THREE.ConeGeometry(.35,.9,6), flameM); f.position.y = .5; g.add(f);
+    const f2 = new THREE.Mesh(new THREE.ConeGeometry(.18,.6,6), flameM2); f2.position.y = .4; g.add(f2);
+    fires.push({g, f, f2, x, z});
+    if (fireLights.length < 5){ const L = new THREE.PointLight(0xff9a4a, 1.8, 22, 1.4); L.position.set(x, landH(x,z)+1.6, z); scene.add(L); fireLights.push(L); }
+  }
+  for (const p of POSTS){ const y = landH(p.x,p.z); const pole = cyl(.08,.08,3.2,0x4e3620,6); pole.position.set(p.x, y+1.6, p.z); scene.add(pole);
+    const horn = new THREE.Mesh(new THREE.ConeGeometry(.12,.7,6), cmat(0xd8cfb8)); horn.rotation.z = PI/2; horn.position.set(p.x+.3, y+2.9, p.z); scene.add(horn); }
+}
+// A caverna de Adulão
+{
+  const y = landH(0,-77);
+  const mouth = box(6.5, 4.2, 2, 0, new THREE.MeshBasicMaterial({color:0x050404})); mouth.position.set(0, y+1.6, -78.4); scene.add(mouth);
+  for (let i=0;i<14;i++){ const a = i/13*PI, r = new THREE.Mesh(new THREE.DodecahedronGeometry(rand(.8,1.6),0), cmat(0x5d5040)); r.position.set(-Math.cos(a)*4.3, y + Math.sin(a)*4 - .2, -77.6 + rand(-.3,.3)); scene.add(r); }
+  const L = new THREE.PointLight(0xffb070, 1.2, 14, 1.4); L.position.set(0, y+2.4, -73); scene.add(L); fireLights.push(L);
+  const g = new THREE.Group(); g.position.set(-1.5, landH(-1.5,-74), -74); scene.add(g);
+  const f = new THREE.Mesh(new THREE.ConeGeometry(.25,.6,6), flameM); f.position.y = .35; g.add(f); fires.push({g, f, f2:f, x:-1.5, z:-74});
+}
+// Belém: muralha, porta, casas e a cisterna junto à porta; o poço no campo
+{
+  for (const sx of [-1,1]){
+    const w = box(32, 4, 1.4, 0x7d6c55); w.position.set(sx*(2.6 + 16), landH(sx*18, GATE_Z) + 1.6, GATE_Z); scene.add(w);
+    const tw = box(2.6, 6, 2.6, 0x86745b); tw.position.set(sx*3.9, landH(sx*4, GATE_Z) + 2.6, GATE_Z); scene.add(tw);
+    const L = new THREE.PointLight(0xff9a4a, 1.3, 16, 1.4); L.position.set(sx*3.9, landH(sx*4, GATE_Z) + 4, GATE_Z - 2); scene.add(L);
+    const tf = new THREE.Mesh(new THREE.ConeGeometry(.2,.5,6), flameM); tf.position.set(sx*3.9, landH(sx*4,GATE_Z)+5.9, GATE_Z - 1.4); scene.add(tf);
+  }
+  for (let i=0;i<22;i++){ const x = rand(-30,30), z = rand(93,120); const h = rand(2.2,4); const hs = box(rand(3,6), h, rand(3,6), [0x9a8566,0x8d7a5e,0xa38e6c][i%3]); hs.position.set(x, landH(x,z)+h/2, z); scene.add(hs); }
+  const cy = landH(CISTERN.x, CISTERN.z);
+  const rim = cyl(1.1,1.2,.8,0x8a8070,12); rim.position.set(CISTERN.x, cy+.4, CISTERN.z); scene.add(rim);
+  const water = cyl(.95,.95,.05,0x1c3a52,12); water.position.set(CISTERN.x, cy+.7, CISTERN.z); scene.add(water);
+  const slab = box(1.4,.15,.5,0x6e6556); slab.position.set(CISTERN.x+1.3, cy+.1, CISTERN.z); scene.add(slab);
+  const wy = landH(FIELD_WELL.x, FIELD_WELL.z);
+  const wr = cyl(.8,.85,.7,0x6f6656,10); wr.position.set(FIELD_WELL.x, wy+.35, FIELD_WELL.z); scene.add(wr);
+  for (const sx of [-1,1]){ const p = cyl(.05,.05,1.8,0x4e3620,5); p.position.set(FIELD_WELL.x + sx*.8, wy+.9, FIELD_WELL.z); scene.add(p); }
+  const bar = cyl(.04,.04,1.8,0x4e3620,5); bar.rotation.z = PI/2; bar.position.set(FIELD_WELL.x, wy+1.75, FIELD_WELL.z); scene.add(bar);
+}
+// Homens de Davi na caverna e o próprio Davi
+const david = buildMan({robe:0x3d5a8a, h:1.78}); scene.add(david.root);
+const davidJar = makeJar(); davidJar.visible = false; david.armR.add(davidJar); davidJar.position.set(0,-.7,.15);
+function placeDavid(sitting){ david.root.position.set(DAVID_POS.x, landH(DAVID_POS.x, DAVID_POS.z) - (sitting ? .45 : 0), DAVID_POS.z); david.root.rotation.set(0, PI*.05, 0); david.legs.forEach(l => l.rotation.x = sitting ? -1.3 : 0); david.armR.rotation.set(0,0,0); davidJar.visible = false; }
+placeDavid(true);
+for (let i=0;i<6;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52][i%3]}); const x = (i < 3 ? -1 : 1)*rand(3.5,6), z = rand(-76,-72); m.root.position.set(x, landH(x,z), z); m.root.rotation.y = rand(-.6,.6); if (i%2) addSpear(m); scene.add(m.root); }
+// O cântaro vazio à entrada da caverna
+const jarProp = makeJar(); scene.add(jarProp);
+function placeJarProp(v){ jarProp.visible = v; jarProp.position.set(JAR_POS.x, landH(JAR_POS.x, JAR_POS.z) + .23, JAR_POS.z); }
+placeJarProp(true);
+
+// Mãos do valente: espada (direita), escudo e cântaro (esquerda)
 const VM = new THREE.Group(); camera.add(VM);
 const swordPivot = new THREE.Group(); swordPivot.position.set(.3,-.34,-.55); swordPivot.scale.setScalar(.75); VM.add(swordPivot);
 { const blade = box(.05,.75,.015,0,mat(0xc7c9cc,{metalness:.8,roughness:.3})); blade.position.y = .45; swordPivot.add(blade);
   const guard = box(.2,.03,.04,0,bronzeM); guard.position.y = .07; swordPivot.add(guard);
   swordPivot.add(cyl(.022,.022,.14,0x4e3620,6)); swordPivot.add(box(.07,.1,.12,0x9a6b48)); }
+const shieldPivot = new THREE.Group(); shieldPivot.position.set(-.46,-.42,-.6); shieldPivot.scale.setScalar(.7); VM.add(shieldPivot);
+{ const s = cyl(.3,.3,.05,0,16,mat(0x6d4a2b)); s.rotation.x = PI/2; shieldPivot.add(s); const boss = sph(.07,0,bronzeM); boss.position.z = -.04; shieldPivot.add(boss); }
+const jarVM = makeJar(); jarVM.position.set(-.38,-.5,-.78); jarVM.scale.setScalar(.55); VM.add(jarVM);
+const waterVM = cyl(.07,.07,.02,0x3a6f96,8); waterVM.position.y = .33; jarVM.add(waterVM);
 
 // ================= Estado =================
 const P = {pos:V(), vel:V(), yaw:PI, pitch:0, eye:1.6, vida:100, cor:70};
-const W = {atkHeld:false, atkT:0, cool:0, swingT:0, heavy:false, kind:'quick', pendingHit:-1, buffer:null, combo:0, comboT:0, parryT:-9, critUntil:-9, dashT:0, dashCool:0, dashDir:V(), iframe:0, lastAtk:-9, prayT:0, prayCool:0, praying:false};
-const F = {v:0, stuck:false, heartT:0};
+const W = {atkHeld:false, atkT:0, cool:0, swingT:0, heavy:false, kind:'quick', pendingHit:-1, buffer:null, combo:0, comboT:0, parryT:-9, critUntil:-9,
+  dashT:0, dashCool:0, dashDir:V(), iframe:0, lastAtk:-9, prayT:0, prayCool:0, praying:false, shield:false, shieldSince:-9,
+  carry:false, water:0, hasJar:false, actT:0, act:null, stepT:0};
 let mode = 'menu', cine = null, gt = 0, timeScale = 1, shake = 0;
 let locked = false, noLock = false, lockFails = 0, pauseOn = false, modal = false;
-const keys = {}, enemies = [], parts = [], arrows = [], allies = [], banners = [];
+const keys = {}, enemies = [], parts = [], arrows = [], allies = [];
 const tmp1 = V(), tmp2 = V();
-const B = {state:'none', line:0, hold:0, spawnT:0, interT:0, riseT:0, rose:false, retreated:false, hornUsed:false, deaths:0, repelled:0, parries:0, time:0, bannerZ:-999, kind:'full', corStart:70, trainScore:0, medal:null, stuckAtEnd:false, warnT:0};
-let soldiers = [];
+const B = {state:'none', alarm:0, route:null, fieldWell:false, together:false, waterEnd:0, deaths:0, repelled:0, parries:0, time:0, kind:'full',
+  corStart:70, trainScore:0, medal:null, spawnT:0, warnedHills:false, choiceT:0, order:'follow', checkpoint:'cave', crossed:false};
+let mouseR = false;
 
 // ================= Entrada =================
 const playing = () => (mode === 'training' || mode === 'battle') && !cine && !modal;
@@ -480,21 +582,21 @@ addEventListener('keydown', e => {
   if (e.code === 'KeyM'){ audio(); setMusic(!musicOn); toast(musicOn ? 'Música ligada' : 'Música desligada', 1.2); }
   if (playing()){
     if (e.code === 'Space'){ e.preventDefault(); dash(); }
-    if (e.code === 'KeyT') askHorn();
+    if (e.code === 'KeyQ') toggleOrder();
   }
   if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code) && playing()) e.preventDefault();
 });
 addEventListener('keyup', e => { keys[e.code] = false; });
-addEventListener('blur', () => { for (const k in keys) keys[k] = false; attackUp(true); });
+addEventListener('blur', () => { for (const k in keys) keys[k] = false; mouseR = false; attackUp(true); });
 canvas.addEventListener('mousedown', e => {
   audio();
   if (cine) { nextCineLine(); return; }
   if (!playing() || touchMode) return;
   if (!locked && !noLock) { tryLock(); return; }
   if (e.button === 0) attackDown();
-  if (e.button === 2) parry();
+  if (e.button === 2){ mouseR = true; parry(); }
 });
-addEventListener('mouseup', e => { if (e.button === 0) attackUp(); });
+addEventListener('mouseup', e => { if (e.button === 0) attackUp(); if (e.button === 2) mouseR = false; });
 addEventListener('mousemove', e => {
   if (!playing() || touchMode) return;
   if (Math.abs(e.movementX) > 180 || Math.abs(e.movementY) > 180) return;
@@ -503,7 +605,7 @@ addEventListener('mousemove', e => {
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
 let touchMode = false;
-const TM = {mx:0, my:0, stickId:null, lookId:null, lx:0, ly:0, fireId:null, prayId:null};
+const TM = {mx:0, my:0, stickId:null, lookId:null, lx:0, ly:0, fireId:null, prayId:null, shieldId:null, actId:null};
 function enableTouch(){
   if (touchMode) return;
   touchMode = true; noLock = true; document.body.classList.add('touch');
@@ -528,12 +630,13 @@ function tstart(id, fn){ $(id).addEventListener('touchstart', e => { e.preventDe
 tstart('stick', t => { TM.stickId = t.identifier; stickMove(t); });
 tstart('lookpad', t => { TM.lookId = t.identifier; TM.lx = t.clientX; TM.ly = t.clientY; });
 tstart('fire', t => { TM.fireId = t.identifier; $('fire').classList.add('on'); if (playing() && !pauseOn) attackDown(); });
-tstart('tshield', () => { if (playing()) parry(); });
-tstart('tswap', () => { if (playing()) dash(); });
+tstart('tshield', t => { TM.shieldId = t.identifier; $('tshield').classList.add('on'); if (playing()) parry(); });
+tstart('tdash', () => { if (playing()) dash(); });
+tstart('tswap', () => { if (playing()) toggleOrder(); });
 tstart('tpray', t => { TM.prayId = t.identifier; $('tpray').classList.add('on'); });
-tstart('thorn', () => { if (playing()) askHorn(); });
+tstart('tact', t => { TM.actId = t.identifier; $('tact').classList.add('on'); });
 $('tpause').addEventListener('click', () => { if ((playing() || cine) && !pauseOn) showPause(); });
-['fire','tshield','tswap','tpray','thorn','tpause'].forEach(id => $(id).addEventListener('contextmenu', e => e.preventDefault()));
+['fire','tshield','tdash','tswap','tpray','tact','tpause'].forEach(id => $(id).addEventListener('contextmenu', e => e.preventDefault()));
 addEventListener('touchmove', e => {
   for (const t of e.changedTouches){
     if (t.identifier === TM.stickId) stickMove(t);
@@ -547,10 +650,13 @@ function touchEnd(e){
     if (t.identifier === TM.lookId) TM.lookId = null;
     if (t.identifier === TM.fireId){ TM.fireId = null; $('fire').classList.remove('on'); attackUp(); }
     if (t.identifier === TM.prayId){ TM.prayId = null; $('tpray').classList.remove('on'); }
+    if (t.identifier === TM.shieldId){ TM.shieldId = null; $('tshield').classList.remove('on'); }
+    if (t.identifier === TM.actId){ TM.actId = null; $('tact').classList.remove('on'); }
   }
 }
 addEventListener('touchend', touchEnd, {passive:true});
 addEventListener('touchcancel', touchEnd, {passive:true});
+const actHeld = () => keys.KeyE || TM.actId !== null;
 
 // ================= HUD =================
 let toastT = 0;
@@ -559,21 +665,31 @@ function setObj(a, b=''){ $('obj').textContent = a; $('sub').textContent = b; }
 function hurtFlash(){ const h = $('hurt'); h.style.transition = 'none'; h.style.opacity = 1; requestAnimationFrame(() => { h.style.transition = ''; h.style.opacity = 0; }); }
 function showHUD(){ $('hud').hidden = false; }
 function hideHUD(){ $('hud').hidden = true; }
+const orderName = () => B.order === 'follow' ? 'Comigo' : 'Segurem';
+function allyProblem(){
+  if (mode !== 'battle' || B.state === 'choice') return '';
+  if (allies.some(a => a.down)) return 'Um companheiro caiu. Chegue perto e segure E (Ação) para levantá-lo.';
+  if (allies.some(a => a.m.root.position.distanceTo(P.pos) > 25)) return B.order === 'hold' ? 'Os companheiros ficaram para trás. Q: "Comigo".' : 'Um companheiro ficou para trás.';
+  return '';
+}
 function updateHUD(){
   const battle = mode === 'battle';
   $('st-vida').hidden = !battle; $('st-cor').hidden = !battle; $('st-score').hidden = battle;
-  $('vida').style.width = clamp(P.vida,0,100) + '%'; $('cor').style.width = clamp(P.cor,0,100) + '%'; $('fad').style.width = clamp(F.v,0,100) + '%';
+  $('st-agua').hidden = !W.carry; $('st-alarme').hidden = !battle || B.state === 'choice';
+  $('vida').style.width = clamp(P.vida,0,100) + '%'; $('cor').style.width = clamp(P.cor,0,100) + '%';
+  $('agua').style.width = clamp(W.water,0,100) + '%'; $('alarme').style.width = clamp(B.alarm,0,100) + '%';
   $('score').textContent = T.score;
-  $('zone').hidden = !(battle && playing() && P.pos.z < B.bannerZ - 4);
-  const final = battle && B.state === 'final';
-  $('hold').hidden = !final;
-  if (final) $('holdfill').style.width = clamp(B.hold / D_().hold * 100, 0, 100) + '%';
-  $('wave').textContent = !battle ? '' : B.state === 'rise' ? 'Os homens de Israel sobem' : final ? 'Resista até o fim' : B.state === 'inter' ? 'Avance' : B.line ? `Linha ${B.line} de 3` : '';
-  $('stuckfx').classList.toggle('on', F.stuck && playing());
+  const prob = playing() ? allyProblem() : '';
+  $('zone').hidden = !prob; if (prob) $('zone').textContent = prob;
+  const lbl = {choice:'A caverna de Adulão', out:'Rumo a Belém', back:'A volta com a água'}[B.state] || '';
+  $('wave').textContent = battle && lbl ? `${lbl} · Ordem: ${orderName()}` : mode === 'training' ? `Ordem: ${orderName()}` : '';
+  $('hold').hidden = true;
   $('pause').hidden = !(playing() && !locked && !noLock && !pauseOn);
   const showTouch = touchMode && playing() && !pauseOn && $('ov').hidden;
   $('touch').hidden = !showTouch;
-  $('thorn').hidden = !(battle && !B.hornUsed);
+  $('tshield').textContent = W.carry ? 'Aparar' : 'Escudo';
+  $('tact').textContent = W.act ? W.act.label : 'Ação';
+  $('tact').style.opacity = W.act ? 1 : .45;
   if (!showTouch && TM.stickId !== null) stickReset();
 }
 const gctx = $('gauge').getContext('2d');
@@ -583,41 +699,28 @@ function drawGauge(){
   const cx = 70, cy = 70, R = 44;
   c.lineCap = 'round'; c.textAlign = 'center'; c.font = '12px "Alegreya Sans",sans-serif';
   c.lineWidth = 5; c.strokeStyle = 'rgba(234,220,189,.2)'; c.beginPath(); c.arc(cx,cy,R,0,PI*2); c.stroke();
-  if (W.praying){ c.lineWidth = 6; c.strokeStyle = '#ecbd6a'; c.beginPath(); c.arc(cx,cy,R,-PI/2,-PI/2 + clamp(W.prayT/2,0,1)*PI*2); c.stroke(); c.fillStyle = '#eadcbd'; c.fillText('orando...', cx, cy+4); return; }
-  if (W.atkHeld && !F.stuck){ const k = clamp(W.atkT/.45,0,1); c.lineWidth = 7; c.strokeStyle = k >= 1 ? '#ecbd6a' : '#93a35a'; c.beginPath(); c.arc(cx,cy,R,-PI/2,-PI/2+k*PI*2); c.stroke(); }
-  // pontos da sequência
+  const ring = (k, col, txt) => { c.lineWidth = 7; c.strokeStyle = col; c.beginPath(); c.arc(cx,cy,R,-PI/2,-PI/2 + clamp(k,0,1)*PI*2); c.stroke(); c.fillStyle = '#eadcbd'; c.fillText(txt, cx, cy+4); };
+  if (W.praying) return ring(W.prayT/2, '#ecbd6a', 'orando...');
+  if (W.act && W.actT > 0) return ring(W.actT / W.act.need, '#6aa6cf', W.act.doing);
+  if (W.act) { c.fillStyle = '#a8cde6'; c.fillText(touchMode ? `Ação: ${W.act.label}` : `E: ${W.act.label}`, cx, cy+4); return; }
+  if (W.atkHeld){ const k = clamp(W.atkT/.45,0,1); c.lineWidth = 7; c.strokeStyle = k >= 1 ? '#ecbd6a' : '#93a35a'; c.beginPath(); c.arc(cx,cy,R,-PI/2,-PI/2+k*PI*2); c.stroke(); }
   for (let i=0;i<3;i++){ c.fillStyle = W.comboT > 0 && i < W.combo ? '#ecbd6a' : 'rgba(234,220,189,.25)'; c.beginPath(); c.arc(cx - 14 + i*14, cy + 22, 4, 0, PI*2); c.fill(); }
   c.fillStyle = 'rgba(234,220,189,.75)';
-  c.fillText(F.stuck ? 'mão pegada à espada' : W.atkHeld ? (W.atkT >= .45 ? 'golpe forte!' : 'segure: forte') : gt < W.critUntil ? 'crítico!' : 'clique: golpe', cx, cy+4);
+  c.fillText(W.atkHeld ? (W.atkT >= .45 ? 'golpe forte!' : 'segure: forte') : gt < W.critUntil ? 'crítico!' : W.shield ? 'escudo erguido' : 'clique: golpe', cx, cy+4);
 }
 
-// ================= Espada: sequência, golpe forte, aparar e desviar =================
+// ================= Espada, escudo, desvio e a água =================
 function attackDown(){ if (!playing() || W.praying) return; W.atkHeld = true; W.atkT = 0; }
-function attackUp(cancel){ if (W.atkHeld && !cancel && playing()) doSwing(F.stuck || W.atkT >= .45); W.atkHeld = false; }
+function attackUp(cancel){ if (W.atkHeld && !cancel && playing()) doSwing(W.atkT >= .45); W.atkHeld = false; }
 function parry(){ if (!playing() || W.praying) return; W.parryT = gt; }
 function dash(){
   if (!playing() || W.praying || W.dashCool > 0) return;
-  if (!F.stuck && F.v > 95){ toast('Sem fôlego para desviar.', .8); return; }
   const f = V(-Math.sin(P.yaw),0,-Math.cos(P.yaw)), r = V(Math.cos(P.yaw),0,-Math.sin(P.yaw)), d = V();
   if (keys.KeyW) d.add(f); if (keys.KeyS) d.sub(f); if (keys.KeyD) d.add(r); if (keys.KeyA) d.sub(r);
   if (touchMode && Math.hypot(TM.mx,TM.my) > .2) d.addScaledVector(f, TM.my).addScaledVector(r, TM.mx);
   if (d.lengthSq() === 0) d.copy(f).negate();
   W.dashDir.copy(d.normalize()); W.dashT = .22; W.iframe = .32; W.dashCool = .55; sfx.dash();
-  addFatigue(5);
-}
-function addFatigue(n){
-  if (F.stuck) return;
-  const mult = mode === 'battle' && B.state === 'final' ? 2 : 1;
-  F.v = clamp(F.v + n*D_().fat*mult, 0, 100);
-  if (F.v >= 100){
-    if (mode === 'training'){ F.v = 50; T.exhausted(); return; }
-    if (mode === 'battle') handSticks();
-  }
-}
-function handSticks(){
-  F.stuck = true; F.v = 100;
-  toast(VS.vhand[0], 4); speak(VS.vhand[0]); sfx.heart(); shake = .8;
-  setObj('A mão pegada à espada', 'A espada não sai mais da mão: cada golpe é forte, mas mais lento. Continue lutando.');
+  if (W.carry) spill(3, true);
 }
 function doSwing(heavy){
   if (W.praying) return;
@@ -629,10 +732,9 @@ function doSwing(heavy){
   W.kind = heavy ? 'heavy' : third ? 'combo' : 'quick';
   let cool = heavy ? .9 : third ? .55 : .4;
   cool *= 1 + (1 - P.cor/100)*.4;
-  if (!F.stuck && F.v > 60) cool *= 1 + (F.v - 60)/100;
-  if (F.stuck) cool *= 1.35;
+  if (W.carry) cool *= 1.15;
   W.cool = cool; W.swingT = .001; W.heavy = heavy || third; W.pendingHit = .1; W.lastAtk = gt;
-  sfx.swing(); addFatigue(heavy ? 8 : 4);
+  sfx.swing();
 }
 function fwdFlat(){ return V(-Math.sin(P.yaw), 0, -Math.cos(P.yaw)); }
 function facing(pos, deg, from=P.pos, fwd=null){ const f = fwd || fwdFlat(), d = tmp1.copy(pos).sub(from).setY(0); const l = d.length(); if (l < .01) return true; return f.dot(d.divideScalar(l)) >= Math.cos(deg*PI/180); }
@@ -640,16 +742,16 @@ function applySwing(){
   const arc = W.kind === 'combo' ? 80 : 55, reach = W.kind === 'combo' ? 3.2 : 2.9;
   for (const e of enemies){ if (!alive(e)) continue;
     if (Math.hypot(e.root.position.x - P.pos.x, e.root.position.z - P.pos.z) < reach && facing(e.root.position, arc)) hitEnemy(e, W.kind, P.pos); }
-  if (mode === 'training') trainingSwing();
 }
-function alive(e){ return e.state !== 'fallen' && e.state !== 'flee' && e.state !== 'gone'; }
+function alive(e){ return e.state !== 'fallen' && e.state !== 'flee'; }
 function enemyFwd(e){ return V(Math.sin(e.root.rotation.y), 0, Math.cos(e.root.rotation.y)); }
 function hitEnemy(e, kind, from){
   if (!alive(e)) return;
-  const crit = from === P.pos && gt < W.critUntil;
-  if (e.type === 'falange' && e.state !== 'stun' && kind === 'quick' && !crit && facing(from, 60, e.root.position, enemyFwd(e))){
+  const byPlayer = from === P.pos, crit = byPlayer && gt < W.critUntil;
+  if (e.state === 'sleep' || e.state === 'watch') wake(e, false);
+  if (e.type === 'guarda' && e.state !== 'stun' && kind === 'quick' && !crit && facing(from, 60, e.root.position, enemyFwd(e))){
     sfx.block(); burst(e.root.position.clone().setY(e.root.position.y+1.1), 0x6d4a2b, 5, 2);
-    if (from === P.pos) toast('A falange bloqueou. Golpe forte, a sequência completa ou pelo lado.', 1.6);
+    if (byPlayer) toast('O guarda bloqueou. Golpe forte, a sequência completa ou pelo lado.', 1.6);
     return;
   }
   let dmg = kind === 'quick' ? 1 : 2; if (crit){ dmg++; W.critUntil = -9; toast('Crítico!', .7); }
@@ -659,26 +761,32 @@ function hitEnemy(e, kind, from){
   e.state = 'stun'; e.t = kind === 'quick' ? .35 : .9;
 }
 function down(e){
-  e.state = 'fallen'; e.t = 0; B.repelled++;
-  if (e.type === 'porta'){
-    toast('O estandarte caiu. Os filisteus em volta perderam o ânimo.', 2);
-    for (const o of enemies){ if (o !== e && alive(o) && o.root.position.distanceTo(e.root.position) < 12){ o.state = 'stun'; o.t = 1.4; } }
-  }
+  e.state = 'fallen'; e.t = 0; if (!e.training) B.repelled++;
+  if (e.torch) e.torch.visible = false;
   if (mode === 'training') T.enemyDown(e);
 }
-/** Golpe ou flecha vindo de "from": aparar no instante certo desequilibra; desviando, passa. */
+/** Golpe ou flecha vindo de "from": desviando, passa; aparando, desequilibra; escudo erguido de frente, bloqueia. */
 function resolveIncoming(from, dmg, msg, attacker){
-  if (W.iframe > 0){ if (mode === 'training') T.onDefense('dodge'); else toast('Desviou.', .6); return false; }
+  if (W.iframe > 0){ toast('Desviou.', .6); return false; }
   if (gt - W.parryT <= D_().parry && facing(from, 75)){
     sfx.parry(); B.parries++; P.cor = clamp(P.cor + 8, 0, 100); W.critUntil = gt + 1.5; toast('Aparou! O próximo golpe é crítico.', 1.1);
     if (attacker){ attacker.state = 'stun'; attacker.t = 1.4; }
     if (mode === 'training') T.onDefense('parry');
     return false;
   }
+  if (W.shield && facing(from, 70)){ sfx.block(); P.cor = clamp(P.cor + 1, 0, 100); if (mode === 'training') T.onDefense('block'); return false; }
+  if (W.carry) spill(D_().spill);
   if (mode === 'training'){ T.onDefense('hit'); sfx.hurt(); hurtFlash(); return true; }
   P.vida -= dmg; P.cor = clamp(P.cor - 5, 0, 100); sfx.hurt(); hurtFlash(); shake = Math.max(shake, .6); toast(msg, 1.4);
-  if (P.vida <= 0) fall('Eleazar caiu no vale.');
+  if (P.vida <= 0) fall('O valente caiu no vale.');
   return true;
+}
+function spill(n, quiet){
+  if (!W.carry || W.water <= 0) return;
+  W.water = Math.max(0, W.water - n);
+  if (!quiet) sfx.water();
+  if (n >= 3){ camera.getWorldDirection(tmp2); burst(tmp1.copy(camera.position).addScaledVector(tmp2, .7).add(V(0,-.35,0)), 0x6aa6cf, Math.min(10, Math.round(n)), 1.4, .6, .6); }
+  if (W.water <= 0 && mode === 'battle' && B.state === 'back') emptyJar();
 }
 
 // ================= Flechas e partículas =================
@@ -692,12 +800,12 @@ function updateParts(dt){
     const gy = groundH(p.m.position.x,p.m.position.z); if (p.m.position.y < gy){ p.m.position.y = gy; p.v.multiplyScalar(.3); }
     p.life -= dt; if (p.life <= 0){ scene.remove(p.m); parts.splice(i,1); } }
 }
-function shootArrow(from, target){
+function shootArrow(from, target, blunt){
   const start = from.clone(), T_ = clamp(start.distanceTo(target)/24, .6, 1.6);
   const tgt = target.clone().addScaledVector(P.vel, T_*.6);
   const vel = tgt.sub(start).sub(V(0,-.5*G*T_*T_,0)).divideScalar(T_);
   const m = new THREE.Group(); const sh = cyl(.012,.012,.8,0x6a4a2a,4); sh.rotation.x = PI/2; m.add(sh);
-  const tip = new THREE.Mesh(new THREE.ConeGeometry(.03,.1,4), cmat(0x8b8e92)); tip.rotation.x = PI/2; tip.position.z = .45; m.add(tip);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(.03,.1,4), cmat(blunt ? 0xcdb892 : 0x8b8e92)); tip.rotation.x = PI/2; tip.position.z = .45; m.add(tip);
   m.position.copy(start); scene.add(m); arrows.push({m, vel, from: from.clone(), t:0, stuck:false}); sfx.arrow();
 }
 function updateArrows(dt){
@@ -705,29 +813,35 @@ function updateArrows(dt){
     const a = arrows[i]; a.t += dt;
     if (a.stuck){ if (a.t > 3){ scene.remove(a.m); arrows.splice(i,1); } continue; }
     a.vel.y -= G*dt; a.m.position.addScaledVector(a.vel, dt); a.m.lookAt(tmp1.copy(a.m.position).add(a.vel));
-    if (a.m.position.distanceTo(tmp2.copy(P.pos).setY(P.pos.y + 1.3)) < .75){ scene.remove(a.m); arrows.splice(i,1); resolveIncoming(a.from, 8*D_().dmg, 'Uma flecha acertou Eleazar.', null); continue; }
+    if (a.m.position.distanceTo(tmp2.copy(P.pos).setY(P.pos.y + 1.3)) < .75){ scene.remove(a.m); arrows.splice(i,1); resolveIncoming(a.from, 8*D_().dmg, 'Uma flecha acertou o valente.', null); continue; }
     if (a.m.position.y < groundH(a.m.position.x, a.m.position.z)){ a.stuck = true; a.t = 0; }
   }
 }
 
 // ================= Filisteus =================
+// sleep: dorme junto ao fogo · watch: de guarda, olhando em volta · alarm: sentinela correndo para a trombeta
 const TYPES = {
   lanceiro: {hp:2, speed:2.6, dmg:12, robe:0x8c2f22},
-  falange:  {hp:3, speed:1.4, dmg:12, robe:0x9b5a2a},
+  guarda:   {hp:3, speed:1.9, dmg:12, robe:0x9b5a2a},
   arqueiro: {hp:1, speed:2.6, dmg:8,  robe:0x7a2a1f},
-  porta:    {hp:3, speed:2,   dmg:10, robe:0x6e2a1c},
-  instrutor:{hp:99, speed:0, dmg:0, robe:0x3d5a8a},
+  sentinela:{hp:1, speed:3.6, dmg:8,  robe:0x6e2a1c},
+  tocha:    {hp:2, speed:2.4, dmg:10, robe:0x8a3a22},
+  instrutor:{hp:4, speed:2.4, dmg:6,  robe:0x3d5a8a},
 };
 function spawnEnemy(type, x, z, extra={}){
   const def = TYPES[type];
-  const m = buildMan({robe:def.robe, plume: type !== 'instrutor', armor: type === 'porta'});
-  if (type === 'lanceiro' || type === 'falange') addSpear(m);
-  if (type === 'falange') addTowerShield(m);
+  const m = buildMan({robe:def.robe, plume: type !== 'instrutor'});
+  if (type === 'lanceiro' || type === 'guarda' || type === 'sentinela') addSpear(m);
+  if (type === 'guarda') addTowerShield(m);
   if (type === 'arqueiro') addBow(m);
-  if (type === 'porta') addBanner(m, 0xa03a24);
   if (type === 'instrutor') addStaff(m);
+  let torch = null;
+  if (type === 'tocha'){ addSpear(m); torch = addTorch(m); }
   m.root.position.set(x, landH(x,z), z); m.root.rotation.y = PI; scene.add(m.root);
-  const e = Object.assign({type, root:m.root, legs:m.legs, armR:m.armR, armL:m.armL, k:m.k, hp:def.hp, speed:def.speed*rand(.9,1.1), dmg:def.dmg, state:'hold', t:0, cool:rand(.4,1.2), shootT:rand(1.5,3), home:V(x,0,z)}, extra);
+  const e = Object.assign({type, root:m.root, legs:m.legs, armR:m.armR, armL:m.armL, k:m.k, hp:def.hp, speed:def.speed*rand(.9,1.1), dmg:def.dmg,
+    state:'watch', t:0, cool:rand(.4,1.2), shootT:rand(1.5,3), torch, target:null, retarget:0, scan:rand(0,6), home:V(x,0,z), wakeAt:rand(25,90), training:false, baseYaw:PI}, extra);
+  m.root.rotation.y = e.baseYaw;
+  if (e.state === 'sleep'){ e.root.rotation.x = -PI/2; e.root.position.y += .25; }
   enemies.push(e); return e;
 }
 function clearEnemies(){ for (const e of enemies) scene.remove(e.root); enemies.length = 0; for (const a of arrows) scene.remove(a.m); arrows.length = 0; }
@@ -737,370 +851,486 @@ function stepToward(e, x, z, spd, dt){
   if (d > .05){ e.root.position.x += dx/d*Math.min(d, spd*dt); e.root.position.z += dz/d*Math.min(d, spd*dt); }
   e.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*spd*3 + i*PI)*.6);
 }
-function nearPorta(e){ return enemies.some(o => o !== e && o.type === 'porta' && alive(o) && o.root.position.distanceTo(e.root.position) < 10); }
+function wake(e, noisy){
+  if (e.state !== 'sleep' && e.state !== 'watch') return;
+  if (e.state === 'sleep'){ e.root.rotation.x = 0; }
+  if (e.type === 'sentinela' && !e.training){ e.state = 'alarm'; e.post = POSTS.reduce((a,p) => p.distanceTo(e.root.position) < a.distanceTo(e.root.position) ? p : a, POSTS[0]); toast('Uma sentinela viu vocês e corre para a trombeta!', 2); sfx.shout(); return; }
+  e.state = 'advance';
+  if (noisy && mode === 'battle') B.alarm = clamp(B.alarm + 4*D_().alarm, 0, 100);
+}
+/** A sentinela ou a tocha enxerga o valente? (as tochas veem mais longe) */
+function sees(e){
+  const d = Math.hypot(P.pos.x - e.root.position.x, P.pos.z - e.root.position.z);
+  if (d < 4.5) return true;
+  const range = (e.type === 'tocha' ? 18 : 12) * (W.carry ? 1.1 : 1);
+  return d < range && facing(P.pos, 65, e.root.position, enemyFwd(e));
+}
+// Quem o filisteu ataca: o valente ou um companheiro de pé, o que estiver mais perto.
+function pickTarget(e){
+  let best = {pos:P.pos, ally:null}, bd = Math.hypot(P.pos.x - e.root.position.x, P.pos.z - e.root.position.z) - 1.5;
+  for (const a of allies){ if (a.down) continue; const p = a.m.root.position, d = Math.hypot(p.x - e.root.position.x, p.z - e.root.position.z); if (d < bd){ bd = d; best = {pos:p, ally:a}; } }
+  return best;
+}
 function updateEnemies(dt){
   for (let i=enemies.length-1;i>=0;i--){
     const e = enemies[i], p = e.root.position;
-    // Aliados de Israel atacam o filisteu mais próximo
     const dP = Math.hypot(P.pos.x - p.x, P.pos.z - p.z);
-    if (e.state === 'fallen'){ e.t += dt; e.root.rotation.x = -Math.min(PI/2, e.t*5); if (e.t > 1.3){ e.state = 'flee'; e.root.rotation.x = 0; } }
-    else if (e.state === 'flee'){ stepToward(e, p.x, p.z + 20, e.panic ? 7.5 : 5.5, dt); faceTo(e, p.x, p.z + 10); if (p.z > 135 || dP > 70){ scene.remove(e.root); enemies.splice(i,1); continue; } }
+    if (e.state === 'advance' || e.state === 'watch' || e.state === 'windup'){ e.retarget -= dt; if (e.retarget <= 0 || !e.target){ e.target = pickTarget(e); e.retarget = .5; } }
+    const tg = e.target ? e.target.pos : P.pos, dT = Math.hypot(tg.x - p.x, tg.z - p.z);
+    if (e.state === 'sleep'){
+      const run = keys.ShiftLeft || keys.ShiftRight || Math.hypot(TM.mx, TM.my) > .92;
+      const noise = enemies.some(o => o !== e && (o.state === 'advance' || o.state === 'windup') && o.root.position.distanceTo(p) < 9);
+      if (dP < (run ? 6.5 : 4) || noise) wake(e, true); else if (B.alarm >= e.wakeAt) wake(e, false);
+    }
+    else if (e.state === 'watch'){
+      e.scan += dt*.6; e.root.rotation.y = e.baseYaw + Math.sin(e.scan)*.9;
+      if (e.patrol){ const k = Math.sin(gt*.25 + e.home.x); stepToward(e, e.home.x, e.home.z + k*10, 1.2, dt); e.root.rotation.y = Math.cos(gt*.25 + e.home.x) > 0 ? 0 : PI; }
+      if ((mode === 'battle' && B.state !== 'choice' && sees(e)) || (e.training && dP < 9)) wake(e, true); else if (B.alarm >= e.wakeAt) wake(e, false);
+    }
+    else if (e.state === 'alarm'){
+      stepToward(e, e.post.x, e.post.z, e.speed*1.15, dt); faceTo(e, e.post.x, e.post.z);
+      if (Math.hypot(e.post.x - p.x, e.post.z - p.z) < 1.4){ B.alarm = clamp(B.alarm + 22*D_().alarm, 0, 100); sfx.horn(); toast('O alarme soou no arraial!', 2); e.state = 'advance'; }
+    }
+    else if (e.state === 'fallen'){ e.t += dt; e.root.rotation.x = -Math.min(PI/2, e.t*5); if (e.t > 1.3){ e.state = 'flee'; e.root.rotation.x = 0; } }
+    else if (e.state === 'flee'){ const away = tmp1.copy(p).sub(P.pos).setY(0).normalize(); stepToward(e, p.x + away.x*10, p.z + away.z*10, e.panic ? 7.5 : 5.5, dt); faceTo(e, p.x + away.x, p.z + away.z); if (dP > 55){ scene.remove(e.root); enemies.splice(i,1); continue; } }
     else if (e.state === 'stun'){ e.t -= dt; e.root.rotation.z = Math.sin(gt*20)*.08; if (e.t <= 0){ e.state = 'advance'; e.root.rotation.z = 0; } }
     else if (e.state === 'windup'){
-      e.t += dt; faceTo(e, P.pos.x, P.pos.z); e.armR.rotation.x = -Math.min(1, e.t/e.wind)*2.2;
-      if (e.t >= e.wind){ e.armR.rotation.x = .6; if (dP < 2.7 && P.vida > 0) resolveIncoming(p, e.dmg*D_().dmg, e.type === 'instrutor' ? '' : 'Um filisteu acertou Eleazar.', e);
+      e.t += dt; faceTo(e, tg.x, tg.z); e.armR.rotation.x = -Math.min(1, e.t/e.wind)*2.2;
+      if (e.t >= e.wind){ e.armR.rotation.x = .6;
+        if (dT < 2.7){ if (e.target && e.target.ally) allyHit(e.target.ally, e.dmg*D_().dmg, e); else if (P.vida > 0) resolveIncoming(p, e.dmg*D_().dmg, e.training ? '' : 'Um filisteu acertou o valente.', e); }
         if (e.state === 'windup'){ e.state = 'recover'; e.t = 0; } }
     }
-    else if (e.state === 'recover'){ e.t += dt; e.armR.rotation.x *= .9; if (e.t > .5){ e.state = e.type === 'instrutor' ? 'hold' : 'advance'; e.cool = e.type === 'instrutor' ? 1.8 : rand(1,1.8); } }
-    else if (e.state === 'aim'){ e.t += dt; faceTo(e, P.pos.x, P.pos.z); e.armL.rotation.x = -1.4; if (e.t > .8){ shootArrow(tmp1.copy(p).setY(p.y + 1.5), V(P.pos.x, P.pos.y + 1.3, P.pos.z)); e.state = 'advance'; e.shootT = rand(2.6,3.6); e.armL.rotation.x = 0; } }
-    else if (e.state === 'hold'){
-      if (e.type === 'instrutor'){ faceTo(e, P.pos.x, P.pos.z); e.cool -= dt; if (e.cool <= 0 && T.attacksLeft > 0 && dP < 3){ T.attacksLeft--; e.state = 'windup'; e.t = 0; e.wind = .7; } else if (dP >= 3) stepToward(e, P.pos.x, P.pos.z, 2, dt); }
-      else { faceTo(e, P.pos.x, P.pos.z); if (dP < 15 || B.forceEngage) e.state = 'advance'; }
-    }
+    else if (e.state === 'recover'){ e.t += dt; e.armR.rotation.x *= .9; if (e.t > .5){ e.state = 'advance'; e.cool = rand(1,1.8); } }
+    else if (e.state === 'aim'){ e.t += dt; faceTo(e, P.pos.x, P.pos.z); e.armL.rotation.x = -1.4; if (e.t > .8){ shootArrow(tmp1.copy(p).setY(p.y + 1.5), V(P.pos.x, P.pos.y + 1.3, P.pos.z), e.training); e.state = 'advance'; e.shootT = e.training ? 2.2 : rand(2.6,3.6); e.armL.rotation.x = 0; } }
     else if (e.state === 'advance'){
       e.cool -= dt;
-      const boost = nearPorta(e) ? 1.2 : 1;
       if (e.type === 'arqueiro'){
-        if (dP < 7) stepToward(e, p.x, p.z + 3, e.speed, dt); else if (dP > 26) stepToward(e, P.pos.x, P.pos.z, e.speed, dt);
-        faceTo(e, P.pos.x, P.pos.z); e.shootT -= dt; if (e.shootT <= 0 && dP < 40){ e.state = 'aim'; e.t = 0; }
-      } else if (e.type === 'porta'){
-        if (dP > 6) stepToward(e, P.pos.x, P.pos.z, e.speed, dt); faceTo(e, P.pos.x, P.pos.z);
+        if (!e.fixed){ if (dP < 7) stepToward(e, p.x - (P.pos.x - p.x), p.z - (P.pos.z - p.z), e.speed, dt); else if (dP > 26) stepToward(e, P.pos.x, P.pos.z, e.speed, dt); }
+        faceTo(e, P.pos.x, P.pos.z); e.shootT -= dt; if (e.shootT <= 0 && dP < 34 && (!e.allowShot || e.allowShot())){ e.state = 'aim'; e.t = 0; }
       } else {
-        if (dP > 2.1) stepToward(e, P.pos.x, P.pos.z, e.speed*boost, dt);
-        faceTo(e, P.pos.x, P.pos.z);
-        if (dP <= 2.3 && e.cool <= 0 && P.vida > 0){ e.state = 'windup'; e.t = 0; e.wind = .65/boost; }
+        if (dT > 2.1) stepToward(e, tg.x, tg.z, e.speed, dt);
+        faceTo(e, tg.x, tg.z);
+        if (dT <= 2.3 && e.cool <= 0 && (!e.target || e.target.ally || P.vida > 0)){ e.state = 'windup'; e.t = 0; e.wind = .65; }
+        // Luta no arraial faz barulho e o alarme sobe.
+        if (mode === 'battle' && !e.training && dT < 6 && Math.abs(p.x) < CAMP.hw + 4 && p.z > CAMP.z0 - 4 && p.z < CAMP.z1 + 4) B.noise = true;
+        // Longe demais: perde os três de vista e volta a vigiar.
+        if (!e.training && dP > 42 && e.type !== 'arqueiro'){ e.state = 'watch'; e.baseYaw = e.root.rotation.y; e.home.copy(p); e.patrol = false; e.wakeAt = Math.max(e.wakeAt, B.alarm + 10); }
       }
     }
-    if (alive(e)){
-      for (const o of enemies){ if (o === e || !alive(o)) continue; const dx = p.x - o.root.position.x, dz = p.z - o.root.position.z, d = Math.hypot(dx,dz); if (d < 1.1 && d > .001){ p.x += dx/d*(1.1-d)*.5; p.z += dz/d*(1.1-d)*.5; } }
+    if (e.torch && e.torch.visible){ const f = e.torch.children[1]; if (f) f.scale.y = .8 + .3*Math.sin(gt*17 + i); }
+    if (alive(e) && e.state !== 'sleep'){
+      for (const o of enemies){ if (o === e || !alive(o) || o.state === 'sleep') continue; const dx = p.x - o.root.position.x, dz = p.z - o.root.position.z, d = Math.hypot(dx,dz); if (d < 1.1 && d > .001){ p.x += dx/d*(1.1-d)*.5; p.z += dz/d*(1.1-d)*.5; } }
       const dx = p.x - P.pos.x, dz = p.z - P.pos.z, d = Math.hypot(dx,dz); if (d < 1.2 && d > .001){ p.x = P.pos.x + dx/d*1.2; p.z = P.pos.z + dz/d*1.2; }
+      p.x = clamp(p.x, -60, 60); p.z = Math.min(p.z, GATE_Z - 1);
+      p.y = landH(p.x, p.z);
     }
-    p.y = landH(p.x, p.z);
   }
 }
 
-// Aliados (só se a trombeta for tocada)
-function askHorn(){
-  if (mode !== 'battle' || B.hornUsed || B.state === 'done') return;
-  modal = true; unlock(); attackUp(true);
-  showOverlay(`
-    <div class="eyebrow">A trombeta</div>
-    <h2>Chamar o povo para ajudar?</h2>
-    <p class="lede">Três soldados descerão para lutar ao seu lado. A luta fica mais fácil, mas o relato conta outra coisa:</p>
-    ${verseHTML('v10b')}
-    <div class="row"><button class="btn" data-act="blow">Tocar a trombeta</button><button class="btn primary" data-act="alone">Continuar sozinho</button></div>
-    <p class="note">Tocar a trombeta faz perder o item de Fidelidade "Lutou sem esperar o povo".</p>`, {
-    blow: () => { hideOverlay(); modal = false; tryLock(); B.hornUsed = true; sfx.horn(); toast('Três soldados descem para ajudar.', 2); spawnAllies(); },
-    alone: () => { hideOverlay(); modal = false; tryLock(); },
-  });
-}
+// ================= Os dois companheiros =================
 function spawnAllies(){
-  for (let i=0;i<3;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52][i]}); addSpear(m); const x = P.pos.x + (i-1)*2, z = P.pos.z - 8; m.root.position.set(x, landH(x,z), z); scene.add(m.root); allies.push(Object.assign(m, {cool:rand(.5,1.2)})); }
+  clearAllies();
+  for (const slot of [-1, 1]){
+    const m = buildMan({robe: slot < 0 ? 0x6f6a3c : 0x7d5f3a}); addSword(m); addRoundShield(m);
+    const x = P.pos.x + slot*2.2, z = P.pos.z - 1.5; m.root.position.set(x, landH(x,z), z); scene.add(m.root);
+    allies.push({m, slot, training: mode === 'training', hp:100, down:false, downT:0, cool:rand(.4,1), holdPos:V(x,0,z), target:null, retarget:0});
+  }
 }
-function clearAllies(){ for (const a of allies) scene.remove(a.root); allies.length = 0; }
+function clearAllies(){ for (const a of allies) scene.remove(a.m.root); allies.length = 0; }
+function toggleOrder(){
+  B.order = B.order === 'follow' ? 'hold' : 'follow';
+  if (B.order === 'hold') for (const a of allies) a.holdPos.copy(a.m.root.position);
+  sfx.shout(); toast(B.order === 'follow' ? '"Comigo!" — os dois seguem você.' : '"Segurem aqui!" — os dois defendem este ponto.', 1.6);
+  if (mode === 'training') T.onOrder();
+}
+function allyHit(a, dmg, attacker){
+  if (a.down) return;
+  if (Math.random() < .4){ sfx.block(); return; }   // o escudo do companheiro segura parte dos golpes
+  a.hp -= dmg * D_().allyDmg * (a.training ? .6 : 1);
+  sfx.hit(); burst(a.m.root.position.clone().setY(a.m.root.position.y + 1.2), 0x8a7a52, 4, 1.8, .6, .6);
+  if (a.hp <= 0){ a.down = true; a.downT = 0; a.m.root.rotation.x = -PI/2; a.m.root.position.y += .25; toast('Um companheiro caiu! Segure E perto dele para levantá-lo.', 2.4); sfx.hurt(); }
+}
+function reviveAlly(a){ a.down = false; a.hp = 55; a.m.root.rotation.x = 0; toast('O companheiro se levantou.', 1.2); if (mode === 'training') T.onRevive(); }
 function updateAllies(dt){
+  const f = fwdFlat(), r = V(-f.z, 0, f.x);
   for (const a of allies){
-    let best = null, bd = 1e9; for (const e of enemies){ if (!alive(e)) continue; const d = a.root.position.distanceTo(e.root.position); if (d < bd){ bd = d; best = e; } }
-    const p = a.root.position; a.cool -= dt;
-    const tx = best ? best.root.position.x : P.pos.x + 2, tz = best ? best.root.position.z : P.pos.z - 2;
-    const dx = tx - p.x, dz = tz - p.z, d = Math.hypot(dx,dz);
-    if (d > 1.8){ p.x += dx/d*3.5*dt; p.z += dz/d*3.5*dt; a.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*10 + i*PI)*.6); }
-    a.root.rotation.y = Math.atan2(dx, dz); p.y = landH(p.x, p.z);
-    if (best && d < 2.2 && a.cool <= 0){ a.cool = 1.2; hitEnemy(best, 'quick', p.clone()); }
+    const p = a.m.root.position;
+    if (a.down){ a.downT += dt; if (D_().selfRevive && a.downT > 8) reviveAlly(a); p.y = landH(p.x, p.z) + .25; continue; }
+    a.cool -= dt; a.retarget -= dt;
+    const anchor = B.order === 'follow' ? P.pos : a.holdPos, reach = B.order === 'follow' ? 8 : 6;
+    if (a.retarget <= 0){
+      a.retarget = .4; a.target = null; let bd = 1e9;
+      for (const e of enemies){ if (!alive(e) || e.state === 'sleep' || e.state === 'watch') continue; const ep = e.root.position;
+        if (Math.hypot(ep.x - anchor.x, ep.z - anchor.z) > reach) continue; const d = Math.hypot(ep.x - p.x, ep.z - p.z) - (e.target && !e.target.ally ? 2 : 0); if (d < bd){ bd = d; a.target = e; } }
+    }
+    let tx, tz, spd = 4.4;
+    if (a.target && alive(a.target)){ tx = a.target.root.position.x; tz = a.target.root.position.z; }
+    else if (B.order === 'follow'){ tx = P.pos.x + r.x*a.slot*2.2 - f.x*1.2; tz = P.pos.z + r.z*a.slot*2.2 - f.z*1.2; }
+    else { tx = a.holdPos.x; tz = a.holdPos.z; }
+    const dx = tx - p.x, dz = tz - p.z, d = Math.hypot(dx,dz), stop = a.target ? 1.8 : .4;
+    if (d > 8) spd = 7;
+    if (d > stop){ p.x += dx/d*Math.min(d - stop, spd*dt); p.z += dz/d*Math.min(d - stop, spd*dt); a.m.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*10 + i*PI)*.6); }
+    else a.m.legs.forEach(l => l.rotation.x *= .8);
+    if (d > .05) a.m.root.rotation.y = Math.atan2(a.target ? dx : (B.order === 'follow' ? -f.x : dx), a.target ? dz : (B.order === 'follow' ? -f.z : dz));
+    a.m.armR.rotation.x *= .85;
+    if (a.target && alive(a.target) && d < 2.3 && a.cool <= 0){ a.cool = 1.1; a.m.armR.rotation.x = -1.6; hitEnemy(a.target, 'quick', p.clone()); }
+    p.x = clamp(p.x, -60, 60); p.z = clamp(p.z, -76, GATE_Z - 1.5); p.y = landH(p.x, p.z);
   }
 }
 
 // ================= Jogador =================
+function currentAction(){
+  for (const a of allies) if (a.down && a.m.root.position.distanceTo(P.pos) < 2.4) return {id:'revive', a, need:2.5, label:'Levantar', doing:'levantando...'};
+  if (mode === 'battle'){
+    if (B.state === 'choice' && jarProp.visible && Math.hypot(P.pos.x - JAR_POS.x, P.pos.z - JAR_POS.z) < 2.2) return {id:'jar', need:.6, label:'Pegar o cântaro', doing:'pegando...'};
+    if (B.state === 'out' && W.hasJar && !W.carry){
+      if (Math.hypot(P.pos.x - CISTERN.x, P.pos.z - CISTERN.z) < 2.6) return {id:'cistern', need:D_().draw, label:'Tirar água', doing:'tirando água...'};
+      if (Math.hypot(P.pos.x - FIELD_WELL.x, P.pos.z - FIELD_WELL.z) < 2.4) return {id:'well', need:2.5, label:'Tirar água do poço', doing:'tirando água...'};
+    }
+  }
+  return null;
+}
 function updatePlayer(dt){
   const f = V(-Math.sin(P.yaw),0,-Math.cos(P.yaw)), r = V(Math.cos(P.yaw),0,-Math.sin(P.yaw)), mv = V();
   if (keys.KeyW) mv.add(f); if (keys.KeyS) mv.sub(f); if (keys.KeyD) mv.add(r); if (keys.KeyA) mv.sub(r);
-  let spd = (keys.ShiftLeft || keys.ShiftRight) ? 7.2 : 4.6;
-  if (!F.stuck && F.v > 60) spd *= .85;
+  let running = keys.ShiftLeft || keys.ShiftRight, spd = running ? 7.2 : 4.6;
+  W.shield = (mouseR || TM.shieldId !== null) && !W.carry && !W.praying;
+  if (W.shield) spd *= .55;
   if (mv.lengthSq() > 0) mv.normalize().multiplyScalar(spd);
-  else if (touchMode && Math.hypot(TM.mx, TM.my) > .12){ const mag = Math.min(1, Math.hypot(TM.mx, TM.my)), run = mag > .92 ? 7.2/4.6 : 1; mv.addScaledVector(f, TM.my).addScaledVector(r, TM.mx).normalize().multiplyScalar(spd*mag*run); }
+  else if (touchMode && Math.hypot(TM.mx, TM.my) > .12){ const mag = Math.min(1, Math.hypot(TM.mx, TM.my)); running = mag > .92; mv.addScaledVector(f, TM.my).addScaledVector(r, TM.mx).normalize().multiplyScalar(spd*mag*(running ? 7.2/4.6 : 1)); }
+  // Ação contextual (segurar E): pegar o cântaro, tirar água, levantar um companheiro.
+  W.act = currentAction();
+  if (W.act && actHeld() && mv.lengthSq() === 0){
+    if (W.act.id === 'well' && !B.warnedWell){ askWell(); return; }
+    W.actT += dt; if (W.actT >= W.act.need){ doAction(W.act); W.actT = 0; }
+  } else W.actT = 0;
   const wantPray = (keys.KeyF || TM.prayId !== null) && mode === 'battle';
   if (wantPray && mv.lengthSq() === 0 && !W.atkHeld){
     if (W.prayCool > 0){ if (W.prayT === 0){ toast(`Aguarde ${Math.ceil(W.prayCool)} s para orar de novo.`, 1); W.prayT = -1; } }
     else { if (W.prayT <= 0){ W.prayT = 0; sfx.pray(); } W.praying = true; W.prayT += dt;
-      if (W.prayT >= 2){ P.cor = clamp(P.cor + 35, 0, 100); W.prayCool = 10; W.prayT = 0; W.praying = false; toast('Eleazar orou e encontrou coragem.', 1.8); } }
+      if (W.prayT >= 2){ P.cor = clamp(P.cor + 35, 0, 100); W.prayCool = 10; W.prayT = 0; W.praying = false; toast('O valente orou e encontrou coragem.', 1.8); } }
   } else { W.praying = false; if (W.prayT !== 0) W.prayT = 0; }
   if (W.praying) mv.set(0,0,0);
   W.prayCool = Math.max(0, W.prayCool - dt);
   if (W.dashT > 0){ W.dashT -= dt; mv.copy(W.dashDir).multiplyScalar(11); P.vel.copy(mv); }
   else P.vel.lerp(mv, clamp(dt*10,0,1));
-  const oldZ = P.pos.z;
+  if (W.carry && running && P.vel.length() > 5) spill(2*dt, true);
   P.pos.addScaledVector(P.vel, dt);
   W.iframe = Math.max(0, W.iframe - dt); W.dashCool = Math.max(0, W.dashCool - dt);
   if (keys.ArrowLeft) P.yaw += 1.8*dt; if (keys.ArrowRight) P.yaw -= 1.8*dt;
   if (keys.ArrowUp) P.pitch = clamp(P.pitch + 1.2*dt, -1.35, 1.35); if (keys.ArrowDown) P.pitch = clamp(P.pitch - 1.2*dt, -1.35, 1.35);
-  const cx = -3*Math.sin(P.pos.z*.03); P.pos.x = clamp(P.pos.x, cx - 12, cx + 12); P.pos.z = clamp(P.pos.z, -60, 118);
-  if (mode === 'training'){ const dx = P.pos.x - T.center.x, dz = P.pos.z - T.center.z, d = Math.hypot(dx,dz); if (d > 6){ P.pos.x = T.center.x + dx/d*6; P.pos.z = T.center.z + dz/d*6; } }
+  P.pos.x = clamp(P.pos.x, -48, 48); P.pos.z = clamp(P.pos.z, -73, GATE_Z - 1.6);
+  if (mode === 'training'){ const dx = P.pos.x - TR.x, dz = P.pos.z - TR.z, d = Math.hypot(dx,dz); if (d > 13){ P.pos.x = TR.x + dx/d*13; P.pos.z = TR.z + dz/d*13; } }
   P.pos.y = landH(P.pos.x, P.pos.z);
-  P.eye = lerp(P.eye, W.praying ? 1.0 : 1.6, clamp(dt*6,0,1));
-  if (mode === 'battle' && B.state !== 'rise' && B.state !== 'done'){ const dz = P.pos.z - oldZ; if (dz > 0) P.cor = clamp(P.cor + dz*1.2, 0, 100); }
+  P.eye = lerp(P.eye, W.praying || W.actT > 0 ? 1.0 : 1.6, clamp(dt*6,0,1));
 
   W.cool = Math.max(0, W.cool - dt); W.comboT = Math.max(0, W.comboT - dt);
   if (W.buffer){ W.buffer.t -= dt; if (W.cool <= 0){ const h = W.buffer.heavy; W.buffer = null; doSwing(h); } else if (W.buffer.t <= 0) W.buffer = null; }
   if (W.atkHeld) W.atkT += dt;
   if (W.pendingHit > 0){ W.pendingHit -= dt; if (W.pendingHit <= 0) applySwing(); }
   if (W.swingT > 0){ W.swingT += dt; if (W.swingT > (W.heavy ? .32 : .22)) W.swingT = 0; }
-  if (!F.stuck && gt - W.lastAtk > 1 && W.dashT <= 0) F.v = Math.max(0, F.v - D_().rec*dt);
-  if (F.stuck){ F.heartT -= dt; if (F.heartT <= 0){ sfx.heart(); F.heartT = 1.1; } }
+}
+function doAction(a){
+  if (a.id === 'revive') reviveAlly(a.a);
+  else if (a.id === 'jar') takeJar();
+  else if (a.id === 'cistern') drawWater(false);
+  else if (a.id === 'well') drawWater(true);
 }
 function fpCamera(){
-  const tr = F.stuck ? .006 : (F.v > 70 ? .003 : 0);
-  const bob = Math.sin(gt*9)*.03*Math.min(1, P.vel.length()/4) + (F.v > 60 ? Math.sin(gt*3)*.015 : 0);
+  const bob = Math.sin(gt*9)*.03*Math.min(1, P.vel.length()/4);
   camera.position.set(P.pos.x, P.pos.y + P.eye + bob, P.pos.z);
-  camera.rotation.set(P.pitch + (Math.random()-.5)*shake*.04 + Math.sin(gt*17)*tr, P.yaw + (Math.random()-.5)*shake*.04 + Math.sin(gt*13)*tr, 0);
+  camera.rotation.set(P.pitch + (Math.random()-.5)*shake*.04, P.yaw + (Math.random()-.5)*shake*.04, 0);
 }
 function animateViewmodel(){
   let rx = -.25, rz = -.35, px = .34, py = -.36;
-  if (W.atkHeld && W.atkT > .15 && !F.stuck){ const k = clamp(W.atkT/.45,0,1); rx = -.25 - .9*k; rz = -.35 - .6*k; py = -.36 + .12*k; }
-  if (W.swingT > 0){ const dur = W.heavy ? .32 : .22, k = clamp(W.swingT/dur,0,1), s = Math.sin(k*PI); rx = -.25 - 1.1*s + 1.4*k; rz = (W.combo === 2 ? .35 - 1.6*k : -.35 + 1.6*k); px = W.combo === 2 ? .0 + .34*k : .34 - .35*k; }
-  if (gt - W.parryT < .25){ rz = -1.4; rx = -.1; px = .12; py = -.2; }
-  if (F.stuck){ px += Math.sin(gt*30)*.004; py += Math.cos(gt*27)*.004; }
+  if (W.atkHeld && W.atkT > .15){ const k = clamp(W.atkT/.45,0,1); rx = -.25 - .9*k; rz = -.35 - .6*k; py = -.36 + .12*k; }
+  if (W.swingT > 0){ const dur = W.heavy ? .32 : .22, k = clamp(W.swingT/dur,0,1), s = Math.sin(k*PI); rx = -.25 - 1.1*s + 1.4*k; rz = (W.combo === 2 ? .35 - 1.6*k : -.35 + 1.6*k); px = W.combo === 2 ? .34*k : .34 - .35*k; }
+  if (gt - W.parryT < .25 && W.carry){ rz = -1.4; rx = -.1; px = .12; py = -.2; }
   swordPivot.rotation.set(rx, 0, rz); swordPivot.position.set(px, py, -.55);
+  shieldPivot.visible = !W.carry; jarVM.visible = W.carry;
+  const up = W.shield ? 1 : 0;
+  shieldPivot.position.lerp(tmp1.set(up ? -.2 : -.46, up ? -.24 : -.42, -.6), .3);
+  shieldPivot.rotation.y += ((up ? 0 : .5) - shieldPivot.rotation.y)*.3;
+  waterVM.visible = W.carry && W.water > 0; waterVM.position.y = .05 + .28*W.water/100;
+  jarVM.rotation.z = W.carry ? Math.sin(gt*2.2)*.04*Math.min(1, P.vel.length()/4) : 0;
 }
 
-// ================= Treino: o ritmo da espada =================
-const T = {score:0, stage:0, center:V(0,0,-70), objs:[], dummies:[], seq:[], seqI:0, lit:-1, litT:0, attacksLeft:0, defended:0, parried:0, dodged:0, endT:-1, enduranceT:0, instructor:null};
+// ================= Treino: os três e o cântaro =================
+const T = {score:0, stage:0, stT:0, objs:[], rings:[], ri:0, gates:[], gi:0, endT:-1, marks:0, waterLeft:0, revives:0, downs:0};
+T.onOrder = () => {};
+T.onRevive = () => { if (T.stage === 2){ T.score += 100; T.revives++; toast('Levantou o companheiro! +100', 1); } };
 T.onDefense = kind => {
-  if (T.stage !== 1) return;
-  T.defended++;
-  if (kind === 'parry'){ T.score += 150; T.parried++; toast('Aparou! +150', .9); }
-  else if (kind === 'dodge'){ T.score += 100; T.dodged++; toast('Desviou +100', .9); }
-  else toast('O bastão acertou Eleazar.', 1);
+  if (kind === 'parry'){ T.score += T.stage === 2 ? 50 : 40; toast(`Aparou! +${T.stage === 2 ? 50 : 40}`, .9); }
+  else if (kind === 'hit' && T.stage === 1) toast('A flecha sem ponta derramou água.', 1);
 };
-T.exhausted = () => { if (T.stage === 2){ T.score = Math.max(0, T.score - 100); toast('Sem fôlego! Respire entre os golpes. −100', 1.6); } };
-T.enemyDown = () => {};
-function clearTraining(){ T.objs.forEach(o => scene.remove(o)); T.objs = []; T.dummies = []; clearEnemies(); }
-function makeDummy(x, z){
+T.enemyDown = e => { if (T.stage === 2 && e.training){ T.score += 150; T.downs++; toast('O instrutor se rendeu. +150', 1); } };
+function clearTraining(){ T.objs.forEach(o => scene.remove(o)); T.objs = []; T.rings = []; T.gates = []; clearEnemies(); }
+function makeRing(x, z){
+  const r = new THREE.Mesh(new THREE.TorusGeometry(2.6, .09, 6, 32), new THREE.MeshBasicMaterial({color:0xecbd6a, transparent:true, opacity:.8}));
+  r.rotation.x = PI/2; r.position.set(x, landH(x,z)+.08, z); r.visible = false; scene.add(r); T.objs.push(r); return r;
+}
+function makeGate(x, z){
   const g = new THREE.Group(); g.position.set(x, landH(x,z), z); scene.add(g); T.objs.push(g);
-  { const post = cyl(.05,.05,1.6,0x5a3f27,5); post.position.y = .8; g.add(post); }
-  const m = mat(0xd9c27a, {emissive:0xffc15a, emissiveIntensity:0});
-  const body = cyl(.25,.3,.9,0,8,m); body.position.y = 1.2; g.add(body);
-  const head = sph(.18,0,m); head.position.y = 1.8; g.add(head);
-  g.lookAt(T.center.x, g.position.y, T.center.z);
-  return {g, mat:m};
+  for (const sx of [-1,1]){ const p = cyl(.06,.06,2,0x5a3f27,5); p.position.set(sx*1.3, 1, 0); g.add(p); }
+  const cloth = box(2.6,.25,.04,0xecbd6a); cloth.position.y = 1.9; g.add(cloth); g.userData.cloth = cloth;
+  return g;
 }
 function setupTraining(n){
-  T.stage = n; T.endT = -1; clearEnemies(); F.v = 0;
-  const c = T.center;
+  T.stage = n; T.endT = -1; T.stT = 0; clearEnemies();
+  W.carry = false; W.water = 0;
+  for (const a of allies) if (a.down) reviveAlly(a);
+  if (B.order !== 'follow') toggleOrder();
   if (n === 0){
-    setObj('Treino 1 de 3: a sequência', 'Acerte o boneco que brilhar com o golpe pedido: rápido, rápido, forte. A sequência completa acerta mais longe e mais forte.');
-    for (let i=0;i<3;i++){ const a = (i - 1)*.6; T.dummies.push(makeDummy(c.x + Math.sin(a)*3, c.z + Math.cos(a)*3)); }
-    T.seq = []; for (let r=0;r<4;r++) T.seq.push('rápido','rápido','forte');
-    T.seqI = 0; T.lit = -1; T.litT = .8;
+    setObj('Treino 1 de 3: ordens', 'Leve os dois até a marca dourada e, lá dentro, mande segurar (Q ou Ordem). Depois chame de volta com "Comigo".');
+    T.rings = [makeRing(TR.x - 8, TR.z + 6), makeRing(TR.x + 8, TR.z + 3), makeRing(TR.x, TR.z - 8)];
+    T.ri = 0; T.rings[0].visible = true; T.marks = 0;
   } else if (n === 1){
-    setObj('Treino 2 de 3: aparar e desviar', 'O instrutor ataca com um bastão. Botão direito (Aparar) no instante do golpe, ou Espaço (Desviar).');
-    T.attacksLeft = 8; T.defended = 0;
-    T.instructor = spawnEnemy('instrutor', c.x, c.z + 4, {state:'hold', cool:1.5});
+    setObj('Treino 2 de 3: o cântaro', 'Passe pelas quatro marcas com o cântaro cheio. Correr, desviar e ser atingido derramam água. Botão direito apara as flechas sem ponta.');
+    W.carry = true; W.water = 100;
+    T.gates = [[-8,-8],[8,-4],[-8,4],[8,9]].map(([x,z]) => makeGate(TR.x + x, TR.z + z)); T.gi = 0; T.limit = 45;
+    T.gates.forEach((g,i) => g.userData.cloth.material = cmat(i === 0 ? 0xecbd6a : 0x6d5a3a));
+    spawnEnemy('arqueiro', TR.x, TR.z + 13, {training:true, fixed:true, state:'advance', shootT:3, baseYaw:PI});
   } else {
-    setObj('Treino 3 de 3: o fôlego', 'Golpeie o poste por 40 s sem deixar o Cansaço chegar ao máximo. Respire entre as sequências.');
-    T.dummies.push(makeDummy(c.x, c.z + 2.2)); T.enduranceT = 40;
-  }
-}
-function trainingSwing(){
-  const c = T.center;
-  if (T.stage === 0 && T.lit >= 0){
-    const d = T.dummies[T.lit], p = d.g.position;
-    if (Math.hypot(p.x - P.pos.x, p.z - P.pos.z) < 3.3 && facing(p, 60)){
-      const want = T.seq[T.seqI], got = W.kind === 'quick' ? 'rápido' : 'forte';
-      if (want !== got){ sfx.block(); toast(`Agora é golpe ${want}.`, 1); return; }
-      sfx.hit(); burst(p.clone().setY(p.y+1.2), 0xd9c27a, 8, 2.4); T.score += 80; T.seqI++; d.mat.emissiveIntensity = 0; T.lit = -1; T.litT = .25;
-    }
-  } else if (T.stage === 2){
-    const d = T.dummies[0], p = d.g.position;
-    if (Math.hypot(p.x - P.pos.x, p.z - P.pos.z) < 3.3 && facing(p, 60)){ sfx.hit(); burst(p.clone().setY(p.y+1.2), 0xd9c27a, 4, 2); T.score += 10; }
+    setObj('Treino 3 de 3: os três juntos', 'Três instrutores atacam os seus companheiros. Proteja-os; se um cair, chegue perto e segure E (Ação) para levantá-lo.');
+    T.downs = 0; T.revives = 0;
+    for (const [x,z] of [[-6,8],[6,8],[0,11]]) spawnEnemy('instrutor', TR.x + x, TR.z + z, {training:true, state:'watch'});
   }
 }
 function updateTraining(dt){
-  if (T.stage === 0){
-    T.litT -= dt;
-    if (T.lit >= 0 && T.litT <= 0){ toast('Muito devagar!', .7); T.dummies[T.lit].mat.emissiveIntensity = 0; T.lit = -1; T.seqI++; T.litT = .4; }
-    else if (T.lit < 0 && T.litT <= 0){
-      if (T.seqI < T.seq.length){ T.lit = Math.floor(Math.random()*3); T.dummies[T.lit].mat.emissiveIntensity = T.seq[T.seqI] === 'forte' ? 1.4 : .8; T.litT = dk === 'valente' ? 2 : 2.8; toast(`Golpe ${T.seq[T.seqI]}`, 1.2); }
-      else if (T.endT < 0) T.endT = 1;
+  T.stT += dt;
+  if (T.stage === 0 && T.ri < T.rings.length){
+    const r = T.rings[T.ri], c = r.position; r.material.opacity = .55 + .3*Math.sin(gt*4);
+    const inside = Math.hypot(P.pos.x - c.x, P.pos.z - c.z) < 3 && allies.every(a => Math.hypot(a.m.root.position.x - c.x, a.m.root.position.z - c.z) < 3.6);
+    if (inside && B.order === 'hold'){
+      const pts = 200 + Math.max(0, Math.round(100 - T.stT*4)); T.score += pts; T.marks++; toast(`Seguraram a marca! +${pts}`, 1.2);
+      r.visible = false; T.ri++; T.stT = 0;
+      if (T.ri < T.rings.length) T.rings[T.ri].visible = true; else T.endT = 1;
     }
   } else if (T.stage === 1){
-    if (T.attacksLeft <= 0 && T.defended >= 8 && T.endT < 0) T.endT = 1.2;
+    const lim = Math.max(0, T.limit - T.stT);
+    setObj('Treino 2 de 3: o cântaro', `Marca ${Math.min(T.gi + 1, 4)} de 4 · ${Math.ceil(lim)} s · água ${Math.round(W.water)}%. Correr, desviar e ser atingido derramam água.`);
+    const g = T.gates[T.gi];
+    if (g && Math.hypot(P.pos.x - g.position.x, P.pos.z - g.position.z) < 1.8){
+      T.gi++; toast(`Marca ${T.gi} de 4`, .8); sfx.hit();
+      T.gates.forEach((q,i) => q.userData.cloth.material = cmat(i === T.gi ? 0xecbd6a : i < T.gi ? 0x93a35a : 0x6d5a3a));
+    }
+    if ((T.gi >= 4 || lim <= 0 || W.water <= 0) && T.endT < 0){
+      const pts = T.gi*60 + Math.round(W.water*6); T.score += pts; T.waterLeft = Math.round(W.water);
+      toast(`Percurso: ${T.gi} de 4 marcas, ${Math.round(W.water)}% de água. +${pts}`, 2); T.endT = 1.2; clearEnemies();
+    }
   } else if (T.stage === 2){
-    T.enduranceT -= dt; setObj('Treino 3 de 3: o fôlego', `Faltam ${Math.ceil(Math.max(0,T.enduranceT))} s. Golpeie sem deixar o Cansaço chegar ao máximo.`);
-    if (T.enduranceT <= 0 && T.endT < 0) T.endT = .8;
+    const left = enemies.filter(e => e.training && alive(e)).length;
+    if ((left === 0 || T.stT > 60) && T.endT < 0){ const pts = Math.max(0, Math.round(300 - T.stT*5)); T.score += pts; if (pts) toast(`Tempo +${pts}`, 1); T.endT = 1.2; }
   }
   if (T.endT > 0){ T.endT -= dt; if (T.endT <= 0){ if (T.stage < 2) setupTraining(T.stage + 1); else finishTraining(); } }
 }
 function startTraining(){
-  setMood('training'); clearTraining(); clearAllies(); mode = 'training'; T.score = 0; F.stuck = false; F.v = 0;
-  P.pos.set(T.center.x, 0, T.center.z); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0); P.cor = 70; P.vida = 100;
+  setMood('training'); clearTraining(); mode = 'training'; T.score = 0; B.order = 'follow';
+  P.pos.set(TR.x, 0, TR.z - 4); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0); P.cor = 70; P.vida = 100;
+  W.hasJar = false; W.carry = false; spawnAllies(); placeDavid(true); placeJarProp(true);
   setupTraining(0); showHUD();
 }
 function finishTraining(){
   const medal = T.score >= 2000 ? 'ouro' : T.score >= 1300 ? 'prata' : 'bronze';
   B.medal = medal; B.trainScore = T.score; B.corStart = ({bronze:55, prata:68, ouro:80})[medal] + (dk === 'pastor' ? 10 : 0);
-  mode = 'result'; hideHUD(); clearTraining(); F.v = 0;
+  mode = 'result'; hideHUD(); clearTraining(); clearAllies(); W.carry = false;
   const names = {ouro:'Ouro', prata:'Prata', bronze:'Bronze'};
   showOverlay(`
     <div class="eyebrow">Treino concluído · ${D_().name}</div>
-    <h2>O ritmo da espada</h2>
+    <h2>Os três e o cântaro</h2>
     <div class="medal ${medal}">Medalha de ${names[medal]}</div>
     <dl class="tally">
-      <dt>Ataques aparados</dt><dd>${T.parried} de 8</dd>
-      <dt>Ataques desviados</dt><dd>${T.dodged} de 8</dd>
-      <dt>Coragem inicial na batalha</dt><dd>${B.corStart}</dd>
+      <dt>Marcas seguradas</dt><dd>${T.marks} de 3</dd>
+      <dt>Água no fim do percurso</dt><dd>${T.waterLeft}%</dd>
+      <dt>Companheiros levantados</dt><dd>${T.revives}</dd>
+      <dt>Coragem inicial na missão</dt><dd>${B.corStart}</dd>
       <dt class="total">Pontos</dt><dd class="total">${T.score}</dd>
     </dl>
-    ${verseHTML('v10a')}
+    ${verseHTML('v13')}
     <div class="row">
-      <button class="btn primary" data-act="next">${B.kind === 'full' ? 'Continuar' : 'Seguir para a batalha'}</button>
+      <button class="btn primary" data-act="next">${B.kind === 'full' ? 'Continuar' : 'Seguir para a missão'}</button>
       <button class="btn" data-act="again">Repetir o treino</button>
       <button class="btn" data-act="menu">Menu</button>
     </div>`, {
-    next: () => { hideOverlay(); tryLock(); startBattle(0); },
+    next: () => { hideOverlay(); tryLock(); desireCine(() => startBattle('choice')); },
     again: () => { hideOverlay(); tryLock(); startTraining(); },
     menu: showMenu,
   });
 }
 
-// ================= Batalha =================
-function placeSoldiers(){
-  for (const s of soldiers) scene.remove(s.root); soldiers = [];
-  for (let i=0;i<14;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52][i%3]}); addSpear(m); const x = rand(-8,8), z = rand(-36,-24);
-    m.root.position.set(x, landH(x,z), z); m.root.rotation.y = rand(-.5,.5); scene.add(m.root); soldiers.push(Object.assign(m, {tx:x, tz:z, bend:0})); }
+// ================= A missão =================
+function populateCamp(){
+  const k = D_().camp;
+  for (const f of fires){ if (f.z < CAMP.z0 - 2) continue; const n = Math.round(2*k + rand(-.4,.4));
+    for (let i=0;i<n;i++){ const a = rand(0, PI*2), x = f.x + Math.cos(a)*2.2, z = f.z + Math.sin(a)*2.2; spawnEnemy(Math.random() < .2 ? 'tocha' : 'lanceiro', x, z, {state:'sleep'}); } }
+  for (const p of POSTS) spawnEnemy('sentinela', p.x + 1.5, p.z - 1.5, {baseYaw:PI + rand(-.6,.6)});
+  for (const x of k >= 1 ? [-9, 9] : [0]) spawnEnemy('sentinela', x, CAMP.z0 - 3, {baseYaw:PI});
+  for (let i=0;i<Math.round(3*k);i++) spawnEnemy('tocha', rand(-14,14), rand(CAMP.z0 + 6, CAMP.z1 - 6), {patrol:true});
+  // O desvio pelas colinas: poucas patrulhas
+  spawnEnemy('lanceiro', 36, 2, {patrol:true}); spawnEnemy('lanceiro', -37, 18, {patrol:true});
+  if (k >= 1) spawnEnemy('tocha', 38, 22, {patrol:true});
+  // A guarnição de Belém, na porta
+  for (let i=0;i<Math.round(4*k);i++) spawnEnemy('guarda', -6 + i*12/Math.max(1, Math.round(4*k) - 1), GATE_Z - 3 - rand(0,1.5), {wakeAt:999});
+  for (const sx of [-1,1]) spawnEnemy('arqueiro', sx*5, GATE_Z - 1.4, {fixed:true, wakeAt:999});
+  spawnEnemy('tocha', 1, GATE_Z - 6, {wakeAt:999});
 }
-function moveSoldiers(dt, speed){
-  for (const s of soldiers){ const p = s.root.position, dx = s.tx - p.x, dz = s.tz - p.z, d = Math.hypot(dx,dz);
-    if (d > .5){ p.x += dx/d*speed*dt; p.z += dz/d*speed*dt; s.root.rotation.y = Math.atan2(dx,dz); s.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*10 + i*PI)*.6); }
-    else { s.legs.forEach(l => l.rotation.x = 0); s.root.rotation.x = s.bend*Math.abs(Math.sin(gt*1.5 + p.x)); }
-    p.y = landH(p.x, p.z); }
-}
-function lineEnemies(n){
-  const c = D_().count[n-1], z0 = LINES[n-1] + 8, L = [];
-  if (n === 1){ for (let i=0;i<c;i++) L.push(['lanceiro', -7 + (i%6)*2.8 + rand(-.5,.5), z0 + Math.floor(i/6)*2.5]); }
-  if (n === 2){ const f = Math.round(c*.6); for (let i=0;i<f;i++) L.push(['falange', -6 + (i%6)*2.2, z0 + Math.floor(i/6)*1.8]); for (let i=f;i<c;i++) L.push([i%2 ? 'arqueiro' : 'lanceiro', rand(-7,7), z0 + 6 + rand(0,3)]); }
-  if (n === 3){ L.push(['porta', 0, z0 + 4]); const f = Math.round(c*.35), a = Math.round(c*.2);
-    for (let i=0;i<f;i++) L.push(['falange', -6 + (i%6)*2.2, z0]); for (let i=0;i<a;i++) L.push(['arqueiro', rand(-7,7), z0 + 7]); for (let i=f+a+1;i<c;i++) L.push(['lanceiro', rand(-7,7), z0 + 2 + rand(0,3)]); }
-  return L;
-}
-function spawnLine(n){
-  B.line = n; B.state = 'line'; B.forceEngage = false;
-  for (const [t,x,z] of lineEnemies(n)){ const cx = -3*Math.sin(z*.03); spawnEnemy(t, x + cx, z); }
-  const txt = {1:'Lanceiros filisteus em linha. Use a sequência rápido, rápido, forte.', 2:'Uma falange: escudos lado a lado. Golpe forte ou a sequência completa abre brecha; ou ataque pelo lado.', 3:'A última linha, com o porta-estandarte. Derrube-o e os filisteus em volta perdem o ânimo.'};
-  setObj(`Avance · Linha ${n} de 3`, txt[n]);
-}
-function plantBanner(z){
-  const g = new THREE.Group(); const cx = -3*Math.sin(z*.03); g.position.set(cx + 5, landH(cx+5, z), z); scene.add(g); banners.push(g);
-  { const pole = cyl(.04,.04,3.4,0x4e3620,5); pole.position.y = 1.7; g.add(pole); }
-  const cloth = box(.9,.6,.02,0x3d5a8a); cloth.position.set(.45,3.1,0); g.add(cloth);
-  B.bannerZ = z; toast('O estandarte de Israel foi plantado.', 1.8); sfx.horn();
-}
-function clearBanners(){ for (const b of banners) scene.remove(b); banners.length = 0; }
-function startBattle(fromLine){
-  setMood('duel'); mode = 'battle'; modal = false; clearEnemies(); clearTraining();
-  P.vida = 100; W.atkHeld = false;
-  if (fromLine === 0){
-    Object.assign(B, {rose:false, retreated:false, hornUsed:false, deaths:0, repelled:0, parries:0, time:0, bannerZ:-999, stuckAtEnd:false, riseT:0, forceEngage:false});
-    F.v = 0; F.stuck = false; clearAllies(); clearBanners();
-    P.cor = B.corStart; P.pos.set(0, 0, -30); P.yaw = PI; P.pitch = -.05; P.vel.set(0,0,0);
-    placeSoldiers(); soldiers.forEach(s => { s.tx = rand(-8,8); s.tz = rand(-50,-42); });
-    B.state = 'rise'; B.line = 0; spawnLine(1); B.state = 'rise';
-    setObj('Os homens de Israel sobem', 'Os soldados recuam colina acima. Alguém precisa descer ao vale.');
-    sfx.shout(); toast('"Quem vai descer?"', 3);
+function startBattle(at){
+  setMood(at === 'choice' ? 'quiet' : 'duel'); mode = 'battle'; modal = false; clearEnemies(); clearTraining();
+  P.vida = 100; W.atkHeld = false; W.carry = false; W.water = 0; W.actT = 0;
+  if (at === 'choice'){
+    Object.assign(B, {alarm:0, route:null, fieldWell:false, together:false, waterEnd:0, deaths:0, repelled:0, parries:0, time:0, warnedHills:false, warnedWell:false, choiceT:0, order:'follow', checkpoint:'cave', crossed:false, choiceHint:false});
+    P.cor = B.corStart; W.hasJar = false; placeJarProp(true); placeDavid(true);
+    P.pos.set(1, 0, -66.5); P.yaw = 0; P.pitch = -.08; P.vel.set(0,0,0);
+    B.state = 'choice';
+    setObj('Davi não deu ordem', 'Ninguém mandou. Se quiser atender ao desejo de Davi, pegue o cântaro vazio na entrada da caverna (segure E).');
   } else {
-    const z = fromLine === 1 ? -8 : LINES[fromLine - 2] + 2;
-    P.pos.set(-3*Math.sin(z*.03), 0, z); P.yaw = PI; P.vel.set(0,0,0);
-    F.v = F.stuck ? 100 : Math.min(F.v, 40);
-    spawnLine(fromLine); B.forceEngage = true;
+    W.hasJar = true; placeJarProp(false); B.state = 'out'; B.order = 'follow';
+    const spot = {cave:V(0,0,-62), field:V(0,0,44), cistern:V(CISTERN.x - 2, 0, CISTERN.z - 5)}[at];
+    P.pos.set(spot.x, 0, spot.z); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0);
+    B.alarm = at === 'cave' ? B.alarm*.5 : Math.max(B.alarm, 40);
+    setObj(at === 'cistern' ? 'A cisterna junto à porta' : 'Romper pelo arraial', at === 'cistern' ? 'Tire a água de novo e volte para Adulão.' : 'A cisterna de Belém fica junto à porta, do outro lado do vale.');
   }
+  populateCamp(); spawnAllies();
   showHUD();
+}
+function takeJar(){
+  W.hasJar = true; placeJarProp(false); B.state = 'out'; setMood('duel'); sfx.shout();
+  toast('"Vamos." Os três saem da caverna.', 2);
+  setObj('Romper pelo arraial', 'A cisterna de Belém fica junto à porta, do outro lado do vale. O caminho do relato passa pelo meio do arraial filisteu. Q: ordens aos companheiros.');
+}
+function askWell(){
+  modal = true; unlock(); attackUp(true); W.actT = 0;
+  showOverlay(`
+    <div class="eyebrow">O poço no campo</div>
+    <h2>Tirar água deste poço?</h2>
+    <p class="lede">Aqui não há guardas, e a água é a mesma para matar a sede. Mas Davi falou de um lugar:</p>
+    ${verseHTML('vgate')}
+    <div class="row"><button class="btn" data-act="take">Tirar água daqui</button><button class="btn primary" data-act="go">Seguir para a cisterna</button></div>
+    <p class="note">Tirar água deste poço faz perder o item de Fidelidade "Da cisterna junto à porta".</p>`, {
+    take: () => { B.warnedWell = true; hideOverlay(); modal = false; tryLock(); },
+    go: () => { B.warnedWell = true; hideOverlay(); modal = false; tryLock(); toast('A cisterna fica junto à porta de Belém.', 1.8); },
+  });
+}
+function drawWater(field){
+  W.carry = true; W.water = 100; B.fieldWell = field; B.state = 'back'; B.checkpoint = field ? 'field' : 'cistern';
+  B.alarm = Math.max(B.alarm, 40); B.spawnT = 2; sfx.water();
+  toast(field ? 'O cântaro está cheio.' : 'Água da cisterna de Belém!', 1.8);
+  setObj('A volta com a água', 'Leve a água a Davi, na caverna de Adulão. Sem escudo: golpes, correria e desvios derramam água. Os companheiros protegem você.');
 }
 function updateBattle(dt){
   if (B.state === 'done') return;
-  B.time += dt; B.warnT = Math.max(0, B.warnT - dt);
-  moveSoldiers(dt, 3.5); updateAllies(dt);
-  if (B.state === 'rise'){
-    B.riseT += dt;
-    if (P.pos.z > -12){ B.rose = true; P.cor = 100; toast('Eleazar se levantou.', 1.6); B.state = 'line'; B.forceEngage = false; setObj('Avance · Linha 1 de 3', 'Lanceiros filisteus em linha. Use a sequência rápido, rápido, forte.'); }
-    else if (B.riseT > 20){ B.state = 'line'; B.forceEngage = true; toast('Os filisteus sobem a colina.', 2); setObj('Avance · Linha 1 de 3', 'Os filisteus vieram até você. Lute.'); }
+  B.time += dt; updateAllies(dt);
+  // Luta dentro do arraial faz barulho: o alarme sobe devagar.
+  if (B.noise){ B.alarm = clamp(B.alarm + 1.5*D_().alarm*dt, 0, 100); B.noise = false; }
+  const x = P.pos.x, z = P.pos.z;
+  if (B.state === 'choice'){
+    B.choiceT += dt;
+    if (B.choiceT > 25 && !B.choiceHint){ B.choiceHint = true; toast('Os dois companheiros pegam as armas e olham para você.', 3); }
     return;
   }
-  // recuar para trás do estandarte
-  if (B.bannerZ > -999 && P.pos.z < B.bannerZ - 4){ P.cor = clamp(P.cor - 4*dt, 0, 100); if (!B.retreated){ B.retreated = true; toast('Você recuou para trás do estandarte.', 2); } }
-  const near = enemies.filter(e => alive(e) && e.root.position.distanceTo(P.pos) < 4).length;
-  if (near >= 3) P.cor = clamp(P.cor - 3*dt, 0, 100);
-  if (B.state === 'line'){
-    if (!enemies.some(alive)){ plantBanner(LINES[B.line - 1]); if (B.line < 3){ B.state = 'inter'; B.interT = 4; setObj('Avance', 'A linha caiu. Siga vale abaixo até a próxima.'); } else startFinal(); }
-  } else if (B.state === 'inter'){
-    B.interT -= dt; if (B.interT <= 0) spawnLine(B.line + 1);
-  } else if (B.state === 'final'){
+  if (B.state === 'out'){
+    if (!B.warnedHills && Math.abs(x) > CAMP.hw + 8 && z > CAMP.z0 - 6 && z < CAMP.z1){ B.warnedHills = true; toast('O desvio pelas colinas é mais seguro, mas o relato diz: romperam pelo arraial.', 3.2); }
+    if (!B.crossed && z > 5){ B.crossed = true; B.route = Math.abs(x) < CAMP.hw + 4 ? 'camp' : 'hills'; if (B.route === 'camp') toast('Pelo meio do arraial!', 1.4); }
+    if (z > 42 && B.checkpoint === 'cave') B.checkpoint = 'field';
+    // A guarnição da porta acorda quando os três chegam perto.
+    if (Math.hypot(x - CISTERN.x, z - CISTERN.z) < 16) for (const e of enemies) if (e.state === 'watch' && e.root.position.z > GATE_Z - 10) wake(e, false);
+  }
+  if (B.state === 'back'){
     B.spawnT -= dt;
-    if (B.spawnT <= 0 && enemies.filter(alive).length < 10){ const r = Math.random(), z = P.pos.z + rand(18,26), x = rand(-7,7) - 3*Math.sin(z*.03);
-      spawnEnemy(r < .45 ? 'lanceiro' : r < .75 ? 'falange' : 'arqueiro', x, z).state = 'advance'; B.spawnT = 2; }
-    if (P.vida > 0 && P.pos.z >= B.bannerZ - 4) B.hold += dt * (1 + clamp((P.pos.z - LINES[2]) / 30, 0, 1));
-    if (B.hold >= D_().hold){ if (!F.stuck) handSticks(); B.state = 'done'; setTimeout(livramento, 2500); }
+    const awake = enemies.filter(e => alive(e) && e.state !== 'sleep' && e.state !== 'watch').length;
+    if (B.spawnT <= 0 && z > CAMP.z0 - 10 && awake < Math.round(5*D_().camp) && B.alarm > 30){
+      const t = tents[Math.floor(Math.random()*tents.length)];
+      if (Math.hypot(t.x - x, t.z - z) < 34 && Math.hypot(t.x - x, t.z - z) > 8) spawnEnemy(Math.random() < .3 ? 'tocha' : 'lanceiro', t.x, t.z, {state:'advance'});
+      B.spawnT = 3.5 / D_().camp;
+    }
+    if (z < CAVE_Z + 1.5 && Math.abs(x) < 9) deliver();
   }
 }
-function startFinal(){
-  B.state = 'final'; B.hold = 0; B.spawnT = 1;
-  setObj('Resista até o fim', F.stuck ? 'A mão está pegada à espada. Continue lutando: o marcador avança enquanto você fica de pé e não recua.' : 'Uma tropa grande desce o vale. O cansaço vai chegar ao máximo: continue lutando.');
-  toast('Resista!', 2); sfx.shout();
+function emptyJar(){
+  if (modal) return;
+  modal = true; attackUp(true); setMood('quiet');
+  const at = D_().toStart ? 'cave' : B.checkpoint;
+  showOverlay(`
+    <div class="eyebrow">A volta · ${D_().name}</div>
+    <h2>O cântaro ficou vazio</h2>
+    <p class="lede">${at === 'cave' ? 'Vocês voltam ao começo do vale para tentar de novo.' : 'Vocês voltam para tirar água de novo.'}</p>
+    ${verseHTML('v16a')}
+    <div class="row"><button class="btn primary" data-act="retry">Tentar de novo</button><button class="btn" data-act="menu">Menu</button></div>`, {
+    retry: () => { hideOverlay(); tryLock(); startBattle(at === 'field' && !B.fieldWell ? 'cistern' : at); },
+    menu: showMenu,
+  });
 }
 function fall(reason){
   if (mode !== 'battle' || modal) return;
   modal = true; B.deaths++; attackUp(true); setMood('quiet');
-  const line = D_().toLine1 ? 1 : Math.max(1, Math.min(3, B.line || 1)), final = B.state === 'final' && !D_().toLine1;
+  const at = D_().toStart ? 'cave' : B.state === 'back' ? (B.fieldWell ? 'field' : 'cistern') : B.checkpoint;
   setTimeout(() => {
     hideHUD();
     showOverlay(`
-      <div class="eyebrow">Batalha · ${D_().name}</div>
+      <div class="eyebrow">Missão · ${D_().name}</div>
       <h2>${reason}</h2>
-      <p class="lede">${final ? 'Você recomeça a resistência final do zero.' : `Você recomeça na linha ${line}.`} ${F.stuck ? 'A mão continua pegada à espada.' : ''}</p>
-      ${verseHTML('v10a')}
+      <p class="lede">${at === 'cave' ? 'Vocês recomeçam na saída da caverna, com o cântaro vazio.' : at === 'field' ? 'Vocês recomeçam depois do arraial, com o cântaro vazio.' : 'Vocês recomeçam perto da cisterna, com o cântaro vazio.'}</p>
+      ${verseHTML('v17')}
       <div class="row"><button class="btn primary" data-act="retry">Tentar de novo</button><button class="btn" data-act="menu">Menu</button></div>`, {
-      retry: () => { hideOverlay(); tryLock(); if (final){ startBattle(3); clearEnemies(); plantBannerIfNeeded(); startFinal(); } else startBattle(line); },
+      retry: () => { hideOverlay(); tryLock(); startBattle(at); },
       menu: showMenu,
     });
   }, 700);
 }
-function plantBannerIfNeeded(){ if (B.bannerZ < LINES[2]) B.bannerZ = LINES[2]; }
-function livramento(){
-  setMood('victory'); sfx.rumble(); B.stuckAtEnd = F.stuck;
-  for (const e of enemies){ if (e.state !== 'gone'){ e.state = 'flee'; e.panic = true; } }
-  hideHUD(); attackUp(true);
-  soldiers.forEach((s,i) => { const a = i/soldiers.length*PI*2; s.root.position.set(P.pos.x + Math.sin(a)*22, 0, P.pos.z - 24 + Math.cos(a)*4); s.tx = P.pos.x + Math.sin(a)*rand(3,9); s.tz = P.pos.z + Math.cos(a)*rand(3,9); s.bend = .5; });
+let cineMen = [];
+function clearCineMen(){ cineMen.forEach(m => scene.remove(m.root)); cineMen = []; }
+function deliver(){
+  B.state = 'done'; B.waterEnd = W.water;
+  B.together = allies.every(a => !a.down && a.m.root.position.distanceTo(P.pos) < 20);
+  if (!B.together) toast('Faltou um dos três.', 2);
+  setMood('victory'); hideHUD(); attackUp(true); W.carry = false;
+  for (const e of enemies) if (alive(e) && e.state !== 'sleep'){ e.state = 'flee'; }
+  // Os três diante de Davi
+  clearCineMen();
+  const hero = buildMan({robe:0x8a7a52}); hero.root.position.set(.4, landH(.4,-70.5), -70.5); hero.root.rotation.y = PI; scene.add(hero.root); cineMen.push(hero);
+  allies.forEach((a,i) => { if (a.down){ a.down = false; a.m.root.rotation.x = 0; } const px = (i ? 2 : -1.4), pz = -69.6; a.m.root.position.set(px, landH(px,pz), pz); a.m.root.rotation.y = PI; });
+  placeDavid(false); david.root.rotation.y = 0; davidJar.visible = true; davidJar.rotation.set(0,0,0);
+  const dp = david.root.position;
+  let poured = false;
   runCine([
-    {v:'v10b', dur:6, update: dt => moveSoldiers(dt, 3), cam: p => camLook(tmp1.set(P.pos.x + Math.sin(p)*9, P.pos.y + 3 + p*3, P.pos.z - 9 + p*2), tmp2.set(P.pos.x, P.pos.y + 1, P.pos.z))},
-    {v:'v10a', dur:5, update: dt => moveSoldiers(dt, 3), cam: p => camLook(tmp1.set(P.pos.x + 1.2, P.pos.y + 1.4, P.pos.z + 1.5 - p*.5), tmp2.set(P.pos.x + .3, P.pos.y + 1.1, P.pos.z))},
-  ], showResults);
+    {v:'v16a', dur:6, cam: p => camLook(tmp1.set(6 - p*2, dp.y + 2.4, -61 - p*2), tmp2.set(0, dp.y + 1.2, -71.5))},
+    {v:'v16b', dur:6, start: () => { sfx.pour(); },
+     update: (dt, p) => { david.armR.rotation.x = -Math.min(1, p*3)*1.3; davidJar.rotation.z = Math.min(1, p*2.5)*1.9;
+       if (p > .25 && p < .9 && Math.random() < .7){ davidJar.getWorldPosition(tmp1); burst(tmp1.add(V(0,.1,0)), 0x6aa6cf, 2, .5, .45, .7); } poured = true; },
+     cam: p => camLook(tmp1.set(dp.x + 2.6, dp.y + 1.6, dp.z + 3.2 - p*.6), tmp2.set(dp.x, dp.y + 1.1, dp.z))},
+    {v:'v17', dur:7, cam: p => camLook(tmp1.set(dp.x - 1.5 + p*3, dp.y + 1.7 + p, dp.z + 4 + p*3), tmp2.set(dp.x, dp.y + 1.2, dp.z + 1.5))},
+    {v:'v17b', dur:5, cam: p => camLook(tmp1.set(-4 + p*2, dp.y + 3 + p*2, -60 + p*3), tmp2.set(0, 3, 80))},
+  ], () => { clearCineMen(); showResults(); });
 }
 function showResults(){
   mode = 'result';
   const fid = [
-    {ok: B.rose, t:'Levantou-se: desceu ao vale a tempo', r:'23:10'},
-    {ok: !B.retreated, t:'Não recuou para trás de um estandarte', r:'23:10'},
-    {ok: B.stuckAtEnd, t:'Lutou até a mão ficar pegada à espada e continuou', r:'23:10'},
-    {ok: !B.hornUsed, t:'Lutou sem esperar o povo', r:'23:10'},
+    {ok: B.route === 'camp', t:'Romperam pelo arraial dos filisteus', r:'23:16'},
+    {ok: !B.fieldWell, t:'Tiraram água da cisterna junto à porta', r:'23:16'},
+    {ok: B.together, t:'Os três voltaram juntos', r:'23:17'},
+    {ok: B.waterEnd >= 60, t:`A água chegou a Davi (${Math.round(B.waterEnd)}%)`, r:'23:16'},
   ];
   const nf = fid.filter(f => f.ok).length;
-  const advance = 3*300 + B.repelled*40 + B.parries*30 + Math.max(0, Math.round(600 - B.time*2));
+  const mission = Math.round(B.waterEnd*10) + B.repelled*30 + B.parries*25 + Math.max(0, Math.round(300 - B.alarm*3)) + Math.max(0, Math.round(600 - B.time));
   const fidPts = nf*250, train = B.medal ? B.trainScore : 0;
-  const total = Math.round((train + advance + fidPts) * D_().mult), stars = 1 + (nf >= 2 ? 1 : 0) + (nf === 4 ? 1 : 0);
-  const win = saveWin(3, stars, total);
+  const total = Math.round((train + mission + fidPts) * D_().mult), stars = 1 + (nf >= 2 ? 1 : 0) + (nf === 4 ? 1 : 0);
+  const win = saveWin(4, stars, total);
   showOverlay(`
-    <div class="eyebrow">Pas-Damim · ${D_().name}</div>
-    <h2>A mão pegada à espada</h2>
+    <div class="eyebrow">Adulão · ${D_().name}</div>
+    <h2>Derramou-a perante o Senhor</h2>
     <div class="stars" aria-label="${stars} de 3 estrelas">${'★'.repeat(stars)}<i>${'★'.repeat(3-stars)}</i></div>
     <dl class="tally">
       <dt>Treino ${B.medal ? '(' + B.medal + ')' : '(não jogado)'}</dt><dd>${train}</dd>
-      <dt>Avanço · 3 linhas · ${B.repelled} afastados · ${B.parries} aparadas · ${Math.round(B.time)} s</dt><dd>${advance}</dd>
+      <dt>Missão · água ${Math.round(B.waterEnd)}% · ${B.repelled} afastados · alarme ${Math.round(B.alarm)}% · ${Math.round(B.time)} s</dt><dd>${mission}</dd>
       <dt>Fidelidade ao relato · ${nf} de 4</dt><dd>${fidPts}</dd>
       <dt>Multiplicador ${D_().name}</dt><dd>×${String(D_().mult).replace('.',',')}</dd>
       <dt class="total">Total</dt><dd class="total">${total}</dd>
     </dl>
     <ul class="checks">${fid.map(f => `<li><span class="${f.ok?'ok':'no'}">${f.ok?'✓':'✗'}</span><span>${f.t} <small>2 Sm ${f.r}</small></span></li>`).join('')}</ul>
-    ${verseHTML('v10b')}
+    ${verseHTML('v17')}
+    <p class="note">Os três não têm nome no texto ("três dos trinta cabeças"). Relato paralelo: 1 Crônicas 11:15-19.</p>
     ${nextPhaseHTML(win)}
-    <div class="row"><button class="btn primary" data-act="again">Jogar a fase de novo</button><button class="btn" data-act="battle">Repetir só a batalha</button><button class="btn" data-act="menu">Menu</button></div>`, {
+    <div class="row"><button class="btn primary" data-act="again">Jogar a fase de novo</button><button class="btn" data-act="battle">Repetir só a missão</button><button class="btn" data-act="menu">Menu</button></div>`, {
     again: startFull, battle: startBattleOnly, menu: showMenu,
   });
 }
@@ -1119,13 +1349,20 @@ function nextCineLine(){
 }
 function endCine(){ stopSpeak(); if (!cine) return; const f = cine.onEnd; cine = null; $('cine').hidden = true; VM.visible = true; if (f) f(); }
 function updateCine(dt){ cine.t += dt; const L = cine.lines[cine.i]; if (!L) return; const D = L.durEff || L.dur, p = clamp(cine.t / D, 0, 1); if (L.cam) L.cam(p); if (L.update) L.update(dt, p); if (cine.t >= D) nextCineLine(); }
+function walkMen(dt, tz){ for (const m of cineMen){ const p = m.root.position; if (p.z > tz){ p.z -= 2.4*dt; p.y = landH(p.x, p.z); m.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*8 + i*PI)*.5); } else m.legs.forEach(l => l.rotation.x = 0); } }
 function introCine(then){
-  setMood('cine'); mode = 'cine'; placeSoldiers(); clearEnemies();
-  soldiers.forEach((s,i) => { s.root.position.set(rand(-6,6), 0, rand(-4,4)); s.tx = s.root.position.x; s.tz = s.root.position.z; });
+  setMood('cine'); mode = 'cine'; clearEnemies(); clearAllies(); clearCineMen(); placeDavid(true); placeJarProp(true);
+  for (let i=0;i<3;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52][i]}); m.root.position.set(-1.5 + i*1.5, 0, -40 - i*1.2); m.root.rotation.y = PI; scene.add(m.root); cineMen.push(m); }
   runCine([
-    {v:'v8', dur:5.5, cam: p => camLook(tmp1.set(lerp(-26,-14,p), lerp(22,14,p), lerp(-30,-10,p)), tmp2.set(0, 2, 30))},
-    {v:'v1cr', dur:6, cam: p => camLook(tmp1.set(3, 3, lerp(-6,6,p)), tmp2.set(0, 3, 110))},
-    {v:'v9', dur:7, start: () => soldiers.forEach(s => { s.tx = rand(-8,8); s.tz = rand(-48,-38); }), update: dt => moveSoldiers(dt, 4), cam: p => camLook(tmp1.set(9, 4, lerp(2,-12,p)), tmp2.set(0, 2, -30))},
+    {v:'v13', dur:7, update: dt => walkMen(dt, -66), cam: p => camLook(tmp1.set(lerp(-9,-5,p), lerp(12,6,p), lerp(-36,-52,p)), tmp2.set(0, 1.5, lerp(-44,-70,p)))},
+    {v:'v14', dur:6.5, update: dt => walkMen(dt, -66), cam: p => camLook(tmp1.set(lerp(-3,3,p), 24, -64), tmp2.set(0, 4, 84))},
+  ], () => { clearCineMen(); then(); });
+}
+function desireCine(then){
+  setMood('cine'); mode = 'cine'; clearEnemies(); clearAllies(); placeDavid(true); placeJarProp(true);
+  const dp = david.root.position;
+  runCine([
+    {v:'v15', dur:7, cam: p => camLook(tmp1.set(dp.x + 1.4 - p*.8, dp.y + 1.7, dp.z + 2.2 + p*1.5), tmp2.set(lerp(dp.x, 0, p), lerp(dp.y + 1.1, 5, p), lerp(dp.z, 84, p)))},
   ], then);
 }
 
@@ -1254,15 +1491,17 @@ function nextPhaseHTML(w){
   if (!w) return '';
   return `<p class="note">${w.fresh ? `<strong style="color:var(--bronze-hi)">Fase ${w.next.n} liberada!</strong> ` : ''}<a class="phase-link" style="color:var(--bronze-hi)" href="${w.next.href}${unlockAll ? '?liberar' : ''}">Ir para a Fase ${w.next.n}: ${w.next.title} →</a></p>`;
 }
+
 function showMenu(){
   pauseOn = false; modal = false; timeScale = 1; if (cine){ cine = null; $('cine').hidden = true; } stopSpeak();
-  mode = 'menu'; setMood('menu'); hideHUD(); clearTraining(); clearEnemies(); clearAllies(); clearBanners(); placeSoldiers(); F.stuck = false; F.v = 0;
+  mode = 'menu'; setMood('menu'); hideHUD(); clearTraining(); clearEnemies(); clearAllies(); clearCineMen(); placeDavid(true); placeJarProp(true);
+  W.carry = false; W.hasJar = false;
   const html = () => `
-    <div class="eyebrow">Protótipo jogável · Fase 3</div>
-    <h1>Eleazar e a mão pegada à espada</h1>
-    <p class="lede">2 Samuel 23:9-10. Quando os homens de Israel sobem a colina, Eleazar desce ao vale de Pas-Damim e luta até a mão ficar pegada à espada.</p>
-    ${phaseMapHTML(3)}
-    ${!phaseOpen(3) ? lockedHTML(3) : `
+    <div class="eyebrow">Protótipo jogável · Fase 4</div>
+    <h1>Os três valentes e a água de Belém</h1>
+    <p class="lede">2 Samuel 23:13-17. Davi só diz um desejo. Três valentes rompem pelo arraial filisteu, tiram água da cisterna junto à porta de Belém e a trazem a ele.</p>
+    ${phaseMapHTML(4)}
+    ${!phaseOpen(4) ? lockedHTML(4) : `
     <div class="sect">Dificuldade</div>
     <div class="choices" role="group" aria-label="Dificuldade">
       ${Object.entries(DIFF).map(([k,d]) => `<button class="choice" data-act="diff" data-k="${k}" aria-pressed="${k===dk}"><strong>${d.name}</strong><span>${d.desc}</span></button>`).join('')}
@@ -1270,23 +1509,24 @@ function showMenu(){
     <div class="row">
       <button class="btn primary" data-act="full">Jogar a fase completa</button>
       <button class="btn" data-act="train">Só o treino</button>
-      <button class="btn" data-act="battle">Só a batalha</button>
+      <button class="btn" data-act="battle">Só a missão</button>
       <button class="btn" data-act="tutorial">Como jogar</button>
     </div>`}
-    ${!phaseOpen(3) ? '<div class="row"><button class="btn" data-act="tutorial">Como jogar</button></div>' : ''}
+    ${!phaseOpen(4) ? '<div class="row"><button class="btn" data-act="tutorial">Como jogar</button></div>' : ''}
     <div class="row">
       <button class="btn" data-act="music" aria-pressed="${musicOn}">Música: ${musicOn ? 'ligada' : 'desligada'}</button>
       <button class="btn" data-act="voice" aria-pressed="${narrOn}">Narração: ${narrOn ? 'ligada' : 'desligada'}</button>
     </div>
     <dl class="controls">
-      <dt>Clique esquerdo</dt><dd>Golpe · três rápidos seguidos formam a sequência (o terceiro acerta mais longe e mais forte)</dd>
-      <dt>Segurar e soltar</dt><dd>Golpe forte (abre a falange)</dd>
-      <dt>Botão direito</dt><dd>Aparar com a espada no instante do golpe · o próximo golpe é crítico</dd>
-      <dt>Espaço</dt><dd>Desviar (gasta fôlego)</dd>
-      <dt>F (segurar) · T</dt><dd>Orar · tocar a trombeta</dd>
+      <dt>Clique esquerdo</dt><dd>Golpe · três rápidos formam a sequência · segure e solte para o golpe forte</dd>
+      <dt>Botão direito</dt><dd>Segurar: escudo · no instante do golpe: aparar (com o cântaro na mão, só aparar)</dd>
+      <dt>Espaço</dt><dd>Desviar (com o cântaro, derrama um pouco)</dd>
+      <dt>Q</dt><dd>Ordem aos companheiros: "Comigo" ou "Segurem aqui"</dd>
+      <dt>E (segurar)</dt><dd>Ação: pegar o cântaro, tirar água, levantar um companheiro</dd>
+      <dt>F (segurar) · Shift</dt><dd>Orar · correr (com o cântaro, derrama)</dd>
       <dt>Esc · M · N</dt><dd>Pausa · música · narração</dd>
     </dl>
-    <p class="note">No celular: direcional, arrastar para olhar e os botões Golpe, Aparar, Desviar, Orar e Trombeta. Os versículos são provisórios.</p>`;
+    <p class="note">No celular: direcional, arrastar para olhar e os botões Golpe, Escudo, Desviar, Ordem, Orar e Ação. Os versículos são provisórios.</p>`;
   showOverlay(html(), {
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
@@ -1296,16 +1536,16 @@ function showMenu(){
   });
 }
 function startFull(){ if (!tutorialSeen()) return showTutorial(startFull); B.kind = 'full'; B.medal = null; hideOverlay(); tryLock(); introCine(() => startTraining()); }
-function startBattleOnly(){ B.kind = 'battle'; B.medal = null; B.corStart = 65 + (dk === 'pastor' ? 10 : 0); hideOverlay(); tryLock(); startBattle(0); }
+function startBattleOnly(){ B.kind = 'battle'; B.medal = null; B.corStart = 65 + (dk === 'pastor' ? 10 : 0); hideOverlay(); tryLock(); desireCine(() => startBattle('choice')); }
 function showPause(){
-  pauseOn = true; stopSpeak(); attackUp(true);
-  const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Batalha';
+  pauseOn = true; stopSpeak(); attackUp(true); mouseR = false;
+  const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Missão';
   const html = () => `
     <div class="eyebrow">Pausa · ${where} · ${D_().name}</div>
     <h2>Jogo pausado</h2>
     <div class="row">
       <button class="btn primary" data-act="resume">Continuar</button>
-      ${inCine ? '<button class="btn" data-act="skip">Pular a cena</button>' : `<button class="btn" data-act="restart">${mode === 'training' ? 'Recomeçar o treino' : 'Recomeçar a batalha'}</button>`}
+      ${inCine ? '<button class="btn" data-act="skip">Pular a cena</button>' : `<button class="btn" data-act="restart">${mode === 'training' ? 'Recomeçar o treino' : 'Recomeçar a missão'}</button>`}
       <button class="btn" data-act="menu">Voltar ao menu</button>
     </div>
     <div class="row">
@@ -1315,7 +1555,7 @@ function showPause(){
   showOverlay(html(), {
     resume: () => { hideOverlay(); pauseOn = false; tryLock(); },
     skip: () => { hideOverlay(); pauseOn = false; tryLock(); endCine(); },
-    restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else startBattle(0); },
+    restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else startBattle('choice'); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
     voice: () => { setNarration(!narrOn); $('ov-card').innerHTML = html(); },
     menu: showMenu,
@@ -1328,14 +1568,15 @@ function update(dt, rdt){
   gt += dt;
   shake = Math.max(0, shake - rdt*1.6);
   if (toastT > 0){ toastT -= rdt; if (toastT <= 0) $('toast').classList.remove('on'); }
+  fires.forEach((f,i) => { const k = .85 + .25*Math.sin(gt*11 + i*1.7) + .1*Math.sin(gt*23 + i); f.f.scale.set(1, k, 1); });
+  fireLights.forEach((L,i) => L.intensity = (i === fireLights.length - 1 ? 1.2 : 1.8) * (.85 + .15*Math.sin(gt*9 + i*2.1)));
   if (cine) updateCine(dt);
-  else if (mode === 'menu'){ const a = gt*.05; camLook(tmp1.set(Math.sin(a)*14, 12, Math.cos(a)*14 + 20), tmp2.set(0,2,30)); }
+  else if (mode === 'menu'){ const a = gt*.05; camLook(tmp1.set(Math.sin(a)*34, 18, Math.cos(a)*34 + 4), tmp2.set(0,2,6)); }
   else if (playing()){
     updatePlayer(dt);
-    if (mode === 'training') updateTraining(dt); else updateBattle(dt);
+    if (mode === 'training'){ updateAllies(dt); updateTraining(dt); } else updateBattle(dt);
     fpCamera(); animateViewmodel();
   }
-  if (mode === 'battle' && B.state === 'done' && !cine) moveSoldiers(dt, 3);
   updateEnemies(dt); updateArrows(dt); updateParts(dt);
   VM.visible = playing();
   updateHUD(); drawGauge();
@@ -1352,3 +1593,6 @@ requestAnimationFrame(loop);
 
 })();
 </script>
+
+</body>
+</html>
