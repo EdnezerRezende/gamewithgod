@@ -1,4 +1,12 @@
-<title>A Água de Belém</title>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>Benaia e o Leão</title>
+</head>
+<body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -155,27 +163,24 @@
   #tpray.on{background:rgba(236,189,106,.85);color:#1b120a}
   .phase-link{color:var(--bronze-hi)}
 
-  /* ---------- Fase 4 ---------- */
-  .bar.agua i{background:#6aa6cf}
-  .bar.alarme i{background:#c0533a}
-  #tdash{position:absolute;right:calc(40px + env(safe-area-inset-right,0px));bottom:calc(206px + env(safe-area-inset-bottom,0px));width:86px;height:44px;border-radius:3px;
+  /* ---------- Fase 5 ---------- */
+  #tdash{position:absolute;right:calc(40px + env(safe-area-inset-right,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px));width:86px;height:44px;border-radius:3px;
     background:rgba(20,15,10,.6);border:1px solid rgba(234,220,189,.4);color:var(--parch);font-size:14px}
-  #tswap{font-size:15px !important;width:74px !important}
   #tact{position:absolute;right:calc(146px + env(safe-area-inset-right,0px));bottom:calc(186px + env(safe-area-inset-bottom,0px));width:96px;height:48px;border-radius:3px;
     background:rgba(106,166,207,.35);border:2px solid rgba(160,205,235,.8);color:var(--parch);font-size:15px;font-weight:700}
   #tact.on{background:rgba(106,166,207,.9);color:#10202c}
+  .holdbar.boss{width:min(300px,34vw)}
+  .holdbar.boss i{background:linear-gradient(90deg,#8c2f22,#c0533a)}
 </style>
 
 <canvas id="game"></canvas>
 
 <div id="hud" hidden>
   <div class="hud-tl"><div id="obj" class="obj"></div><div id="sub" class="sub"></div></div>
-  <div class="hud-tc"><div id="wave" class="wave"></div><div id="hold" class="holdbar" hidden><i id="holdfill"></i></div></div>
+  <div class="hud-tc"><div id="wave" class="wave"></div><div id="hold" class="holdbar boss" hidden><i id="holdfill"></i></div></div>
   <div class="hud-tr">
     <div class="stat" id="st-vida"><span class="lbl">Vida</span><div class="bar"><i id="vida"></i></div></div>
     <div class="stat" id="st-cor"><span class="lbl">Coragem</span><div class="bar cor"><i id="cor"></i></div></div>
-    <div class="stat" id="st-agua"><span class="lbl">Água</span><div class="bar agua"><i id="agua"></i></div></div>
-    <div class="stat" id="st-alarme"><span class="lbl">Alarme</span><div class="bar alarme"><i id="alarme"></i></div></div>
     <div class="stat" id="st-score"><span class="lbl">Pontos</span><span id="score" class="num">0</span></div>
   </div>
   <div id="cross"></div>
@@ -183,7 +188,7 @@
   <canvas id="gauge" width="280" height="280"></canvas>
   <div id="toast"></div>
   <div id="hurt"></div>
-  <div class="esc-hint">Esc · pausa · botão direito · escudo · Espaço · desviar · Q · ordem · E · ação · F · orar · M · música · N · narração</div>
+  <div class="esc-hint">Esc · pausa · botão direito · escudo e aparar · Espaço · desviar · E · ação · F · orar · M · música · N · narração</div>
 </div>
 
 <div id="cine" hidden>
@@ -197,7 +202,6 @@
   <button id="fire" type="button" aria-label="Golpear">Golpe</button>
   <button id="tshield" type="button" aria-label="Escudo ou aparar">Escudo</button>
   <button id="tdash" type="button" aria-label="Desviar">Desviar</button>
-  <button id="tswap" type="button" aria-label="Ordem aos companheiros">Ordem</button>
   <button id="tpray" type="button" aria-label="Segure para orar">Orar</button>
   <button id="tact" type="button" aria-label="Segure para a ação">Ação</button>
   <button id="tpause" type="button" aria-label="Pausa">❚❚</button>
@@ -357,24 +361,24 @@ function makeTerrain(hFn, colFn){
 const cA = new THREE.Color(), cB = new THREE.Color();
 
 
-// ================= Fase 4: textos e dificuldade =================
+// ================= Fase 5: textos e dificuldade =================
 // Texto provisório (Almeida, domínio público) — revisar contra a edição escolhida.
 const VS = {
-  v13:  ['Também três dos trinta cabeças desceram, e no tempo da sega vieram a Davi, à caverna de Adulão; e a tropa dos filisteus se acampara no vale de Refaim.', '2 Samuel 23:13'],
-  v14:  ['E Davi estava então no lugar forte, e a guarnição dos filisteus estava então em Belém.', '2 Samuel 23:14'],
-  v15:  ['E teve Davi desejo, e disse: Quem me dera beber da água da cisterna de Belém, que está junto à porta!', '2 Samuel 23:15'],
-  vgate:['...da água da cisterna de Belém, que está junto à porta.', '2 Samuel 23:15'],
-  v16a: ['Então aqueles três valentes romperam pelo arraial dos filisteus, e tiraram água da cisterna de Belém, que está junto à porta, e a tomaram, e a trouxeram a Davi;', '2 Samuel 23:16'],
-  v16b: ['...porém ele não a quis beber, mas derramou-a perante o Senhor.', '2 Samuel 23:16'],
-  v17:  ['E disse: Guarda-me, ó Senhor, de que tal faça; beberia eu o sangue dos homens que foram a risco da sua vida? De maneira que não a quis beber.', '2 Samuel 23:17'],
-  v17b: ['Isto fizeram aqueles três valentes.', '2 Samuel 23:17'],
+  v20a:  ['Também Benaia, filho de Joiada, filho de um homem valente de Cabzeel, grande em obras; este feriu dois fortes leões de Moabe;', '2 Samuel 23:20'],
+  v20b:  ['...e desceu ele, e feriu um leão no meio de uma cova, no tempo da neve.', '2 Samuel 23:20'],
+  v21:   ['Também este feriu um homem egípcio, homem de grande presença; e o egípcio trazia uma lança na mão, porém ele desceu a ele com um cajado, e arrancou a lança da mão do egípcio, e o matou com a sua própria lança.', '2 Samuel 23:21'],
+  vsnow: ['...no tempo da neve.', '2 Samuel 23:20'],
+  vpit:  ['...e desceu ele, e feriu um leão no meio de uma cova...', '2 Samuel 23:20'],
+  vstaff:['...porém ele desceu a ele com um cajado...', '2 Samuel 23:21'],
+  v22:   ['Estas coisas fez Benaia, filho de Joiada; e teve nome entre os três valentes.', '2 Samuel 23:22'],
+  v23:   ['Dentre os trinta era ele o mais nobre, porém aos três primeiros não chegou; e Davi o pôs sobre a sua guarda.', '2 Samuel 23:23'],
 };
 const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]} <button class="listen" data-act="speak" data-k="${k}" aria-label="Ouvir o versículo">▶ Ouvir</button></cite></blockquote>`;
 
 const DIFF = {
-  pastor:    {name:'Pastor',    desc:'Companheiros resistentes, alarme lento e 5 s para tirar a água.',  parry:.45, spill:8,  allyDmg:.5, selfRevive:true,  camp:.7,  alarm:.6, draw:5, dmg:.6, toStart:false, mult:1},
-  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              parry:.3,  spill:12, allyDmg:.8, selfRevive:false, camp:1,   alarm:1,  draw:7, dmg:1,  toStart:false, mult:1.5},
-  valente:   {name:'Valente',   desc:'Arraial cheio, alarme rápido e 9 s para tirar a água.',            parry:.18, spill:18, allyDmg:1.1,selfRevive:false, camp:1.35,alarm:1.4,draw:9, dmg:1.4, toStart:true,  mult:2},
+  pastor:    {name:'Pastor',    desc:'Leão mais fraco, aviso do bote longo e janela de aparar folgada.', lion:10, warn:1,  parry:.45, disarm:.8, egy:6,  dmg:.6, toLion:false, mult:1},
+  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              lion:14, warn:.8, parry:.3,  disarm:1,  egy:8,  dmg:1,  toLion:false, mult:1.5},
+  valente:   {name:'Valente',   desc:'Leão forte, aviso curto e o egípcio mais resistente.',              lion:18, warn:.6, parry:.18, disarm:1.3,egy:10, dmg:1.4, toLion:true,  mult:2},
 };
 let dk = 'guerreiro';
 try { const s = localStorage.getItem('vdd-diff'); if (DIFF[s]) dk = s; } catch(e) {}
@@ -384,159 +388,160 @@ Object.assign(sfx, {
   swing:  () => noise({dur:.18, freq:1100, q:.9, gain:.2, attack:.02}),
   hit:    () => { tone({freq:120, dur:.18, gain:.3, slide:60}); noise({dur:.1, freq:500, gain:.2}); },
   block:  () => { tone({freq:190, dur:.12, type:'triangle', gain:.3}); noise({dur:.06, freq:1200, gain:.2}); },
+  wood:   () => { tone({freq:240, dur:.1, type:'triangle', gain:.3}); noise({dur:.05, freq:1500, gain:.18}); },
   parry:  () => [880,1320,2210].forEach((f,i) => tone({freq:f, dur:.5-i*.1, gain:.1/(i+1)})),
-  arrow:  () => noise({dur:.35, freq:2600, q:3, gain:.08, attack:.05}),
   dash:   () => noise({dur:.2, freq:600, q:.8, gain:.12, attack:.02}),
-  horn:   () => tone({freq:130, dur:2, type:'sawtooth', gain:.18, slide:98, lp:900, attack:.25}),
-  water:  () => noise({dur:.3, freq:700, q:2.5, gain:.14, attack:.03}),
-  pour:   () => noise({dur:3, freq:500, q:1.8, gain:.12, attack:.4}),
+  growl:  () => tone({freq:95, dur:.9, type:'sawtooth', gain:.16, slide:70, lp:420, attack:.1}),
+  lroar:  () => { tone({freq:120, dur:1.6, type:'sawtooth', gain:.25, slide:60, lp:700, attack:.12}); noise({dur:1.4, freq:300, q:.6, gain:.2, attack:.1}); },
+  wind:   () => noise({dur:2.5, freq:900, q:.4, gain:.05, attack:.8}),
   pray:   () => tone({freq:392, dur:1.4, type:'triangle', gain:.08, attack:.3}),
   shout:  () => tone({freq:300, dur:.5, type:'sawtooth', gain:.06, slide:220, lp:1200}),
-  step:   () => noise({dur:.08, freq:300, q:1, gain:.05}),
+  pull:   () => { noise({dur:.4, freq:400, q:1.2, gain:.2, attack:.05}); tone({freq:160, dur:.3, type:'triangle', gain:.2, slide:260}); },
 });
 
-// ================= Noite no vale de Refaim =================
-scene.fog.color.set(0x121828); scene.fog.near = 25; scene.fog.far = 170;
-renderer.setClearColor(0x0b0f1a);
-scene.traverse(o => {
-  if (o.isHemisphereLight){ o.color.set(0x7a8ab5); o.groundColor.set(0x241f1a); o.intensity = .5; }
-  if (o.isMesh && o.geometry.attributes.color && o.material.side === THREE.BackSide){
-    const p = o.geometry.attributes.position, c = o.geometry.attributes.color, top = new THREE.Color(0x04060d), hor = new THREE.Color(0x1b2236);
-    for (let i=0;i<p.count;i++){ const y = p.getY(i)/600, k = hor.clone().lerp(top, sstep(-.05,.6,y)); c.setXYZ(i, k.r, k.g, k.b); }
-    c.needsUpdate = true;
-  }
-  if (o.isMesh && o.geometry.parameters && o.geometry.parameters.radius === 18){ o.material.color.set(0xdfe6f5); o.position.set(-160, 190, 320); o.scale.setScalar(.6); }
-});
-sunL.color.set(0xa7b8e0); sunL.intensity = .45; sunL.position.set(-160, 190, 320);
-{ // estrelas
-  const n = 500, pos = [];
-  for (let i=0;i<n;i++){ const a = rand(0, PI*2), e = rand(.12, 1.4); pos.push(Math.cos(a)*Math.cos(e)*560, Math.sin(e)*560, Math.sin(a)*Math.cos(e)*560); }
-  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  scene.add(new THREE.Points(g, new THREE.PointsMaterial({color:0xdfe6ff, size:1.6, sizeAttenuation:false, fog:false})));
+// ================= Dois lugares: a aldeia na neve (A) e a planície da guarda (B) =================
+const PIT = V(0, 0, 20), PIT_R = 7.4, SHELTER = V(-14, 0, -12), ROCKS = V(2.5, 0, 9.4);
+const BX = 400;                                   // a planície fica 400 m a leste, fora da vista
+const EG = V(BX, 0, 40), RACK = V(BX - 4.5, 0, 29), TRN = V(BX, 0, -30), CAMPD = V(BX, 0, -70);
+function villageH(x,z){
+  const r = Math.hypot(x - PIT.x, z - PIT.z);
+  const hills = 6*sstep(40,90,Math.hypot(x, z*.8)) + .6*Math.sin(x*.09)*Math.cos(z*.07);
+  return hills - 3.8*sstep(9.2, 7.6, r);
 }
-
-// ================= Terreno: de Adulão a Belém =================
-const JAR_POS = V(-3, 0, -70.5), DAVID_POS = V(2.2, 0, -73.8), CAVE_Z = -70;
-const TR = V(0, 0, -52);                          // área do treino, diante da caverna
-const CAMP = {z0:-26, z1:36, hw:20};              // o arraial filisteu no meio do vale
-const GATE_Z = 88, CISTERN = V(6, 0, 83), FIELD_WELL = V(-30, 0, 50);
-const POSTS = [V(-12,0,-4), V(11,0,14), V(-5,0,30)];   // postes com a trombeta de alarme
-function landH(x,z){
-  const ax = Math.abs(x);
-  const hills = 7*sstep(24,44,ax) + 6*sstep(46,80,ax);
-  const cliff = 16*sstep(-75,-90,z) * (1 - .3*sstep(10,30,ax));
-  const town = 5*sstep(62,98,z) * (1 - .5*sstep(40,60,ax));
-  const n = .35*Math.sin(x*.15 + z*.07) + .25*Math.sin(z*.11 - x*.05);
-  return hills + cliff + town + n*sstep(-74,-66,z);
-}
+function plainH(x,z){ return .8*Math.sin(x*.05)*Math.cos(z*.04) + .4*Math.sin(x*.13 + z*.09) + 5*sstep(60,120,Math.hypot(x,z)); }
+function landH(x,z){ return x > BX/2 ? plainH(x - BX, z) : villageH(x, z); }
 const groundH = landH;
-function inField(x,z){ return (z > 40 && z < 78 && Math.abs(x) < 34 && !(Math.abs(x) < 3.5)) || (z > -64 && z < -34 && Math.abs(x) > 8 && Math.abs(x) < 22); }
-scene.add(makeTerrain(landH, (x,y,z) => {
-  cA.set(0x7d7650).lerp(cB.set(0x8f8a60), (Math.sin(x*.3)*Math.sin(z*.27) + 1)*.3);
-  if (inField(x,z)) cA.lerp(cB.set(0xc4a24e), .7);
-  cA.lerp(cB.set(0x6b5a44), sstep(3,9,y)*.7);
-  if (Math.abs(x) < 2.6 && (z > 36 || z < -26)) cA.lerp(cB.set(0x9c8a66), .6);   // trilha
+const snowTerrain = makeTerrain(villageH, (x,y,z) => {
+  const r = Math.hypot(x - PIT.x, z - PIT.z);
+  cA.set(0xe6ebf2).lerp(cB.set(0xcdd6e2), (Math.sin(x*.3)*Math.sin(z*.27) + 1)*.35);
+  if (r < 9) cA.lerp(cB.set(0x7a6f62), sstep(9, 7.6, r)*.8);       // paredes e fundo da cova, com pouca neve
+  if (Math.abs(x + Math.sin(z*.1)*2) < 1.6 && z < 8) cA.lerp(cB.set(0xb9b2a6), .5);   // trilha pisada
+  return cA.clone().offsetHSL(0,0,rand(-.02,.02));
+});
+scene.add(snowTerrain);
+const plainTerrain = makeTerrain(plainH, (x,y,z) => {
+  cA.set(0xb3a26a).lerp(cB.set(0xa39858), (Math.sin(x*.3)*Math.sin(z*.27) + 1)*.3);
+  cA.lerp(cB.set(0x8f6d47), sstep(2,5,y)*.6);
   return cA.clone().offsetHSL(0,0,rand(-.03,.03));
-}));
-// Cevada na colheita
-{
-  const n = 1400, crop = new THREE.InstancedMesh(new THREE.ConeGeometry(.12,.75,5), new THREE.MeshStandardMaterial({color:0xd8b95a, flatShading:true, roughness:1}), n);
-  const m = new THREE.Matrix4(), c = new THREE.Color(); let k = 0;
-  while (k < n){ const x = rand(-34,34), z = rand(-64,78); if (!inField(x,z)) continue;
-    m.makeTranslation(x, landH(x,z)+.37, z); crop.setMatrixAt(k, m); crop.setColorAt(k, c.set(k%3 ? 0xd8b95a : 0xc4a24a)); k++; }
-  scene.add(crop);
-  for (let i=0;i<40;i++){ const z = rand(42,76), x = rand(-30,30); if (Math.abs(x) < 4) continue; const s = cyl(.35,.4,1,0xc9a94e,6); s.position.set(x, landH(x,z)+.5, z); s.rotation.z = rand(-.2,.2); scene.add(s); }
+});
+plainTerrain.position.x = BX; scene.add(plainTerrain);
+
+// Céu e neblina: cinza de neve na aldeia, entardecer claro na planície
+let skyMesh = null;
+scene.traverse(o => { if (o.isMesh && o.geometry.attributes.color && o.material.side === THREE.BackSide) skyMesh = o; });
+const sunMesh = (() => { let m = null; scene.traverse(o => { if (o.isMesh && o.geometry.parameters && o.geometry.parameters.radius === 18) m = o; }); return m; })();
+const hemi = (() => { let h = null; scene.traverse(o => { if (o.isHemisphereLight) h = o; }); return h; })();
+const skyOrig = skyMesh ? skyMesh.geometry.attributes.color.array.slice() : null;
+function setWeather(kind){
+  const c = skyMesh.geometry.attributes.color, p = skyMesh.geometry.attributes.position;
+  if (kind === 'snow'){
+    const top = new THREE.Color(0x8e99a8), hor = new THREE.Color(0xd4d9df);
+    for (let i=0;i<p.count;i++){ const y = p.getY(i)/600, k = hor.clone().lerp(top, sstep(-.05,.7,y)); c.setXYZ(i, k.r, k.g, k.b); }
+    scene.fog.color.set(0xc9d0d8); scene.fog.near = 12; scene.fog.far = 120;
+    if (hemi){ hemi.color.set(0xdfe6ef); hemi.groundColor.set(0x8a8f96); hemi.intensity = .95; }
+    sunL.intensity = .55; sunL.color.set(0xe8eef5); if (sunMesh) sunMesh.visible = false;
+  } else {
+    c.array.set(skyOrig);
+    scene.fog.color.set(0xd39a62); scene.fog.near = 70; scene.fog.far = 330;
+    if (hemi){ hemi.color.set(0xffd9a8); hemi.groundColor.set(0x4a3522); hemi.intensity = .85; }
+    sunL.intensity = 1.05; sunL.color.set(0xffc988); if (sunMesh) sunMesh.visible = true;
+  }
+  c.needsUpdate = true;
 }
-for (let i=0;i<90;i++){ const z = rand(-70,120), x = (Math.random() < .5 ? -1 : 1)*rand(26,60); const r = new THREE.Mesh(new THREE.DodecahedronGeometry(rand(.4,1.8),0), cmat(0x6e604a)); r.position.set(x, landH(x,z), z); r.rotation.set(rand(0,3),rand(0,3),0); scene.add(r); }
+// Neve caindo em volta da câmera
+const SNOW_N = 1400, snowGeo = new THREE.BufferGeometry(), snowPos = new Float32Array(SNOW_N*3);
+for (let i=0;i<SNOW_N;i++){ snowPos[i*3] = rand(-25,25); snowPos[i*3+1] = rand(0,18); snowPos[i*3+2] = rand(-25,25); }
+snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPos, 3));
+const snow = new THREE.Points(snowGeo, new THREE.PointsMaterial({color:0xffffff, size:.09, transparent:true, opacity:.9}));
+snow.frustumCulled = false; scene.add(snow);
+let snowing = true;
+function updateSnow(dt){
+  snow.visible = snowing && camera.position.x < BX/2;
+  if (!snow.visible) return;
+  const a = snowGeo.attributes.position.array, cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+  for (let i=0;i<SNOW_N;i++){
+    a[i*3+1] -= dt*(1.2 + (i%5)*.15); a[i*3] += Math.sin(gt*.7 + i)*dt*.4;
+    if (a[i*3+1] < cy - 6){ a[i*3+1] = cy + 12; a[i*3] = cx + rand(-25,25); a[i*3+2] = cz + rand(-25,25); }
+    if (Math.abs(a[i*3] - cx) > 26) a[i*3] = cx + rand(-25,25);
+    if (Math.abs(a[i*3+2] - cz) > 26) a[i*3+2] = cz + rand(-25,25);
+  }
+  snowGeo.attributes.position.needsUpdate = true;
+}
 
 // ================= Modelos =================
 function cyl(rt, rb, h, color, seg=8, m){ return new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg), m || cmat(color)); }
 function sph(r, color, m){ return new THREE.Mesh(new THREE.SphereGeometry(r,10,8), m || cmat(color)); }
 function box(x,y,z,color,m){ return new THREE.Mesh(new THREE.BoxGeometry(x,y,z), m || cmat(color)); }
 const bronzeM = mat(0xb07a32, {metalness:.6, roughness:.4});
-const flameM = new THREE.MeshBasicMaterial({color:0xffa53a}), flameM2 = new THREE.MeshBasicMaterial({color:0xfff0b0});
-function buildMan({robe=0x7b3322, skin=0x9a6b48, h=1.75, plume=false}={}){
+const flameM = new THREE.MeshBasicMaterial({color:0xffa53a});
+function buildMan({robe=0x7b3322, skin=0x9a6b48, h=1.75, turban=0}={}){
   const root = new THREE.Group(), k = h/1.75, legs = [];
   for (const sx of [-1,1]){ const hip = new THREE.Group(); hip.position.set(.12*sx*k, .8*k, 0); const l = cyl(.08*k,.07*k,.8*k,skin); l.position.y = -.4*k; hip.add(l); root.add(hip); legs.push(hip); }
   const body = cyl(.22*k,.3*k,.8*k, robe); body.position.y = 1.15*k; root.add(body);
   const head = sph(.14*k, skin); head.position.y = 1.66*k; root.add(head);
-  if (plume){ for (let i=0;i<9;i++){ const a = (i/8 - .5)*PI*.9, f = box(.035,.22,.02,0xc9b9a0); f.position.set(Math.sin(a)*.12*k, 1.84*k, -Math.cos(a)*.03*k + .02); f.rotation.z = -a*.5; root.add(f); }
-    const band = cyl(.15*k,.15*k,.05*k,0xa03a24); band.position.y = 1.74*k; root.add(band); }
+  if (turban){ const t = cyl(.15*k,.16*k,.12*k,turban); t.position.y = 1.76*k; root.add(t); }
   const armR = new THREE.Group(); armR.position.set(.3*k, 1.45*k, 0); const ar = cyl(.06*k,.05*k,.62*k,skin); ar.position.y = -.3*k; armR.add(ar); root.add(armR);
   const armL = new THREE.Group(); armL.position.set(-.3*k, 1.45*k, 0); const al = cyl(.06*k,.05*k,.62*k,skin); al.position.y = -.3*k; armL.add(al); root.add(armL);
   return {root, legs, body, head, armR, armL, k};
 }
-function addSpear(m){ const s = new THREE.Group(); s.add(cyl(.03,.03,2.4,0x5a3d22,5)); const tip = new THREE.Mesh(new THREE.ConeGeometry(.06,.3,5), cmat(0x8b8e92)); tip.position.y = 1.35; s.add(tip); s.position.set(0,-.6*m.k,.12); s.rotation.x = .25; m.armR.add(s); return s; }
-function addTowerShield(m){ const s = box(.8,1.25,.08,0x6d4a2b); s.position.set(.1,-.35*m.k,.32); m.armL.add(s); return s; }
-function addRoundShield(m){ const s = cyl(.34,.34,.06,0,12,bronzeM); s.rotation.x = PI/2; s.position.set(0,-.45*m.k,.25); m.armL.add(s); return s; }
-function addSword(m){ const s = box(.05,.7,.02,0,mat(0xc7c9cc,{metalness:.8,roughness:.3})); s.position.set(0,-.75*m.k,.2); s.rotation.x = .9; m.armR.add(s); return s; }
-function addBow(m){ const b = new THREE.Mesh(new THREE.TorusGeometry(.5,.025,5,12,PI), cmat(0x5a3d22)); b.rotation.z = PI/2; b.position.set(0,-.55*m.k,.25); m.armL.add(b); return b; }
-function addStaff(m){ const s = cyl(.03,.03,1.8,0x6b4a2a,5); s.position.set(0,-.55*m.k,.12); s.rotation.x = .3; m.armR.add(s); return s; }
-function addTorch(m){ const t = new THREE.Group(); t.add(cyl(.03,.03,.7,0x4e3620,5)); const f = new THREE.Mesh(new THREE.ConeGeometry(.12,.35,6), flameM); f.position.y = .5; t.add(f); t.position.set(0,-.62*m.k,.08); t.rotation.x = -.5; m.armL.add(t); return t; }
-function makeJar(){ const g = new THREE.Group(), c = mat(0xb5603a); const b = sph(.2,0,c); b.scale.set(1,1.15,1); g.add(b);
-  const n = cyl(.08,.1,.18,0,8,c); n.position.y = .26; g.add(n); const l = cyl(.11,.09,.04,0,8,c); l.position.y = .36; g.add(l); return g; }
+function addSpear(m, len=2.4){ const s = new THREE.Group(); s.add(cyl(.03,.03,len,0x5a3d22,5)); const tip = new THREE.Mesh(new THREE.ConeGeometry(.06,.3,5), cmat(0x8b8e92)); tip.position.y = len/2 + .15; s.add(tip); s.position.set(0,-.6*m.k,.12); s.rotation.x = .25; m.armR.add(s); return s; }
+function addPad(m){ const s = box(.7,1.1,.25,0xb5a27a); s.position.set(.1,-.35*m.k,.32); m.armL.add(s); return s; }
 
-// Tendas, fogueiras e postes de alarme do arraial
-const fires = [], fireLights = [], tents = [];
-{
-  let tries = 0;
-  while (tents.length < 16 && tries++ < 500){
-    const x = rand(-CAMP.hw, CAMP.hw), z = rand(CAMP.z0, CAMP.z1);
-    if (Math.abs(x) < 3 || tents.some(t => Math.hypot(t.x - x, t.z - z) < 7) || POSTS.some(p => Math.hypot(p.x - x, p.z - z) < 4)) continue;
-    const t = new THREE.Mesh(new THREE.ConeGeometry(2.4, 2.6, 4), cmat([0x8a6f4c,0x7b5e42,0x9a7e57][tents.length%3]));
-    t.position.set(x, landH(x,z)+1.3, z); t.rotation.y = rand(0,PI); scene.add(t); tents.push({x, z});
-  }
-  for (let i=0;i<7;i++){
-    const tt = tents[i*2 % tents.length], x = tt.x + rand(-3.5,3.5), z = tt.z + (Math.random() < .5 ? -4 : 4);
-    const g = new THREE.Group(); g.position.set(x, landH(x,z), z); scene.add(g);
-    for (let j=0;j<5;j++){ const l = box(.8,.12,.12,0x3a2618); l.position.y = .08; l.rotation.y = j*PI/5; g.add(l); }
-    const f = new THREE.Mesh(new THREE.ConeGeometry(.35,.9,6), flameM); f.position.y = .5; g.add(f);
-    const f2 = new THREE.Mesh(new THREE.ConeGeometry(.18,.6,6), flameM2); f2.position.y = .4; g.add(f2);
-    fires.push({g, f, f2, x, z});
-    if (fireLights.length < 5){ const L = new THREE.PointLight(0xff9a4a, 1.8, 22, 1.4); L.position.set(x, landH(x,z)+1.6, z); scene.add(L); fireLights.push(L); }
-  }
-  for (const p of POSTS){ const y = landH(p.x,p.z); const pole = cyl(.08,.08,3.2,0x4e3620,6); pole.position.set(p.x, y+1.6, p.z); scene.add(pole);
-    const horn = new THREE.Mesh(new THREE.ConeGeometry(.12,.7,6), cmat(0xd8cfb8)); horn.rotation.z = PI/2; horn.position.set(p.x+.3, y+2.9, p.z); scene.add(horn); }
+// O leão
+function buildLion(){
+  const root = new THREE.Group(), g = new THREE.Group(); root.add(g);
+  const fur = 0xb98a4b, mane = 0x6a4323;
+  const body = box(.6,.6,1.45,fur); body.position.y = .82; g.add(body);
+  const man = sph(.46,mane); man.position.set(0,1.02,.66); g.add(man);
+  const head = new THREE.Group(); head.position.set(0,1.0,.92); g.add(head);
+  head.add(sph(.27,0xc39556)); const snout = box(.2,.16,.2,0xd4ad73); snout.position.set(0,-.06,.22); head.add(snout);
+  const legs = [];
+  for (const [x,z] of [[-.22,-.52],[.22,-.52],[-.22,.52],[.22,.52]]){ const p = new THREE.Group(); p.position.set(x,.6,z); const l = box(.15,.6,.15,0xb07f43); l.position.y = -.3; p.add(l); g.add(p); legs.push(p); }
+  const tail = cyl(.03,.03,.8,0xb07f43,5); tail.position.set(0,.9,-.95); tail.rotation.x = .9; g.add(tail);
+  root.scale.setScalar(1.15);
+  return {root, g, head, legs, body};
 }
-// A caverna de Adulão
+const lion = buildLion(); scene.add(lion.root);
+
+// O egípcio: cinco côvados, com a lança longa
+const egy = buildMan({robe:0xd9d0b8, skin:0x7a5236, h:2.5, turban:0xe8e0cc});
+const egySpear = addSpear(egy, 3.6); egySpear.position.z = .2;
+scene.add(egy.root);
+
+// Aldeia na neve: casas, moradores, o abrigo com fogo e o monte de pedras na borda da cova
+const villagers = [];
 {
-  const y = landH(0,-77);
-  const mouth = box(6.5, 4.2, 2, 0, new THREE.MeshBasicMaterial({color:0x050404})); mouth.position.set(0, y+1.6, -78.4); scene.add(mouth);
-  for (let i=0;i<14;i++){ const a = i/13*PI, r = new THREE.Mesh(new THREE.DodecahedronGeometry(rand(.8,1.6),0), cmat(0x5d5040)); r.position.set(-Math.cos(a)*4.3, y + Math.sin(a)*4 - .2, -77.6 + rand(-.3,.3)); scene.add(r); }
-  const L = new THREE.PointLight(0xffb070, 1.2, 14, 1.4); L.position.set(0, y+2.4, -73); scene.add(L); fireLights.push(L);
-  const g = new THREE.Group(); g.position.set(-1.5, landH(-1.5,-74), -74); scene.add(g);
-  const f = new THREE.Mesh(new THREE.ConeGeometry(.25,.6,6), flameM); f.position.y = .35; g.add(f); fires.push({g, f, f2:f, x:-1.5, z:-74});
+  for (let i=0;i<12;i++){ const a = rand(0, PI*2), r = rand(20, 34), x = Math.cos(a)*r, z = Math.sin(a)*r - 6; if (Math.hypot(x - PIT.x, z - PIT.z) < 13) continue;
+    const h = rand(2.2,3.2), hs = box(rand(3,5), h, rand(3,5), [0x9a8566,0x8d7a5e,0xa38e6c][i%3]); hs.position.set(x, villageH(x,z) + h/2, z); scene.add(hs);
+    const roof = box(hs.geometry.parameters.width + .3, .25, hs.geometry.parameters.depth + .3, 0xf2f5f8); roof.position.set(x, villageH(x,z) + h + .12, z); scene.add(roof); }
+  for (let i=0;i<5;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52,0x5e5638,0x7a6a48][i]}); const a = -PI/2 + (i - 2)*.45, x = PIT.x + Math.cos(a)*10.5, z = PIT.z + Math.sin(a)*10.5;
+    m.root.position.set(x, villageH(x,z), z); m.root.lookAt(PIT.x, m.root.position.y, PIT.z); scene.add(m.root); villagers.push(m); }
+  const hut = new THREE.Group(); hut.position.set(SHELTER.x, villageH(SHELTER.x, SHELTER.z), SHELTER.z); scene.add(hut);
+  for (const [x,z] of [[-1.4,-1.2],[1.4,-1.2],[-1.4,1.2],[1.4,1.2]]){ const p = cyl(.08,.08,2.4,0x4e3620,5); p.position.set(x,1.2,z); hut.add(p); }
+  const roof = box(3.4,.2,3,0xf2f5f8); roof.position.y = 2.45; hut.add(roof);
+  const fire = new THREE.Mesh(new THREE.ConeGeometry(.3,.7,6), flameM); fire.position.y = .35; hut.add(fire); hut.userData.fire = fire;
+  const L = new THREE.PointLight(0xff9a4a, 1.2, 10, 1.4); L.position.set(SHELTER.x, villageH(SHELTER.x, SHELTER.z) + 1.4, SHELTER.z); scene.add(L);
+  var shelterFire = fire;
+  for (let i=0;i<9;i++){ const r = new THREE.Mesh(new THREE.DodecahedronGeometry(rand(.15,.28),0), cmat(0x8a8274)); r.position.set(ROCKS.x + rand(-.6,.6), villageH(ROCKS.x, ROCKS.z) + rand(.1,.4), ROCKS.z + rand(-.5,.5)); scene.add(r); }
 }
-// Belém: muralha, porta, casas e a cisterna junto à porta; o poço no campo
+// Planície da guarda: o suporte com a espada, o acampamento de Davi e o campo de treino
+const rackSword = box(.05,.8,.02,0,mat(0xc7c9cc,{metalness:.8,roughness:.3}));
 {
-  for (const sx of [-1,1]){
-    const w = box(32, 4, 1.4, 0x7d6c55); w.position.set(sx*(2.6 + 16), landH(sx*18, GATE_Z) + 1.6, GATE_Z); scene.add(w);
-    const tw = box(2.6, 6, 2.6, 0x86745b); tw.position.set(sx*3.9, landH(sx*4, GATE_Z) + 2.6, GATE_Z); scene.add(tw);
-    const L = new THREE.PointLight(0xff9a4a, 1.3, 16, 1.4); L.position.set(sx*3.9, landH(sx*4, GATE_Z) + 4, GATE_Z - 2); scene.add(L);
-    const tf = new THREE.Mesh(new THREE.ConeGeometry(.2,.5,6), flameM); tf.position.set(sx*3.9, landH(sx*4,GATE_Z)+5.9, GATE_Z - 1.4); scene.add(tf);
-  }
-  for (let i=0;i<22;i++){ const x = rand(-30,30), z = rand(93,120); const h = rand(2.2,4); const hs = box(rand(3,6), h, rand(3,6), [0x9a8566,0x8d7a5e,0xa38e6c][i%3]); hs.position.set(x, landH(x,z)+h/2, z); scene.add(hs); }
-  const cy = landH(CISTERN.x, CISTERN.z);
-  const rim = cyl(1.1,1.2,.8,0x8a8070,12); rim.position.set(CISTERN.x, cy+.4, CISTERN.z); scene.add(rim);
-  const water = cyl(.95,.95,.05,0x1c3a52,12); water.position.set(CISTERN.x, cy+.7, CISTERN.z); scene.add(water);
-  const slab = box(1.4,.15,.5,0x6e6556); slab.position.set(CISTERN.x+1.3, cy+.1, CISTERN.z); scene.add(slab);
-  const wy = landH(FIELD_WELL.x, FIELD_WELL.z);
-  const wr = cyl(.8,.85,.7,0x6f6656,10); wr.position.set(FIELD_WELL.x, wy+.35, FIELD_WELL.z); scene.add(wr);
-  for (const sx of [-1,1]){ const p = cyl(.05,.05,1.8,0x4e3620,5); p.position.set(FIELD_WELL.x + sx*.8, wy+.9, FIELD_WELL.z); scene.add(p); }
-  const bar = cyl(.04,.04,1.8,0x4e3620,5); bar.rotation.z = PI/2; bar.position.set(FIELD_WELL.x, wy+1.75, FIELD_WELL.z); scene.add(bar);
+  const g = new THREE.Group(); g.position.set(RACK.x, landH(RACK.x, RACK.z), RACK.z); scene.add(g);
+  for (const sx of [-.5,.5]){ const p = cyl(.05,.05,1.3,0x4e3620,5); p.position.set(sx,.65,0); g.add(p); }
+  const bar = cyl(.04,.04,1.1,0x4e3620,5); bar.rotation.z = PI/2; bar.position.y = 1.2; g.add(bar);
+  rackSword.position.set(0,.8,.06); g.add(rackSword);
+  for (let i=0;i<8;i++){ const x = CAMPD.x + rand(-18,18), z = CAMPD.z + rand(-12,8); const t = new THREE.Mesh(new THREE.ConeGeometry(2.2,2.4,4), cmat([0x8a6f4c,0x7b5e42][i%2])); t.position.set(x, landH(x,z)+1.2, z); t.rotation.y = rand(0,PI); scene.add(t); }
 }
-// Homens de Davi na caverna e o próprio Davi
 const david = buildMan({robe:0x3d5a8a, h:1.78}); scene.add(david.root);
-const davidJar = makeJar(); davidJar.visible = false; david.armR.add(davidJar); davidJar.position.set(0,-.7,.15);
-function placeDavid(sitting){ david.root.position.set(DAVID_POS.x, landH(DAVID_POS.x, DAVID_POS.z) - (sitting ? .45 : 0), DAVID_POS.z); david.root.rotation.set(0, PI*.05, 0); david.legs.forEach(l => l.rotation.x = sitting ? -1.3 : 0); david.armR.rotation.set(0,0,0); davidJar.visible = false; }
-placeDavid(true);
-for (let i=0;i<6;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52][i%3]}); const x = (i < 3 ? -1 : 1)*rand(3.5,6), z = rand(-76,-72); m.root.position.set(x, landH(x,z), z); m.root.rotation.y = rand(-.6,.6); if (i%2) addSpear(m); scene.add(m.root); }
-// O cântaro vazio à entrada da caverna
-const jarProp = makeJar(); scene.add(jarProp);
-function placeJarProp(v){ jarProp.visible = v; jarProp.position.set(JAR_POS.x, landH(JAR_POS.x, JAR_POS.z) + .23, JAR_POS.z); }
-placeJarProp(true);
+david.root.position.set(CAMPD.x, landH(CAMPD.x, CAMPD.z + 6), CAMPD.z + 6);
+const guards = [];
+for (let i=0;i<8;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52][i%3]}); addSpear(m); const x = CAMPD.x + (i < 4 ? -1 : 1)*(2.5 + (i%4)*1.4), z = CAMPD.z + 9 + (i%4)*.6;
+  m.root.position.set(x, landH(x,z), z); m.root.rotation.y = i < 4 ? PI/2 : -PI/2; scene.add(m.root); guards.push(m); }
+// Os dois fortes de Moabe (só na abertura)
+const moab = [0,1].map(i => { const m = buildMan({robe:0x5a4a7a, h:1.9}); m.root.position.set(BX + 30 + i*3, landH(BX + 30 + i*3, 10), 10 + i*2); m.root.rotation.x = -PI/2; m.root.position.y += .3; scene.add(m.root); return m; });
 
-// Mãos do valente: espada (direita), escudo e cântaro (esquerda)
+// Mãos de Benaia: espada e escudo, cajado, lança
 const VM = new THREE.Group(); camera.add(VM);
 const swordPivot = new THREE.Group(); swordPivot.position.set(.3,-.34,-.55); swordPivot.scale.setScalar(.75); VM.add(swordPivot);
 { const blade = box(.05,.75,.015,0,mat(0xc7c9cc,{metalness:.8,roughness:.3})); blade.position.y = .45; swordPivot.add(blade);
@@ -544,22 +549,23 @@ const swordPivot = new THREE.Group(); swordPivot.position.set(.3,-.34,-.55); swo
   swordPivot.add(cyl(.022,.022,.14,0x4e3620,6)); swordPivot.add(box(.07,.1,.12,0x9a6b48)); }
 const shieldPivot = new THREE.Group(); shieldPivot.position.set(-.46,-.42,-.6); shieldPivot.scale.setScalar(.7); VM.add(shieldPivot);
 { const s = cyl(.3,.3,.05,0,16,mat(0x6d4a2b)); s.rotation.x = PI/2; shieldPivot.add(s); const boss = sph(.07,0,bronzeM); boss.position.z = -.04; shieldPivot.add(boss); }
-const jarVM = makeJar(); jarVM.position.set(-.38,-.5,-.78); jarVM.scale.setScalar(.55); VM.add(jarVM);
-const waterVM = cyl(.07,.07,.02,0x3a6f96,8); waterVM.position.y = .33; jarVM.add(waterVM);
+const staffPivot = new THREE.Group(); staffPivot.position.set(.22,-.4,-.5); VM.add(staffPivot);
+{ const s = cyl(.022,.025,1.6,0x6b4a2a,6); s.rotation.x = -1.25; s.position.set(0,.1,-.35); staffPivot.add(s); staffPivot.add(box(.07,.1,.12,0x9a6b48)); }
+const spearPivot = new THREE.Group(); spearPivot.position.set(.2,-.36,-.4); VM.add(spearPivot);
+{ const s = cyl(.028,.028,2.4,0x5a3d22,6); s.rotation.x = -PI/2; s.position.set(0,0,-.9); spearPivot.add(s);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(.05,.26,5), cmat(0x8b8e92)); tip.rotation.x = -PI/2; tip.position.set(0,0,-2.2); spearPivot.add(tip); spearPivot.add(box(.07,.1,.12,0x9a6b48)); }
 
 // ================= Estado =================
 const P = {pos:V(), vel:V(), yaw:PI, pitch:0, eye:1.6, vida:100, cor:70};
-const W = {atkHeld:false, atkT:0, cool:0, swingT:0, heavy:false, kind:'quick', pendingHit:-1, buffer:null, combo:0, comboT:0, parryT:-9, critUntil:-9,
-  dashT:0, dashCool:0, dashDir:V(), iframe:0, lastAtk:-9, prayT:0, prayCool:0, praying:false, shield:false, shieldSince:-9,
-  carry:false, water:0, hasJar:false, actT:0, act:null, stepT:0};
+const W = {weapon:'sword', atkHeld:false, atkT:0, cool:0, swingT:0, heavy:false, kind:'quick', pendingHit:-1, buffer:null, combo:0, comboT:0, parryT:-9, critUntil:-9,
+  dashT:0, dashCool:0, dashDir:V(), iframe:0, prayT:0, prayCool:0, praying:false, shield:false, actT:0, act:null};
 let mode = 'menu', cine = null, gt = 0, timeScale = 1, shake = 0;
 let locked = false, noLock = false, lockFails = 0, pauseOn = false, modal = false;
-const keys = {}, enemies = [], parts = [], arrows = [], allies = [];
+const keys = {}, parts = [], rocks = [];
 const tmp1 = V(), tmp2 = V();
-const B = {state:'none', alarm:0, route:null, fieldWell:false, together:false, waterEnd:0, deaths:0, repelled:0, parries:0, time:0, kind:'full',
-  corStart:70, trainScore:0, medal:null, spawnT:0, warnedHills:false, choiceT:0, order:'follow', checkpoint:'cave', crossed:false};
+const B = {part:'none', waited:false, rocks:0, tookSword:false, disarmed:false, spearKill:false, deaths:0, time:0, parries:0, dodges:0, kind:'full', corStart:70, trainScore:0, medal:null,
+  warnedSnow:false, warnedRocks:false, warnedSword:false, staffCapWarned:false, lionT:0};
 let mouseR = false;
-
 // ================= Entrada =================
 const playing = () => (mode === 'training' || mode === 'battle') && !cine && !modal;
 function tryLock(){ goFullscreen(); if (noLock) return; try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch(e) { noLock = true; } }
@@ -569,12 +575,11 @@ document.addEventListener('pointerlockerror', () => { if (++lockFails >= 3) noLo
 addEventListener('keydown', e => {
   keys[e.code] = true;
   if ((e.code === 'Escape' || e.code === 'KeyP') && (playing() || cine) && !pauseOn) { showPause(); return; }
-  if (cine && !pauseOn && e.code === 'Enter') endCine();
+  if (cine && !pauseOn && e.code === 'Enter') endCine_();
   if (e.repeat) return;
   if (e.code === 'KeyM'){ audio(); setMusic(!musicOn); toast(musicOn ? 'Música ligada' : 'Música desligada', 1.2); }
   if (playing()){
     if (e.code === 'Space'){ e.preventDefault(); dash(); }
-    if (e.code === 'KeyQ') toggleOrder();
   }
   if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code) && playing()) e.preventDefault();
 });
@@ -624,11 +629,10 @@ tstart('lookpad', t => { TM.lookId = t.identifier; TM.lx = t.clientX; TM.ly = t.
 tstart('fire', t => { TM.fireId = t.identifier; $('fire').classList.add('on'); if (playing() && !pauseOn) attackDown(); });
 tstart('tshield', t => { TM.shieldId = t.identifier; $('tshield').classList.add('on'); if (playing()) parry(); });
 tstart('tdash', () => { if (playing()) dash(); });
-tstart('tswap', () => { if (playing()) toggleOrder(); });
 tstart('tpray', t => { TM.prayId = t.identifier; $('tpray').classList.add('on'); });
 tstart('tact', t => { TM.actId = t.identifier; $('tact').classList.add('on'); });
 $('tpause').addEventListener('click', () => { if ((playing() || cine) && !pauseOn) showPause(); });
-['fire','tshield','tdash','tswap','tpray','tact','tpause'].forEach(id => $(id).addEventListener('contextmenu', e => e.preventDefault()));
+['fire','tshield','tdash','tpray','tact','tpause'].forEach(id => $(id).addEventListener('contextmenu', e => e.preventDefault()));
 addEventListener('touchmove', e => {
   for (const t of e.changedTouches){
     if (t.identifier === TM.stickId) stickMove(t);
@@ -657,29 +661,20 @@ function setObj(a, b=''){ $('obj').textContent = a; $('sub').textContent = b; }
 function hurtFlash(){ const h = $('hurt'); h.style.transition = 'none'; h.style.opacity = 1; requestAnimationFrame(() => { h.style.transition = ''; h.style.opacity = 0; }); }
 function showHUD(){ $('hud').hidden = false; }
 function hideHUD(){ $('hud').hidden = true; }
-const orderName = () => B.order === 'follow' ? 'Comigo' : 'Segurem';
-function allyProblem(){
-  if (mode !== 'battle' || B.state === 'choice') return '';
-  if (allies.some(a => a.down)) return 'Um companheiro caiu. Chegue perto e segure E (Ação) para levantá-lo.';
-  if (allies.some(a => a.m.root.position.distanceTo(P.pos) > 25)) return B.order === 'hold' ? 'Os companheiros ficaram para trás. Q: "Comigo".' : 'Um companheiro ficou para trás.';
-  return '';
-}
 function updateHUD(){
   const battle = mode === 'battle';
   $('st-vida').hidden = !battle; $('st-cor').hidden = !battle; $('st-score').hidden = battle;
-  $('st-agua').hidden = !W.carry; $('st-alarme').hidden = !battle || B.state === 'choice';
   $('vida').style.width = clamp(P.vida,0,100) + '%'; $('cor').style.width = clamp(P.cor,0,100) + '%';
-  $('agua').style.width = clamp(W.water,0,100) + '%'; $('alarme').style.width = clamp(B.alarm,0,100) + '%';
   $('score').textContent = T.score;
-  const prob = playing() ? allyProblem() : '';
-  $('zone').hidden = !prob; if (prob) $('zone').textContent = prob;
-  const lbl = {choice:'A caverna de Adulão', out:'Rumo a Belém', back:'A volta com a água'}[B.state] || '';
-  $('wave').textContent = battle && lbl ? `${lbl} · Ordem: ${orderName()}` : mode === 'training' ? `Ordem: ${orderName()}` : '';
-  $('hold').hidden = true;
+  $('zone').hidden = true;
+  const boss = battle && (B.part === 'pit' || B.part === 'egypt');
+  $('hold').hidden = !boss;
+  if (boss) $('holdfill').style.width = clamp(B.part === 'pit' ? L.hp/L.max*100 : E.hp/E.max*100, 0, 100) + '%';
+  $('wave').textContent = !battle ? '' : B.part === 'snow' ? (snowing ? 'O dia da neve' : 'A neve passou') : B.part === 'pit' ? 'O leão' : B.part === 'egypt' ? (E.armed ? 'O egípcio' : 'O egípcio sem a lança') : '';
   $('pause').hidden = !(playing() && !locked && !noLock && !pauseOn);
   const showTouch = touchMode && playing() && !pauseOn && $('ov').hidden;
   $('touch').hidden = !showTouch;
-  $('tshield').textContent = W.carry ? 'Aparar' : 'Escudo';
+  $('tshield').textContent = W.weapon === 'sword' ? 'Escudo' : 'Aparar';
   $('tact').textContent = W.act ? W.act.label : 'Ação';
   $('tact').style.opacity = W.act ? 1 : .45;
   if (!showTouch && TM.stickId !== null) stickReset();
@@ -696,12 +691,12 @@ function drawGauge(){
   if (W.act && W.actT > 0) return ring(W.actT / W.act.need, '#6aa6cf', W.act.doing);
   if (W.act) { c.fillStyle = '#a8cde6'; c.fillText(touchMode ? `Ação: ${W.act.label}` : `E: ${W.act.label}`, cx, cy+4); return; }
   if (W.atkHeld){ const k = clamp(W.atkT/.45,0,1); c.lineWidth = 7; c.strokeStyle = k >= 1 ? '#ecbd6a' : '#93a35a'; c.beginPath(); c.arc(cx,cy,R,-PI/2,-PI/2+k*PI*2); c.stroke(); }
-  for (let i=0;i<3;i++){ c.fillStyle = W.comboT > 0 && i < W.combo ? '#ecbd6a' : 'rgba(234,220,189,.25)'; c.beginPath(); c.arc(cx - 14 + i*14, cy + 22, 4, 0, PI*2); c.fill(); }
   c.fillStyle = 'rgba(234,220,189,.75)';
-  c.fillText(W.atkHeld ? (W.atkT >= .45 ? 'golpe forte!' : 'segure: forte') : gt < W.critUntil ? 'crítico!' : W.shield ? 'escudo erguido' : 'clique: golpe', cx, cy+4);
+  const wname = {sword:'espada', staff:'cajado', rack:'espada', spear:'lança'}[W.weapon];
+  c.fillText(W.atkHeld ? (W.atkT >= .45 ? 'golpe forte!' : 'segure: forte') : gt < W.critUntil ? 'crítico!' : W.shield ? 'escudo erguido' : wname, cx, cy+4);
 }
 
-// ================= Espada, escudo, desvio e a água =================
+// ================= Armas: espada e escudo, cajado, lança =================
 function attackDown(){ if (!playing() || W.praying) return; W.atkHeld = true; W.atkT = 0; }
 function attackUp(cancel){ if (W.atkHeld && !cancel && playing()) doSwing(W.atkT >= .45); W.atkHeld = false; }
 function parry(){ if (!playing() || W.praying) return; W.parryT = gt; }
@@ -711,8 +706,7 @@ function dash(){
   if (keys.KeyW) d.add(f); if (keys.KeyS) d.sub(f); if (keys.KeyD) d.add(r); if (keys.KeyA) d.sub(r);
   if (touchMode && Math.hypot(TM.mx,TM.my) > .2) d.addScaledVector(f, TM.my).addScaledVector(r, TM.mx);
   if (d.lengthSq() === 0) d.copy(f).negate();
-  W.dashDir.copy(d.normalize()); W.dashT = .22; W.iframe = .32; W.dashCool = .55; sfx.dash();
-  if (W.carry) spill(3, true);
+  W.dashDir.copy(d.normalize()); W.dashT = .22; W.iframe = .34; W.dashCool = .55; sfx.dash();
 }
 function doSwing(heavy){
   if (W.praying) return;
@@ -720,68 +714,40 @@ function doSwing(heavy){
   if (!heavy && W.comboT > 0) W.combo++; else W.combo = 1;
   if (W.combo > 3) W.combo = 1;
   W.comboT = .9;
-  const third = !heavy && W.combo === 3;
+  const third = !heavy && W.combo === 3 && W.weapon !== 'spear';
   W.kind = heavy ? 'heavy' : third ? 'combo' : 'quick';
-  let cool = heavy ? .9 : third ? .55 : .4;
+  let cool = (heavy ? .9 : third ? .55 : .4) * (W.weapon === 'spear' ? 1.25 : W.weapon === 'staff' ? .9 : 1);
   cool *= 1 + (1 - P.cor/100)*.4;
-  if (W.carry) cool *= 1.15;
-  W.cool = cool; W.swingT = .001; W.heavy = heavy || third; W.pendingHit = .1; W.lastAtk = gt;
+  W.cool = cool; W.swingT = .001; W.heavy = heavy || third; W.pendingHit = W.weapon === 'spear' ? .14 : .1;
   sfx.swing();
 }
 function fwdFlat(){ return V(-Math.sin(P.yaw), 0, -Math.cos(P.yaw)); }
 function facing(pos, deg, from=P.pos, fwd=null){ const f = fwd || fwdFlat(), d = tmp1.copy(pos).sub(from).setY(0); const l = d.length(); if (l < .01) return true; return f.dot(d.divideScalar(l)) >= Math.cos(deg*PI/180); }
+function reachOf(){ return W.weapon === 'spear' ? 3.9 : W.weapon === 'staff' ? 2.7 : W.kind === 'combo' ? 3.2 : 2.9; }
 function applySwing(){
-  const arc = W.kind === 'combo' ? 80 : 55, reach = W.kind === 'combo' ? 3.2 : 2.9;
-  for (const e of enemies){ if (!alive(e)) continue;
-    if (Math.hypot(e.root.position.x - P.pos.x, e.root.position.z - P.pos.z) < reach && facing(e.root.position, arc)) hitEnemy(e, W.kind, P.pos); }
+  const arc = W.weapon === 'spear' ? 28 : W.kind === 'combo' ? 80 : 55, reach = reachOf();
+  const inReach = pos => Math.hypot(pos.x - P.pos.x, pos.z - P.pos.z) < reach && facing(pos, arc);
+  if (mode === 'battle' && B.part === 'pit' && L.state !== 'dead' && inReach(L.root.position)) hitLion();
+  if (mode === 'battle' && B.part === 'egypt' && E.state !== 'dead' && inReach(E.root.position)) hitEgy();
+  if (mode === 'training') trainingSwing(inReach);
 }
-function alive(e){ return e.state !== 'fallen' && e.state !== 'flee'; }
-function enemyFwd(e){ return V(Math.sin(e.root.rotation.y), 0, Math.cos(e.root.rotation.y)); }
-function hitEnemy(e, kind, from){
-  if (!alive(e)) return;
-  const byPlayer = from === P.pos, crit = byPlayer && gt < W.critUntil;
-  if (e.state === 'sleep' || e.state === 'watch') wake(e, false);
-  if (e.type === 'guarda' && e.state !== 'stun' && kind === 'quick' && !crit && facing(from, 60, e.root.position, enemyFwd(e))){
-    sfx.block(); burst(e.root.position.clone().setY(e.root.position.y+1.1), 0x6d4a2b, 5, 2);
-    if (byPlayer) toast('O guarda bloqueou. Golpe forte, a sequência completa ou pelo lado.', 1.6);
-    return;
-  }
-  let dmg = kind === 'quick' ? 1 : 2; if (crit){ dmg++; W.critUntil = -9; toast('Crítico!', .7); }
-  e.hp -= dmg; sfx.hit(); burst(e.root.position.clone().setY(e.root.position.y+1.2), 0xa28a5e, 6, 2.2, .7, .7);
-  if (kind !== 'quick'){ const push = tmp2.copy(e.root.position).sub(from).setY(0).normalize(); e.root.position.addScaledVector(push, 1.4); }
-  if (e.hp <= 0){ down(e); return; }
-  e.state = 'stun'; e.t = kind === 'quick' ? .35 : .9;
-}
-function down(e){
-  e.state = 'fallen'; e.t = 0; if (!e.training) B.repelled++;
-  if (e.torch) e.torch.visible = false;
-  if (mode === 'training') T.enemyDown(e);
-}
-/** Golpe ou flecha vindo de "from": desviando, passa; aparando, desequilibra; escudo erguido de frente, bloqueia. */
-function resolveIncoming(from, dmg, msg, attacker){
-  if (W.iframe > 0){ toast('Desviou.', .6); return false; }
-  if (gt - W.parryT <= D_().parry && facing(from, 75)){
-    sfx.parry(); B.parries++; P.cor = clamp(P.cor + 8, 0, 100); W.critUntil = gt + 1.5; toast('Aparou! O próximo golpe é crítico.', 1.1);
-    if (attacker){ attacker.state = 'stun'; attacker.t = 1.4; }
-    if (mode === 'training') T.onDefense('parry');
+/** Golpe vindo de "from": desviando, passa; aparando, desequilibra; escudo de frente, bloqueia. */
+function resolveIncoming(from, dmg, msg, opt={}){
+  if (W.iframe > 0){ B.dodges++; toast('Desviou.', .6); if (opt.onDodge) opt.onDodge(); return false; }
+  if (!opt.noParry && gt - W.parryT <= D_().parry && facing(from, 75)){
+    sfx.parry(); B.parries++; P.cor = clamp(P.cor + 8, 0, 100); W.critUntil = gt + 1.5;
+    if (opt.onParry) opt.onParry(); else toast('Aparou! O próximo golpe é crítico.', 1.1);
     return false;
   }
-  if (W.shield && facing(from, 70)){ sfx.block(); P.cor = clamp(P.cor + 1, 0, 100); if (mode === 'training') T.onDefense('block'); return false; }
-  if (W.carry) spill(D_().spill);
-  if (mode === 'training'){ T.onDefense('hit'); sfx.hurt(); hurtFlash(); return true; }
-  P.vida -= dmg; P.cor = clamp(P.cor - 5, 0, 100); sfx.hurt(); hurtFlash(); shake = Math.max(shake, .6); toast(msg, 1.4);
-  if (P.vida <= 0) fall('O valente caiu no vale.');
+  if (!opt.noBlock && W.shield && facing(from, 70)){ sfx.block(); P.cor = clamp(P.cor + 1, 0, 100); return false; }
+  if (mode === 'training'){ sfx.hurt(); hurtFlash(); if (opt.onHit) opt.onHit(); return true; }
+  P.vida -= dmg; P.cor = clamp(P.cor - 6, 0, 100); sfx.hurt(); hurtFlash(); shake = Math.max(shake, .7); toast(msg, 1.4);
+  if (P.vida <= 0) fall(B.part === 'pit' ? 'O leão derrubou Benaia.' : 'O egípcio derrubou Benaia.');
   return true;
 }
-function spill(n, quiet){
-  if (!W.carry || W.water <= 0) return;
-  W.water = Math.max(0, W.water - n);
-  if (!quiet) sfx.water();
-  if (n >= 3){ camera.getWorldDirection(tmp2); burst(tmp1.copy(camera.position).addScaledVector(tmp2, .7).add(V(0,-.35,0)), 0x6aa6cf, Math.min(10, Math.round(n)), 1.4, .6, .6); }
-  if (W.water <= 0 && mode === 'battle' && B.state === 'back') emptyJar();
-}
+function critBonus(){ if (gt < W.critUntil){ W.critUntil = -9; toast('Crítico!', .7); return 1; } return 0; }
 
-// ================= Flechas e partículas =================
+// ================= Partículas =================
 const shardGeo = new THREE.BoxGeometry(.08,.05,.06);
 function burst(pos, color, n, spd, size=1, life=1.2){
   for (let i=0;i<n;i++){ const m = new THREE.Mesh(shardGeo, cmat(color)); m.scale.setScalar(size*rand(.6,1.5)); m.position.copy(pos); scene.add(m);
@@ -792,227 +758,254 @@ function updateParts(dt){
     const gy = groundH(p.m.position.x,p.m.position.z); if (p.m.position.y < gy){ p.m.position.y = gy; p.v.multiplyScalar(.3); }
     p.life -= dt; if (p.life <= 0){ scene.remove(p.m); parts.splice(i,1); } }
 }
-function shootArrow(from, target, blunt){
-  const start = from.clone(), T_ = clamp(start.distanceTo(target)/24, .6, 1.6);
-  const tgt = target.clone().addScaledVector(P.vel, T_*.6);
-  const vel = tgt.sub(start).sub(V(0,-.5*G*T_*T_,0)).divideScalar(T_);
-  const m = new THREE.Group(); const sh = cyl(.012,.012,.8,0x6a4a2a,4); sh.rotation.x = PI/2; m.add(sh);
-  const tip = new THREE.Mesh(new THREE.ConeGeometry(.03,.1,4), cmat(blunt ? 0xcdb892 : 0x8b8e92)); tip.rotation.x = PI/2; tip.position.z = .45; m.add(tip);
-  m.position.copy(start); scene.add(m); arrows.push({m, vel, from: from.clone(), t:0, stuck:false}); sfx.arrow();
+
+// ================= O leão na cova =================
+const L = {root:lion.root, g:lion.g, state:'pace', t:0, hp:14, max:14, dir:V(), dist:0, trav:0, hitDone:false, cool:1, nextT:2, roarT:8, ang:0, wall:false};
+function lionPos(){ return L.root.position; }
+function placeLion(){
+  L.state = 'pace'; L.t = 0; L.hp = L.max = D_().lion; L.cool = 1; L.nextT = 2; L.roarT = 8; L.ang = 0;
+  L.root.position.set(PIT.x + 3, villageH(PIT.x + 3, PIT.z), PIT.z); L.g.rotation.set(0,0,0); L.g.position.y = 0; L.root.visible = true;
 }
-function updateArrows(dt){
-  for (let i=arrows.length-1;i>=0;i--){
-    const a = arrows[i]; a.t += dt;
-    if (a.stuck){ if (a.t > 3){ scene.remove(a.m); arrows.splice(i,1); } continue; }
-    a.vel.y -= G*dt; a.m.position.addScaledVector(a.vel, dt); a.m.lookAt(tmp1.copy(a.m.position).add(a.vel));
-    if (a.m.position.distanceTo(tmp2.copy(P.pos).setY(P.pos.y + 1.3)) < .75){ scene.remove(a.m); arrows.splice(i,1); resolveIncoming(a.from, 8*D_().dmg, 'Uma flecha acertou o valente.', null); continue; }
-    if (a.m.position.y < groundH(a.m.position.x, a.m.position.z)){ a.stuck = true; a.t = 0; }
+function clampPit(p, r){ const dx = p.x - PIT.x, dz = p.z - PIT.z, d = Math.hypot(dx,dz); let wall = false; if (d > r){ p.x = PIT.x + dx/d*r; p.z = PIT.z + dz/d*r; wall = true; } return wall; }
+function lionFace(x, z){ L.root.rotation.y = Math.atan2(x - L.root.position.x, z - L.root.position.z); }
+function lionWalk(spd){ lion.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*spd*3 + (i%2 ? PI : 0) + (i > 1 ? PI/2 : 0))*.5); }
+function updateLion(dt){
+  if (!L.root.visible) return;
+  const p = L.root.position, dP = Math.hypot(P.pos.x - p.x, P.pos.z - p.z);
+  const fighting = mode === 'battle' && B.part === 'pit' && playing();
+  if (L.state === 'dead'){ L.g.rotation.z = Math.min(PI/2, L.g.rotation.z + dt*2.5); L.g.position.y = Math.max(-.35, L.g.position.y - dt); return; }
+  if (L.state === 'pace' || (!fighting && L.state !== 'dead')){
+    if (L.state !== 'pace'){ L.state = 'pace'; L.g.position.y = 0; L.g.rotation.set(0,0,0); }
+    L.ang += dt*.35; const tx = PIT.x + Math.cos(L.ang)*4, tz = PIT.z + Math.sin(L.ang)*4;
+    p.x += (tx - p.x)*Math.min(1, dt*1.5); p.z += (tz - p.z)*Math.min(1, dt*1.5); lionFace(tx + Math.cos(L.ang + 1), tz + Math.sin(L.ang + 1)); lionWalk(1.5);
+    L.roarT -= dt; if (L.roarT <= 0){ L.roarT = rand(7,11); if (mode === 'battle' && B.part === 'snow') sfx.growl(); }
+    p.y = villageH(p.x, p.z); return;
   }
+  L.cool -= dt;
+  if (L.state === 'prowl'){
+    const ax = p.x - P.pos.x, az = p.z - P.pos.z, a = Math.atan2(az, ax) + dt*.6;
+    const tx = P.pos.x + Math.cos(a)*5.2, tz = P.pos.z + Math.sin(a)*5.2;
+    const dx = tx - p.x, dz = tz - p.z, d = Math.hypot(dx,dz); if (d > .1){ p.x += dx/d*Math.min(d, 3.2*dt); p.z += dz/d*Math.min(d, 3.2*dt); lionWalk(3); }
+    clampPit(p, PIT_R - .8); lionFace(P.pos.x, P.pos.z);
+    L.nextT -= dt; L.roarT -= dt;
+    if (L.roarT <= 0 && dP > 3){ L.state = 'roar'; L.t = 0; L.roarT = rand(10,14); sfx.lroar(); }
+    else if (L.nextT <= 0){ L.nextT = rand(1.3, 2.5); if (dP < 3) { L.state = 'swipe'; L.t = 0; } else { L.state = 'crouch'; L.t = 0; sfx.growl(); } }
+    else if (dP < 2.3 && L.cool <= 0){ L.state = 'swipe'; L.t = 0; }
+  } else if (L.state === 'crouch'){
+    L.t += dt; lionFace(P.pos.x, P.pos.z); L.g.position.y = -.18*Math.min(1, L.t/.3); L.g.rotation.x = .12;
+    if (L.t >= D_().warn){
+      const tx = P.pos.x + P.vel.x*.2, tz = P.pos.z + P.vel.z*.2;
+      L.dir.set(tx - p.x, 0, tz - p.z); L.dist = L.dir.length(); L.dir.normalize(); L.trav = 0; L.hitDone = false; L.state = 'pounce'; L.t = 0; L.g.rotation.x = -.15;
+    }
+  } else if (L.state === 'pounce'){
+    L.t += dt; const step = 13*dt; p.x += L.dir.x*step; p.z += L.dir.z*step; L.trav += step;
+    L.g.position.y = Math.sin(clamp(L.trav/(L.dist + 2), 0, 1)*PI)*.7;
+    const wall = clampPit(p, PIT_R - .8);
+    if (!L.hitDone && Math.hypot(P.pos.x - p.x, P.pos.z - p.z) < 1.5){ L.hitDone = true; resolveIncoming(p.clone(), 22*D_().dmg, 'O leão acertou Benaia.', {noParry:true, noBlock:true}); }
+    if (wall || L.trav >= L.dist + 2 || L.t > .9){
+      L.state = 'stunned'; L.t = wall ? 2.3 : 1.3; L.g.position.y = 0; L.g.rotation.x = 0;
+      if (wall){ sfx.hit(); shake = Math.max(shake, .3); toast('O leão bateu na parede da cova!', 1.2); }
+    }
+  } else if (L.state === 'stunned'){
+    L.t -= dt; L.g.rotation.z = Math.sin(gt*14)*.12;
+    if (L.t <= 0){ L.state = 'prowl'; L.g.rotation.z = 0; L.nextT = rand(1,2); }
+  } else if (L.state === 'swipe'){
+    L.t += dt; lionFace(P.pos.x, P.pos.z); lion.legs[3].rotation.x = -Math.min(1, L.t/.5)*1.3;
+    if (L.t >= .5){
+      lion.legs[3].rotation.x = .4;
+      if (dP < 2.7) resolveIncoming(p.clone(), 14*D_().dmg, 'Uma patada acertou Benaia.', {onParry: () => { L.state = 'stunned'; L.t = 1.3; toast('Aparou a patada! O leão está atordoado.', 1.2); }});
+      if (L.state === 'swipe'){ L.state = 'prowl'; L.cool = 1.2; }
+    }
+  } else if (L.state === 'roar'){
+    L.t += dt; L.head.rotation.x = -Math.min(1, L.t/.3)*.6;
+    if (L.t > .3 && L.t - dt <= .3){ P.cor = clamp(P.cor - 10, 0, 100); toast('O rugido do leão abala a coragem. Segure F para orar.', 1.8); shake = Math.max(shake, .4); }
+    if (L.t > 1.2){ L.state = 'prowl'; L.head.rotation.x = 0; }
+  }
+  // não atravessa o jogador
+  const dx = p.x - P.pos.x, dz = p.z - P.pos.z, d = Math.hypot(dx,dz);
+  if (d < 1.3 && d > .001 && L.state !== 'pounce'){ p.x = P.pos.x + dx/d*1.3; p.z = P.pos.z + dz/d*1.3; clampPit(p, PIT_R - .8); }
+  p.y = villageH(p.x, p.z);
+}
+function hitLion(){
+  let dmg = (W.kind === 'quick' ? 1 : 2) + critBonus();
+  if (L.state === 'stunned') dmg *= 2;
+  else if (Math.random() < .35){ sfx.block(); toast('O leão se esquivou.', .7); return; }
+  L.hp -= dmg; sfx.hit(); burst(L.root.position.clone().setY(L.root.position.y + 1), 0xb98a4b, 6, 2, .7, .7);
+  if (L.hp <= 0) lionDown();
+}
+function lionDown(){
+  L.state = 'dead'; L.hp = 0; sfx.lroar();
+  setObj('O leão caiu', B.rocks > 0 ? 'O leão caiu, mas não da maneira que o texto conta.' : '"...e feriu um leão no meio de uma cova, no tempo da neve."');
+  toast('O leão caiu.', 2);
+  B.part = 'lionDone'; setTimeout(() => { if (mode === 'battle' && B.part === 'lionDone') egyptCine(); }, 2600);
+}
+// Pedras atiradas da borda
+function throwRock(){
+  const start = camera.position.clone(), tgt = L.root.position.clone().setY(L.root.position.y + 1), T_ = .9;
+  const vel = tgt.clone().sub(start).sub(V(0, -.5*G*T_*T_, 0)).divideScalar(T_);
+  const m = new THREE.Mesh(new THREE.DodecahedronGeometry(.18,0), cmat(0x8a8274)); m.position.copy(start); scene.add(m);
+  rocks.push({m, vel, t:0}); sfx.swing(); B.rocks++;
+}
+function updateRocks(dt){
+  for (let i=rocks.length-1;i>=0;i--){ const r = rocks[i]; r.t += dt; r.vel.y -= G*dt; r.m.position.addScaledVector(r.vel, dt);
+    if (L.state !== 'dead' && r.m.position.distanceTo(tmp1.copy(L.root.position).setY(L.root.position.y + 1)) < 1.1){
+      scene.remove(r.m); rocks.splice(i,1); L.hp -= 1; sfx.hit(); sfx.growl(); if (L.hp <= 0) lionDown(); continue; }
+    if (r.t > 2 || r.m.position.y < villageH(r.m.position.x, r.m.position.z)){ scene.remove(r.m); rocks.splice(i,1); } }
 }
 
-// ================= Filisteus =================
-// sleep: dorme junto ao fogo · watch: de guarda, olhando em volta · alarm: sentinela correndo para a trombeta
-const TYPES = {
-  lanceiro: {hp:2, speed:2.6, dmg:12, robe:0x8c2f22},
-  guarda:   {hp:3, speed:1.9, dmg:12, robe:0x9b5a2a},
-  arqueiro: {hp:1, speed:2.6, dmg:8,  robe:0x7a2a1f},
-  sentinela:{hp:1, speed:3.6, dmg:8,  robe:0x6e2a1c},
-  tocha:    {hp:2, speed:2.4, dmg:10, robe:0x8a3a22},
-  instrutor:{hp:4, speed:2.4, dmg:6,  robe:0x3d5a8a},
-};
-function spawnEnemy(type, x, z, extra={}){
-  const def = TYPES[type];
-  const m = buildMan({robe:def.robe, plume: type !== 'instrutor'});
-  if (type === 'lanceiro' || type === 'guarda' || type === 'sentinela') addSpear(m);
-  if (type === 'guarda') addTowerShield(m);
-  if (type === 'arqueiro') addBow(m);
-  if (type === 'instrutor') addStaff(m);
-  let torch = null;
-  if (type === 'tocha'){ addSpear(m); torch = addTorch(m); }
-  m.root.position.set(x, landH(x,z), z); m.root.rotation.y = PI; scene.add(m.root);
-  const e = Object.assign({type, root:m.root, legs:m.legs, armR:m.armR, armL:m.armL, k:m.k, hp:def.hp, speed:def.speed*rand(.9,1.1), dmg:def.dmg,
-    state:'watch', t:0, cool:rand(.4,1.2), shootT:rand(1.5,3), torch, target:null, retarget:0, scan:rand(0,6), home:V(x,0,z), wakeAt:rand(25,90), training:false, baseYaw:PI}, extra);
-  m.root.rotation.y = e.baseYaw;
-  if (e.state === 'sleep'){ e.root.rotation.x = -PI/2; e.root.position.y += .25; }
-  enemies.push(e); return e;
+// ================= O egípcio =================
+const E = {root:egy.root, state:'approach', t:0, hp:8, max:8, armed:true, cool:1.5};
+function placeEgy(){
+  E.state = 'approach'; E.t = 0; E.hp = E.max = D_().egy; E.armed = true; E.cool = 1.5; egySpear.visible = true;
+  E.root.position.set(EG.x, landH(EG.x, EG.z + 6), EG.z + 6); E.root.rotation.set(0, PI, 0); egy.armR.rotation.set(0,0,0);
 }
-function clearEnemies(){ for (const e of enemies) scene.remove(e.root); enemies.length = 0; for (const a of arrows) scene.remove(a.m); arrows.length = 0; }
-function faceTo(e, x, z){ e.root.rotation.y = Math.atan2(x - e.root.position.x, z - e.root.position.z); }
-function stepToward(e, x, z, spd, dt){
-  const dx = x - e.root.position.x, dz = z - e.root.position.z, d = Math.hypot(dx,dz);
-  if (d > .05){ e.root.position.x += dx/d*Math.min(d, spd*dt); e.root.position.z += dz/d*Math.min(d, spd*dt); }
-  e.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*spd*3 + i*PI)*.6);
-}
-function wake(e, noisy){
-  if (e.state !== 'sleep' && e.state !== 'watch') return;
-  if (e.state === 'sleep'){ e.root.rotation.x = 0; }
-  if (e.type === 'sentinela' && !e.training){ e.state = 'alarm'; e.post = POSTS.reduce((a,p) => p.distanceTo(e.root.position) < a.distanceTo(e.root.position) ? p : a, POSTS[0]); toast('Uma sentinela viu vocês e corre para a trombeta!', 2); sfx.shout(); return; }
-  e.state = 'advance';
-  if (noisy && mode === 'battle') B.alarm = clamp(B.alarm + 4*D_().alarm, 0, 100);
-}
-/** A sentinela ou a tocha enxerga o valente? (as tochas veem mais longe) */
-function sees(e){
-  const d = Math.hypot(P.pos.x - e.root.position.x, P.pos.z - e.root.position.z);
-  if (d < 4.5) return true;
-  const range = (e.type === 'tocha' ? 18 : 12) * (W.carry ? 1.1 : 1);
-  return d < range && facing(P.pos, 65, e.root.position, enemyFwd(e));
-}
-// Quem o filisteu ataca: o valente ou um companheiro de pé, o que estiver mais perto.
-function pickTarget(e){
-  let best = {pos:P.pos, ally:null}, bd = Math.hypot(P.pos.x - e.root.position.x, P.pos.z - e.root.position.z) - 1.5;
-  for (const a of allies){ if (a.down) continue; const p = a.m.root.position, d = Math.hypot(p.x - e.root.position.x, p.z - e.root.position.z); if (d < bd){ bd = d; best = {pos:p, ally:a}; } }
-  return best;
-}
-function updateEnemies(dt){
-  for (let i=enemies.length-1;i>=0;i--){
-    const e = enemies[i], p = e.root.position;
-    const dP = Math.hypot(P.pos.x - p.x, P.pos.z - p.z);
-    if (e.state === 'advance' || e.state === 'watch' || e.state === 'windup'){ e.retarget -= dt; if (e.retarget <= 0 || !e.target){ e.target = pickTarget(e); e.retarget = .5; } }
-    const tg = e.target ? e.target.pos : P.pos, dT = Math.hypot(tg.x - p.x, tg.z - p.z);
-    if (e.state === 'sleep'){
-      const run = keys.ShiftLeft || keys.ShiftRight || Math.hypot(TM.mx, TM.my) > .92;
-      const noise = enemies.some(o => o !== e && (o.state === 'advance' || o.state === 'windup') && o.root.position.distanceTo(p) < 9);
-      if (dP < (run ? 6.5 : 4) || noise) wake(e, true); else if (B.alarm >= e.wakeAt) wake(e, false);
+function egyFace(x, z){ E.root.rotation.y = Math.atan2(x - E.root.position.x, z - E.root.position.z); }
+function egyFacesPlayer(deg){ return facing(P.pos, deg, E.root.position, V(Math.sin(E.root.rotation.y), 0, Math.cos(E.root.rotation.y))); }
+function updateEgy(dt){
+  const p = E.root.position, dP = Math.hypot(P.pos.x - p.x, P.pos.z - p.z);
+  if (E.state === 'dead'){ E.root.rotation.x = Math.max(-PI/2, E.root.rotation.x - dt*2.2); return; }
+  if (!(mode === 'battle' && B.part === 'egypt' && playing())) return;
+  E.cool -= dt;
+  const walk = spd => egy.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*spd*2.4 + i*PI)*.5);
+  if (E.state === 'approach'){
+    egyFace(P.pos.x, P.pos.z);
+    const want = E.armed ? 3.6 : 1.9;
+    if (dP > want){ p.x += (P.pos.x - p.x)/dP*(E.armed ? 2.1 : 3)*dt; p.z += (P.pos.z - p.z)/dP*(E.armed ? 2.1 : 3)*dt; walk(E.armed ? 2.1 : 3); } else egy.legs.forEach(l => l.rotation.x *= .8);
+    if (E.cool <= 0 && dP < (E.armed ? 4.4 : 2.4)){
+      E.t = 0; E.state = !E.armed ? 'punchWind' : Math.random() < .65 ? 'thrustWind' : 'sweepWind';
     }
-    else if (e.state === 'watch'){
-      e.scan += dt*.6; e.root.rotation.y = e.baseYaw + Math.sin(e.scan)*.9;
-      if (e.patrol){ const k = Math.sin(gt*.25 + e.home.x); stepToward(e, e.home.x, e.home.z + k*10, 1.2, dt); e.root.rotation.y = Math.cos(gt*.25 + e.home.x) > 0 ? 0 : PI; }
-      if ((mode === 'battle' && B.state !== 'choice' && sees(e)) || (e.training && dP < 9)) wake(e, true); else if (B.alarm >= e.wakeAt) wake(e, false);
+  } else if (E.state === 'thrustWind'){
+    E.t += dt; egyFace(P.pos.x, P.pos.z); egy.armR.rotation.x = Math.min(1, E.t/.4)*.7;
+    if (E.t >= .75){
+      egy.armR.rotation.x = -1.3; E.state = 'recover'; E.t = 0;
+      if (dP < 4.7 && egyFacesPlayer(28)) resolveIncoming(p.clone(), 16*D_().dmg, 'A lança do egípcio acertou Benaia.', {noBlock:true, onParry: () => { E.state = 'staggered'; E.t = 1.6; toast('Aparou! Ele perdeu o equilíbrio: chegue perto e segure E para arrancar a lança!', 2.2); }});
     }
-    else if (e.state === 'alarm'){
-      stepToward(e, e.post.x, e.post.z, e.speed*1.15, dt); faceTo(e, e.post.x, e.post.z);
-      if (Math.hypot(e.post.x - p.x, e.post.z - p.z) < 1.4){ B.alarm = clamp(B.alarm + 22*D_().alarm, 0, 100); sfx.horn(); toast('O alarme soou no arraial!', 2); e.state = 'advance'; }
+  } else if (E.state === 'sweepWind'){
+    E.t += dt; E.root.rotation.y += Math.sin(E.t*9)*dt*.6; egy.armR.rotation.z = Math.min(1, E.t/.6)*1.2;
+    if (E.t >= 1){
+      egy.armR.rotation.z = -1; E.state = 'recover'; E.t = -.2;
+      if (dP < 3.9) resolveIncoming(p.clone(), 14*D_().dmg, 'A varredura da lança acertou Benaia.', {noParry:true, noBlock:true});
     }
-    else if (e.state === 'fallen'){ e.t += dt; e.root.rotation.x = -Math.min(PI/2, e.t*5); if (e.t > 1.3){ e.state = 'flee'; e.root.rotation.x = 0; } }
-    else if (e.state === 'flee'){ const away = tmp1.copy(p).sub(P.pos).setY(0).normalize(); stepToward(e, p.x + away.x*10, p.z + away.z*10, e.panic ? 7.5 : 5.5, dt); faceTo(e, p.x + away.x, p.z + away.z); if (dP > 55){ scene.remove(e.root); enemies.splice(i,1); continue; } }
-    else if (e.state === 'stun'){ e.t -= dt; e.root.rotation.z = Math.sin(gt*20)*.08; if (e.t <= 0){ e.state = 'advance'; e.root.rotation.z = 0; } }
-    else if (e.state === 'windup'){
-      e.t += dt; faceTo(e, tg.x, tg.z); e.armR.rotation.x = -Math.min(1, e.t/e.wind)*2.2;
-      if (e.t >= e.wind){ e.armR.rotation.x = .6;
-        if (dT < 2.7){ if (e.target && e.target.ally) allyHit(e.target.ally, e.dmg*D_().dmg, e); else if (P.vida > 0) resolveIncoming(p, e.dmg*D_().dmg, e.training ? '' : 'Um filisteu acertou o valente.', e); }
-        if (e.state === 'windup'){ e.state = 'recover'; e.t = 0; } }
+  } else if (E.state === 'punchWind'){
+    E.t += dt; egyFace(P.pos.x, P.pos.z); egy.armR.rotation.x = Math.min(1, E.t/.3)*.9;
+    if (E.t >= .45){
+      egy.armR.rotation.x = -1.2; E.state = 'recover'; E.t = .1;
+      if (dP < 2.4) resolveIncoming(p.clone(), 10*D_().dmg, 'O egípcio acertou um soco.', {onParry: () => { E.state = 'stun'; E.t = 1.1; toast('Aparou o soco!', 1); }});
     }
-    else if (e.state === 'recover'){ e.t += dt; e.armR.rotation.x *= .9; if (e.t > .5){ e.state = 'advance'; e.cool = rand(1,1.8); } }
-    else if (e.state === 'aim'){ e.t += dt; faceTo(e, P.pos.x, P.pos.z); e.armL.rotation.x = -1.4; if (e.t > .8){ shootArrow(tmp1.copy(p).setY(p.y + 1.5), V(P.pos.x, P.pos.y + 1.3, P.pos.z), e.training); e.state = 'advance'; e.shootT = e.training ? 2.2 : rand(2.6,3.6); e.armL.rotation.x = 0; } }
-    else if (e.state === 'advance'){
-      e.cool -= dt;
-      if (e.type === 'arqueiro'){
-        if (!e.fixed){ if (dP < 7) stepToward(e, p.x - (P.pos.x - p.x), p.z - (P.pos.z - p.z), e.speed, dt); else if (dP > 26) stepToward(e, P.pos.x, P.pos.z, e.speed, dt); }
-        faceTo(e, P.pos.x, P.pos.z); e.shootT -= dt; if (e.shootT <= 0 && dP < 34 && (!e.allowShot || e.allowShot())){ e.state = 'aim'; e.t = 0; }
-      } else {
-        if (dT > 2.1) stepToward(e, tg.x, tg.z, e.speed, dt);
-        faceTo(e, tg.x, tg.z);
-        if (dT <= 2.3 && e.cool <= 0 && (!e.target || e.target.ally || P.vida > 0)){ e.state = 'windup'; e.t = 0; e.wind = .65; }
-        // Luta no arraial faz barulho e o alarme sobe.
-        if (mode === 'battle' && !e.training && dT < 6 && Math.abs(p.x) < CAMP.hw + 4 && p.z > CAMP.z0 - 4 && p.z < CAMP.z1 + 4) B.noise = true;
-        // Longe demais: perde os três de vista e volta a vigiar.
-        if (!e.training && dP > 42 && e.type !== 'arqueiro'){ e.state = 'watch'; e.baseYaw = e.root.rotation.y; e.home.copy(p); e.patrol = false; e.wakeAt = Math.max(e.wakeAt, B.alarm + 10); }
-      }
-    }
-    if (e.torch && e.torch.visible){ const f = e.torch.children[1]; if (f) f.scale.y = .8 + .3*Math.sin(gt*17 + i); }
-    if (alive(e) && e.state !== 'sleep'){
-      for (const o of enemies){ if (o === e || !alive(o) || o.state === 'sleep') continue; const dx = p.x - o.root.position.x, dz = p.z - o.root.position.z, d = Math.hypot(dx,dz); if (d < 1.1 && d > .001){ p.x += dx/d*(1.1-d)*.5; p.z += dz/d*(1.1-d)*.5; } }
-      const dx = p.x - P.pos.x, dz = p.z - P.pos.z, d = Math.hypot(dx,dz); if (d < 1.2 && d > .001){ p.x = P.pos.x + dx/d*1.2; p.z = P.pos.z + dz/d*1.2; }
-      p.x = clamp(p.x, -60, 60); p.z = Math.min(p.z, GATE_Z - 1);
-      p.y = landH(p.x, p.z);
-    }
+  } else if (E.state === 'recover'){
+    E.t += dt; egy.armR.rotation.x *= .9; egy.armR.rotation.z *= .9;
+    if (E.t > .6){ E.state = 'approach'; E.cool = E.armed ? rand(1.2, 2) : rand(.7, 1.2); }
+  } else if (E.state === 'staggered' || E.state === 'stun'){
+    E.t -= dt; E.root.rotation.z = Math.sin(gt*12)*.06; egy.armR.rotation.x = .3;
+    if (E.t <= 0){ E.state = 'approach'; E.root.rotation.z = 0; E.cool = .8; }
   }
+  const dx = p.x - P.pos.x, dz = p.z - P.pos.z, d = Math.hypot(dx,dz);
+  if (d < 1.4 && d > .001){ p.x = P.pos.x + dx/d*1.4; p.z = P.pos.z + dz/d*1.4; }
+  const ex = p.x - EG.x, ez = p.z - EG.z, er = Math.hypot(ex, ez); if (er > 20){ p.x = EG.x + ex/er*20; p.z = EG.z + ez/er*20; }
+  p.y = landH(p.x, p.z);
+}
+function hitEgy(){
+  let dmg = W.weapon === 'spear' ? (W.kind === 'quick' ? 2 : 3) : W.weapon === 'rack' ? (W.kind === 'quick' ? 1 : 2) : (W.kind === 'quick' ? .5 : 1);
+  dmg += critBonus();
+  if (W.weapon === 'staff'){
+    const floor = E.max*.5; dmg = Math.max(0, Math.min(dmg, E.hp - floor));
+    if (dmg === 0 && !B.staffCapWarned){ B.staffCapWarned = true; toast('O cajado não basta para derrubá-lo. Apare a estocada e arranque a lança (segure E).', 3); }
+    sfx.wood();
+  } else sfx.hit();
+  E.hp -= dmg; burst(E.root.position.clone().setY(E.root.position.y + 1.8), 0xd9d0b8, 5, 2, .7, .7);
+  const push = tmp2.copy(E.root.position).sub(P.pos).setY(0).normalize(); E.root.position.addScaledVector(push, W.weapon === 'spear' ? .9 : .5);
+  if (E.hp <= 0){ egyDown(); return; }
+  if (E.state === 'approach' || E.state === 'recover'){ E.state = 'stun'; E.t = W.weapon === 'staff' ? .25 : .45; }
+}
+function egyDown(){
+  E.state = 'dead'; E.hp = 0; B.spearKill = W.weapon === 'spear'; sfx.hit(); shake = .4;
+  setObj('O egípcio caiu', B.spearKill ? '"...e o matou com a sua própria lança."' : 'O egípcio caiu, mas não com a lança dele.');
+  toast('O egípcio caiu.', 2);
+  B.part = 'done'; setTimeout(() => { if (mode === 'battle') endCine(); }, 2400);
+}
+function disarm(){
+  E.armed = false; egySpear.visible = false; W.weapon = 'spear'; B.disarmed = true; sfx.pull(); shake = .3;
+  E.state = 'recover'; E.t = -.4;
+  toast('Arrancou a lança da mão do egípcio!', 2);
+  setObj('O egípcio sem a lança', 'Agora ele vem com os punhos, mais rápido e de perto. Mantenha distância e estoque com a lança dele.');
 }
 
-// ================= Os dois companheiros =================
-function spawnAllies(){
-  clearAllies();
-  for (const slot of [-1, 1]){
-    const m = buildMan({robe: slot < 0 ? 0x6f6a3c : 0x7d5f3a}); addSword(m); addRoundShield(m);
-    const x = P.pos.x + slot*2.2, z = P.pos.z - 1.5; m.root.position.set(x, landH(x,z), z); scene.add(m.root);
-    allies.push({m, slot, training: mode === 'training', hp:100, down:false, downT:0, cool:rand(.4,1), holdPos:V(x,0,z), target:null, retarget:0});
-  }
-}
-function clearAllies(){ for (const a of allies) scene.remove(a.m.root); allies.length = 0; }
-function toggleOrder(){
-  B.order = B.order === 'follow' ? 'hold' : 'follow';
-  if (B.order === 'hold') for (const a of allies) a.holdPos.copy(a.m.root.position);
-  sfx.shout(); toast(B.order === 'follow' ? '"Comigo!" — os dois seguem você.' : '"Segurem aqui!" — os dois defendem este ponto.', 1.6);
-  if (mode === 'training') T.onOrder();
-}
-function allyHit(a, dmg, attacker){
-  if (a.down) return;
-  if (Math.random() < .4){ sfx.block(); return; }   // o escudo do companheiro segura parte dos golpes
-  a.hp -= dmg * D_().allyDmg * (a.training ? .6 : 1);
-  sfx.hit(); burst(a.m.root.position.clone().setY(a.m.root.position.y + 1.2), 0x8a7a52, 4, 1.8, .6, .6);
-  if (a.hp <= 0){ a.down = true; a.downT = 0; a.m.root.rotation.x = -PI/2; a.m.root.position.y += .25; toast('Um companheiro caiu! Segure E perto dele para levantá-lo.', 2.4); sfx.hurt(); }
-}
-function reviveAlly(a){ a.down = false; a.hp = 55; a.m.root.rotation.x = 0; toast('O companheiro se levantou.', 1.2); if (mode === 'training') T.onRevive(); }
-function updateAllies(dt){
-  const f = fwdFlat(), r = V(-f.z, 0, f.x);
-  for (const a of allies){
-    const p = a.m.root.position;
-    if (a.down){ a.downT += dt; if (D_().selfRevive && a.downT > 8) reviveAlly(a); p.y = landH(p.x, p.z) + .25; continue; }
-    a.cool -= dt; a.retarget -= dt;
-    const anchor = B.order === 'follow' ? P.pos : a.holdPos, reach = B.order === 'follow' ? 8 : 6;
-    if (a.retarget <= 0){
-      a.retarget = .4; a.target = null; let bd = 1e9;
-      for (const e of enemies){ if (!alive(e) || e.state === 'sleep' || e.state === 'watch') continue; const ep = e.root.position;
-        if (Math.hypot(ep.x - anchor.x, ep.z - anchor.z) > reach) continue; const d = Math.hypot(ep.x - p.x, ep.z - p.z) - (e.target && !e.target.ally ? 2 : 0); if (d < bd){ bd = d; a.target = e; } }
-    }
-    let tx, tz, spd = 4.4;
-    if (a.target && alive(a.target)){ tx = a.target.root.position.x; tz = a.target.root.position.z; }
-    else if (B.order === 'follow'){ tx = P.pos.x + r.x*a.slot*2.2 - f.x*1.2; tz = P.pos.z + r.z*a.slot*2.2 - f.z*1.2; }
-    else { tx = a.holdPos.x; tz = a.holdPos.z; }
-    const dx = tx - p.x, dz = tz - p.z, d = Math.hypot(dx,dz), stop = a.target ? 1.8 : .4;
-    if (d > 8) spd = 7;
-    if (d > stop){ p.x += dx/d*Math.min(d - stop, spd*dt); p.z += dz/d*Math.min(d - stop, spd*dt); a.m.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*10 + i*PI)*.6); }
-    else a.m.legs.forEach(l => l.rotation.x *= .8);
-    if (d > .05) a.m.root.rotation.y = Math.atan2(a.target ? dx : (B.order === 'follow' ? -f.x : dx), a.target ? dz : (B.order === 'follow' ? -f.z : dz));
-    a.m.armR.rotation.x *= .85;
-    if (a.target && alive(a.target) && d < 2.3 && a.cool <= 0){ a.cool = 1.1; a.m.armR.rotation.x = -1.6; hitEnemy(a.target, 'quick', p.clone()); }
-    p.x = clamp(p.x, -60, 60); p.z = clamp(p.z, -76, GATE_Z - 1.5); p.y = landH(p.x, p.z);
-  }
-}
-
-// ================= Jogador =================
+// ================= Jogador e ações =================
 function currentAction(){
-  for (const a of allies) if (a.down && a.m.root.position.distanceTo(P.pos) < 2.4) return {id:'revive', a, need:2.5, label:'Levantar', doing:'levantando...'};
-  if (mode === 'battle'){
-    if (B.state === 'choice' && jarProp.visible && Math.hypot(P.pos.x - JAR_POS.x, P.pos.z - JAR_POS.z) < 2.2) return {id:'jar', need:.6, label:'Pegar o cântaro', doing:'pegando...'};
-    if (B.state === 'out' && W.hasJar && !W.carry){
-      if (Math.hypot(P.pos.x - CISTERN.x, P.pos.z - CISTERN.z) < 2.6) return {id:'cistern', need:D_().draw, label:'Tirar água', doing:'tirando água...'};
-      if (Math.hypot(P.pos.x - FIELD_WELL.x, P.pos.z - FIELD_WELL.z) < 2.4) return {id:'well', need:2.5, label:'Tirar água do poço', doing:'tirando água...'};
-    }
+  const d = q => Math.hypot(P.pos.x - q.x, P.pos.z - q.z);
+  if (mode === 'training' && T.stage === 1 && T.I && T.iState === 'staggered' && d(T.I.root.position) < 3.3) return {id:'tdisarm', need:D_().disarm, label:'Arrancar a lança', doing:'arrancando...'};
+  if (mode !== 'battle') return null;
+  if (B.part === 'snow'){
+    if (snowing && d(SHELTER) < 2.8) return {id:'shelter', need:2, label:'Esperar a neve passar', doing:'esperando...'};
+    if (L.state !== 'dead' && d(ROCKS) < 2.2) return {id:'rocks', need:.5, label:'Atirar uma pedra', doing:'...'};
+  }
+  if (B.part === 'egypt'){
+    if (E.armed && E.state === 'staggered' && d(E.root.position) < 3.3) return {id:'disarm', need:D_().disarm, label:'Arrancar a lança', doing:'arrancando...'};
+    if (W.weapon === 'staff' && E.armed && d(RACK) < 2.2) return {id:'rack', need:.6, label:'Pegar a espada', doing:'pegando...'};
   }
   return null;
+}
+function askConfirm(kind, then){
+  const txt = {
+    shelter:{eb:'O abrigo', h:'Esperar a neve passar?', lede:'Aqui dentro está quente, e sem neve o chão fica firme. Mas o texto guarda um detalhe:', v:'vsnow', yes:'Esperar a neve passar', no:'Ir agora, na neve', item:'No tempo da neve'},
+    rocks:{eb:'A borda da cova', h:'Atirar pedras de cima?', lede:'Daqui o leão não alcança você. Mas o texto conta outra coisa:', v:'vpit', yes:'Atirar pedras', no:'Descer à cova', item:'Desceu à cova'},
+    rack:{eb:'O suporte de armas', h:'Pegar a espada?', lede:'Com a espada a luta fica mais fácil. Mas o texto diz:', v:'vstaff', yes:'Pegar a espada', no:'Ficar com o cajado', item:'Desceu a ele com um cajado'},
+  }[kind];
+  modal = true; unlock(); attackUp(true); W.actT = 0;
+  showOverlay(`
+    <div class="eyebrow">${txt.eb}</div>
+    <h2>${txt.h}</h2>
+    <p class="lede">${txt.lede}</p>
+    ${verseHTML(txt.v)}
+    <div class="row"><button class="btn" data-act="yes">${txt.yes}</button><button class="btn primary" data-act="no">${txt.no}</button></div>
+    <p class="note">Escolher "${txt.yes}" faz perder o item de Fidelidade "${txt.item}".</p>`, {
+    yes: () => { hideOverlay(); modal = false; tryLock(); then(); },
+    no: () => { hideOverlay(); modal = false; tryLock(); },
+  });
+}
+function doAction(a){
+  if (a.id === 'shelter'){ snowing = false; B.waited = true; toast('A neve parou. O chão ficou firme.', 2); sfx.wind(); }
+  else if (a.id === 'rocks') throwRock();
+  else if (a.id === 'rack'){ W.weapon = 'rack'; B.tookSword = true; rackSword.visible = false; toast('Benaia pegou a espada.', 1.4); }
+  else if (a.id === 'disarm') disarm();
+  else if (a.id === 'tdisarm') trainingDisarm();
 }
 function updatePlayer(dt){
   const f = V(-Math.sin(P.yaw),0,-Math.cos(P.yaw)), r = V(Math.cos(P.yaw),0,-Math.sin(P.yaw)), mv = V();
   if (keys.KeyW) mv.add(f); if (keys.KeyS) mv.sub(f); if (keys.KeyD) mv.add(r); if (keys.KeyA) mv.sub(r);
-  let running = keys.ShiftLeft || keys.ShiftRight, spd = running ? 7.2 : 4.6;
-  W.shield = (mouseR || TM.shieldId !== null) && !W.carry && !W.praying;
+  let spd = (keys.ShiftLeft || keys.ShiftRight) ? 7.2 : 4.6;
+  W.shield = (mouseR || TM.shieldId !== null) && W.weapon === 'sword' && !W.praying;
   if (W.shield) spd *= .55;
   if (mv.lengthSq() > 0) mv.normalize().multiplyScalar(spd);
-  else if (touchMode && Math.hypot(TM.mx, TM.my) > .12){ const mag = Math.min(1, Math.hypot(TM.mx, TM.my)); running = mag > .92; mv.addScaledVector(f, TM.my).addScaledVector(r, TM.mx).normalize().multiplyScalar(spd*mag*(running ? 7.2/4.6 : 1)); }
-  // Ação contextual (segurar E): pegar o cântaro, tirar água, levantar um companheiro.
+  else if (touchMode && Math.hypot(TM.mx, TM.my) > .12){ const mag = Math.min(1, Math.hypot(TM.mx, TM.my)); mv.addScaledVector(f, TM.my).addScaledVector(r, TM.mx).normalize().multiplyScalar(spd*mag*(mag > .92 ? 7.2/4.6 : 1)); }
   W.act = currentAction();
   if (W.act && actHeld() && mv.lengthSq() === 0){
-    if (W.act.id === 'well' && !B.warnedWell){ askWell(); return; }
+    const warnKey = {shelter:'warnedSnow', rocks:'warnedRocks', rack:'warnedSword'}[W.act.id];
+    if (warnKey && !B[warnKey]){ B[warnKey] = true; const a = W.act; askConfirm(a.id, () => doAction(a)); return; }
     W.actT += dt; if (W.actT >= W.act.need){ doAction(W.act); W.actT = 0; }
   } else W.actT = 0;
   const wantPray = (keys.KeyF || TM.prayId !== null) && mode === 'battle';
   if (wantPray && mv.lengthSq() === 0 && !W.atkHeld){
     if (W.prayCool > 0){ if (W.prayT === 0){ toast(`Aguarde ${Math.ceil(W.prayCool)} s para orar de novo.`, 1); W.prayT = -1; } }
     else { if (W.prayT <= 0){ W.prayT = 0; sfx.pray(); } W.praying = true; W.prayT += dt;
-      if (W.prayT >= 2){ P.cor = clamp(P.cor + 35, 0, 100); W.prayCool = 10; W.prayT = 0; W.praying = false; toast('O valente orou e encontrou coragem.', 1.8); } }
+      if (W.prayT >= 2){ P.cor = clamp(P.cor + 35, 0, 100); W.prayCool = 10; W.prayT = 0; W.praying = false; toast('Benaia orou e encontrou coragem.', 1.8); } }
   } else { W.praying = false; if (W.prayT !== 0) W.prayT = 0; }
   if (W.praying) mv.set(0,0,0);
   W.prayCool = Math.max(0, W.prayCool - dt);
+  const slip = snowing && P.pos.x < BX/2 && mode === 'battle';
   if (W.dashT > 0){ W.dashT -= dt; mv.copy(W.dashDir).multiplyScalar(11); P.vel.copy(mv); }
-  else P.vel.lerp(mv, clamp(dt*10,0,1));
-  if (W.carry && running && P.vel.length() > 5) spill(2*dt, true);
+  else P.vel.lerp(mv, clamp(dt*(slip ? 2.2 : 10),0,1));
   P.pos.addScaledVector(P.vel, dt);
   W.iframe = Math.max(0, W.iframe - dt); W.dashCool = Math.max(0, W.dashCool - dt);
   if (keys.ArrowLeft) P.yaw += 1.8*dt; if (keys.ArrowRight) P.yaw -= 1.8*dt;
   if (keys.ArrowUp) P.pitch = clamp(P.pitch + 1.2*dt, -1.35, 1.35); if (keys.ArrowDown) P.pitch = clamp(P.pitch - 1.2*dt, -1.35, 1.35);
-  P.pos.x = clamp(P.pos.x, -48, 48); P.pos.z = clamp(P.pos.z, -73, GATE_Z - 1.6);
-  if (mode === 'training'){ const dx = P.pos.x - TR.x, dz = P.pos.z - TR.z, d = Math.hypot(dx,dz); if (d > 13){ P.pos.x = TR.x + dx/d*13; P.pos.z = TR.z + dz/d*13; } }
+  const keepIn = (c, rr) => { const dx = P.pos.x - c.x, dz = P.pos.z - c.z, d = Math.hypot(dx,dz); if (d > rr){ P.pos.x = c.x + dx/d*rr; P.pos.z = c.z + dz/d*rr; } };
+  if (mode === 'training') keepIn(TRN, 13);
+  else if (B.part === 'snow' || B.part === 'lionDone') keepIn(V(0,0,0), 45);
+  else if (B.part === 'pit') clampPit(P.pos, PIT_R - .4);
+  else if (B.part === 'egypt' || B.part === 'done') keepIn(EG, 22);
+  // Entrar na cova: a neve desliza atrás e não há volta até o fim
+  if (mode === 'battle' && B.part === 'snow' && Math.hypot(P.pos.x - PIT.x, P.pos.z - PIT.z) < PIT_R - .2 && L.state !== 'dead') enterPit();
   P.pos.y = landH(P.pos.x, P.pos.z);
   P.eye = lerp(P.eye, W.praying || W.actT > 0 ? 1.0 : 1.6, clamp(dt*6,0,1));
 
@@ -1022,305 +1015,221 @@ function updatePlayer(dt){
   if (W.pendingHit > 0){ W.pendingHit -= dt; if (W.pendingHit <= 0) applySwing(); }
   if (W.swingT > 0){ W.swingT += dt; if (W.swingT > (W.heavy ? .32 : .22)) W.swingT = 0; }
 }
-function doAction(a){
-  if (a.id === 'revive') reviveAlly(a.a);
-  else if (a.id === 'jar') takeJar();
-  else if (a.id === 'cistern') drawWater(false);
-  else if (a.id === 'well') drawWater(true);
-}
 function fpCamera(){
   const bob = Math.sin(gt*9)*.03*Math.min(1, P.vel.length()/4);
   camera.position.set(P.pos.x, P.pos.y + P.eye + bob, P.pos.z);
   camera.rotation.set(P.pitch + (Math.random()-.5)*shake*.04, P.yaw + (Math.random()-.5)*shake*.04, 0);
 }
 function animateViewmodel(){
+  const w = W.weapon;
+  swordPivot.visible = w === 'sword' || w === 'rack'; shieldPivot.visible = w === 'sword'; staffPivot.visible = w === 'staff'; spearPivot.visible = w === 'spear';
   let rx = -.25, rz = -.35, px = .34, py = -.36;
   if (W.atkHeld && W.atkT > .15){ const k = clamp(W.atkT/.45,0,1); rx = -.25 - .9*k; rz = -.35 - .6*k; py = -.36 + .12*k; }
-  if (W.swingT > 0){ const dur = W.heavy ? .32 : .22, k = clamp(W.swingT/dur,0,1), s = Math.sin(k*PI); rx = -.25 - 1.1*s + 1.4*k; rz = (W.combo === 2 ? .35 - 1.6*k : -.35 + 1.6*k); px = W.combo === 2 ? .34*k : .34 - .35*k; }
-  if (gt - W.parryT < .25 && W.carry){ rz = -1.4; rx = -.1; px = .12; py = -.2; }
+  const k = W.swingT > 0 ? clamp(W.swingT/(W.heavy ? .32 : .22),0,1) : 0, s = Math.sin(k*PI);
+  if (W.swingT > 0){ rx = -.25 - 1.1*s + 1.4*k; rz = (W.combo === 2 ? .35 - 1.6*k : -.35 + 1.6*k); px = W.combo === 2 ? .34*k : .34 - .35*k; }
+  const parrying = gt - W.parryT < .25 && w !== 'sword';
+  if (parrying && w === 'rack'){ rz = -1.4; rx = -.1; px = .12; py = -.2; }
   swordPivot.rotation.set(rx, 0, rz); swordPivot.position.set(px, py, -.55);
-  shieldPivot.visible = !W.carry; jarVM.visible = W.carry;
   const up = W.shield ? 1 : 0;
   shieldPivot.position.lerp(tmp1.set(up ? -.2 : -.46, up ? -.24 : -.42, -.6), .3);
   shieldPivot.rotation.y += ((up ? 0 : .5) - shieldPivot.rotation.y)*.3;
-  waterVM.visible = W.carry && W.water > 0; waterVM.position.y = .05 + .28*W.water/100;
-  jarVM.rotation.z = W.carry ? Math.sin(gt*2.2)*.04*Math.min(1, P.vel.length()/4) : 0;
+  // Cajado: gira em arco; aparando, fica atravessado na frente
+  staffPivot.rotation.set(parrying ? .2 : -s*.9, parrying ? 0 : s*.8, parrying ? 1.35 : -s*.6);
+  staffPivot.position.set(parrying ? 0 : .22, parrying ? -.25 : -.4, -.5);
+  // Lança: estocada para a frente
+  const th = W.swingT > 0 ? s : 0, back = W.atkHeld ? clamp(W.atkT/.45,0,1)*.2 : 0;
+  spearPivot.position.set(parrying ? .05 : .2, parrying ? -.28 : -.36, -.4 - th*.55 + back);
+  spearPivot.rotation.set(0, 0, parrying ? 1.2 : 0);
 }
 
-// ================= Treino: os três e o cântaro =================
-const T = {score:0, stage:0, stT:0, objs:[], rings:[], ri:0, gates:[], gi:0, endT:-1, marks:0, waterLeft:0, revives:0, downs:0};
-T.onOrder = () => {};
-T.onRevive = () => { if (T.stage === 2){ T.score += 100; T.revives++; toast('Levantou o companheiro! +100', 1); } };
-T.onDefense = kind => {
-  if (kind === 'parry'){ T.score += T.stage === 2 ? 50 : 40; toast(`Aparou! +${T.stage === 2 ? 50 : 40}`, .9); }
-  else if (kind === 'hit' && T.stage === 1) toast('A flecha sem ponta derramou água.', 1);
-};
-T.enemyDown = e => { if (T.stage === 2 && e.training){ T.score += 150; T.downs++; toast('O instrutor se rendeu. +150', 1); } };
-function clearTraining(){ T.objs.forEach(o => scene.remove(o)); T.objs = []; T.rings = []; T.gates = []; clearEnemies(); }
-function makeRing(x, z){
-  const r = new THREE.Mesh(new THREE.TorusGeometry(2.6, .09, 6, 32), new THREE.MeshBasicMaterial({color:0xecbd6a, transparent:true, opacity:.8}));
-  r.rotation.x = PI/2; r.position.set(x, landH(x,z)+.08, z); r.visible = false; scene.add(r); T.objs.push(r); return r;
+// ================= Treino: o campo da guarda =================
+const T = {score:0, stage:0, stT:0, endT:-1, objs:[], I:null, iState:'ready', iT:0, count:0, escaped:0, counters:0, disarms:0, hitThis:false, dummies:[], lit:-1, litT:0, seqN:0, dist:0, dir:V(), trav:0, hitDone:false};
+function clearTraining(){ T.objs.forEach(o => scene.remove(o)); T.objs = []; T.dummies = []; if (T.I){ scene.remove(T.I.root); T.I = null; } }
+function makeInstructor(withSpear){
+  const m = buildMan({robe:0x3d5a8a}); if (withSpear) addSpear(m, 2.2); else addPad(m);
+  m.root.position.set(TRN.x, landH(TRN.x, TRN.z + 8), TRN.z + 8); m.root.rotation.y = PI; scene.add(m.root); return m;
 }
-function makeGate(x, z){
+function makeDummy(x, z){
   const g = new THREE.Group(); g.position.set(x, landH(x,z), z); scene.add(g); T.objs.push(g);
-  for (const sx of [-1,1]){ const p = cyl(.06,.06,2,0x5a3f27,5); p.position.set(sx*1.3, 1, 0); g.add(p); }
-  const cloth = box(2.6,.25,.04,0xecbd6a); cloth.position.y = 1.9; g.add(cloth); g.userData.cloth = cloth;
-  return g;
+  { const post = cyl(.05,.05,1.6,0x5a3f27,5); post.position.y = .8; g.add(post); }
+  const m = mat(0xd9c27a, {emissive:0xffc15a, emissiveIntensity:0});
+  const body = cyl(.25,.3,.9,0,8,m); body.position.y = 1.2; g.add(body);
+  const head = sph(.18,0,m); head.position.y = 1.8; g.add(head);
+  g.lookAt(TRN.x, g.position.y, TRN.z); return {g, mat:m};
 }
 function setupTraining(n){
-  T.stage = n; T.endT = -1; T.stT = 0; clearEnemies();
-  W.carry = false; W.water = 0;
-  for (const a of allies) if (a.down) reviveAlly(a);
-  if (B.order !== 'follow') toggleOrder();
+  T.stage = n; T.stT = 0; T.endT = -1; clearTraining(); T.count = 0; T.iState = 'ready'; T.iT = 1.2;
   if (n === 0){
-    setObj('Treino 1 de 3: ordens', 'Leve os dois até a marca dourada e, lá dentro, mande segurar (Q ou Ordem). Depois chame de volta com "Comigo".');
-    T.rings = [makeRing(TR.x - 8, TR.z + 6), makeRing(TR.x + 8, TR.z + 3), makeRing(TR.x, TR.z - 8)];
-    T.ri = 0; T.rings[0].visible = true; T.marks = 0;
+    W.weapon = 'sword';
+    setObj('Treino 1 de 3: o bote', 'O instrutor vai correr contra você, como o leão. Quando ele se agachar, desvie para o lado (Espaço) e golpeie enquanto ele se recupera.');
+    T.I = makeInstructor(false);
   } else if (n === 1){
-    setObj('Treino 2 de 3: o cântaro', 'Passe pelas quatro marcas com o cântaro cheio. Correr, desviar e ser atingido derramam água. Botão direito apara as flechas sem ponta.');
-    W.carry = true; W.water = 100;
-    T.gates = [[-8,-8],[8,-4],[-8,4],[8,9]].map(([x,z]) => makeGate(TR.x + x, TR.z + z)); T.gi = 0; T.limit = 45;
-    T.gates.forEach((g,i) => g.userData.cloth.material = cmat(i === 0 ? 0xecbd6a : 0x6d5a3a));
-    spawnEnemy('arqueiro', TR.x, TR.z + 13, {training:true, fixed:true, state:'advance', shootT:3, baseYaw:PI});
+    W.weapon = 'staff';
+    setObj('Treino 2 de 3: o cajado', 'Apare a estocada com o cajado (botão direito no instante do golpe). Com ele desequilibrado, chegue perto e segure E para arrancar a lança.');
+    T.I = makeInstructor(true);
   } else {
-    setObj('Treino 3 de 3: os três juntos', 'Três instrutores atacam os seus companheiros. Proteja-os; se um cair, chegue perto e segure E (Ação) para levantá-lo.');
-    T.downs = 0; T.revives = 0;
-    for (const [x,z] of [[-6,8],[6,8],[0,11]]) spawnEnemy('instrutor', TR.x + x, TR.z + z, {training:true, state:'watch'});
+    W.weapon = 'spear';
+    setObj('Treino 3 de 3: a lança', 'Estoque o boneco que brilhar. A lança alcança longe: mantenha distância.');
+    for (const [x,z] of [[-3,4.5],[0,5.2],[3,4.5]]) T.dummies.push(makeDummy(TRN.x + x, TRN.z + z));
+    T.lit = -1; T.litT = .8; T.seqN = 0;
+  }
+}
+function trainingSwing(inReach){
+  if (T.stage === 0 && T.I && T.iState === 'stumble' && !T.hitThis && inReach(T.I.root.position)){ T.hitThis = true; T.score += 100; T.counters++; sfx.hit(); toast('Contra-ataque! +100', .9); }
+  if (T.stage === 2 && T.lit >= 0){
+    const d = T.dummies[T.lit], p = d.g.position, dist = Math.hypot(p.x - P.pos.x, p.z - P.pos.z);
+    if (!inReach(p)) return;
+    if (dist < 2.2){ sfx.block(); toast('Perto demais: a lança precisa de distância.', 1); return; }
+    sfx.hit(); burst(p.clone().setY(p.y + 1.2), 0xd9c27a, 8, 2.4); T.score += 80; d.mat.emissiveIntensity = 0; T.lit = -1; T.litT = .4; toast('+80', .6);
   }
 }
 function updateTraining(dt){
   T.stT += dt;
-  if (T.stage === 0 && T.ri < T.rings.length){
-    const r = T.rings[T.ri], c = r.position; r.material.opacity = .55 + .3*Math.sin(gt*4);
-    const inside = Math.hypot(P.pos.x - c.x, P.pos.z - c.z) < 3 && allies.every(a => Math.hypot(a.m.root.position.x - c.x, a.m.root.position.z - c.z) < 3.6);
-    if (inside && B.order === 'hold'){
-      const pts = 200 + Math.max(0, Math.round(100 - T.stT*4)); T.score += pts; T.marks++; toast(`Seguraram a marca! +${pts}`, 1.2);
-      r.visible = false; T.ri++; T.stT = 0;
-      if (T.ri < T.rings.length) T.rings[T.ri].visible = true; else T.endT = 1;
+  const I = T.I;
+  if (I){
+    const p = I.root.position, dP = Math.hypot(P.pos.x - p.x, P.pos.z - p.z);
+    const face = () => { I.root.rotation.y = Math.atan2(P.pos.x - p.x, P.pos.z - p.z); };
+    if (T.stage === 0){
+      if (T.iState === 'ready'){ T.iT -= dt; face(); if (T.iT <= 0 && T.count < 6){ T.iState = 'crouch'; T.iT = 0; sfx.shout(); } else if (T.count >= 6 && T.endT < 0) T.endT = 1; }
+      else if (T.iState === 'crouch'){ T.iT += dt; face(); I.root.position.y = landH(p.x,p.z) - .15; if (T.iT >= D_().warn + .1){ T.dir.set(P.pos.x - p.x, 0, P.pos.z - p.z); T.dist = T.dir.length(); T.dir.normalize(); T.trav = 0; T.hitDone = false; T.iState = 'charge'; T.count++; } }
+      else if (T.iState === 'charge'){
+        const step = 10*dt; p.x += T.dir.x*step; p.z += T.dir.z*step; T.trav += step; I.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*20 + i*PI)*.7);
+        if (!T.hitDone && dP < 1.3){ T.hitDone = true; resolveIncoming(p.clone(), 0, '', {noParry:true, noBlock:true, onHit: () => toast('O bote acertou. Desvie quando ele se agachar.', 1.4)}); }
+        if (T.trav >= T.dist + 2.5){ T.iState = 'stumble'; T.iT = 1.6; T.hitThis = false; if (!T.hitDone || W.iframe > 0){ T.escaped++; T.score += 60; toast('Escapou do bote! Agora golpeie. +60', 1); } }
+      } else if (T.iState === 'stumble'){ T.iT -= dt; I.root.rotation.z = Math.sin(gt*12)*.1; if (T.iT <= 0){ I.root.rotation.z = 0; T.iState = 'back'; } }
+      else if (T.iState === 'back'){ const tx = TRN.x, tz = TRN.z + 8, dx = tx - p.x, dz = tz - p.z, d = Math.hypot(dx,dz); if (d > .3){ p.x += dx/d*3*dt; p.z += dz/d*3*dt; I.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*9 + i*PI)*.5); } else { T.iState = 'ready'; T.iT = 1; } }
+      if (T.iState !== 'crouch') p.y = landH(p.x, p.z);
+    } else if (T.stage === 1){
+      face();
+      if (T.iState === 'ready'){ if (dP > 3.6){ p.x += (P.pos.x - p.x)/dP*2*dt; p.z += (P.pos.z - p.z)/dP*2*dt; } T.iT -= dt; if (T.iT <= 0 && dP < 4.6 && T.count < 8){ T.iState = 'wind'; T.iT = 0; } if (T.count >= 8 && T.endT < 0) T.endT = 1; }
+      else if (T.iState === 'wind'){ T.iT += dt; I.armR.rotation.x = Math.min(1, T.iT/.4)*.7; if (T.iT >= .8){ I.armR.rotation.x = -1.2; T.count++; T.iState = 'ready'; T.iT = 1.6;
+        if (dP < 4.6) resolveIncoming(p.clone(), 0, '', {noBlock:true, onParry: () => { T.iState = 'staggered'; T.iT = 1.8; toast('Aparou! Segure E para arrancar a lança.', 1.4); }, onHit: () => toast('A lança sem ponta acertou. Apare no instante do golpe.', 1.4)}); } }
+      else if (T.iState === 'staggered'){ T.iT -= dt; I.root.rotation.z = Math.sin(gt*12)*.06; if (T.iT <= 0){ I.root.rotation.z = 0; T.iState = 'ready'; T.iT = 1; } }
+      else if (T.iState === 'rearm'){ T.iT -= dt; if (T.iT <= 0){ I.armR.children.forEach(c => c.visible = true); T.iState = 'ready'; T.iT = 1; } }
+      I.armR.rotation.x *= .95; p.y = landH(p.x, p.z);
+      if (T.disarms >= 5 && T.endT < 0) T.endT = 1;
     }
-  } else if (T.stage === 1){
-    const lim = Math.max(0, T.limit - T.stT);
-    setObj('Treino 2 de 3: o cântaro', `Marca ${Math.min(T.gi + 1, 4)} de 4 · ${Math.ceil(lim)} s · água ${Math.round(W.water)}%. Correr, desviar e ser atingido derramam água.`);
-    const g = T.gates[T.gi];
-    if (g && Math.hypot(P.pos.x - g.position.x, P.pos.z - g.position.z) < 1.8){
-      T.gi++; toast(`Marca ${T.gi} de 4`, .8); sfx.hit();
-      T.gates.forEach((q,i) => q.userData.cloth.material = cmat(i === T.gi ? 0xecbd6a : i < T.gi ? 0x93a35a : 0x6d5a3a));
+  }
+  if (T.stage === 2){
+    T.litT -= dt;
+    if (T.lit >= 0 && T.litT <= 0){ toast('Muito devagar!', .7); T.dummies[T.lit].mat.emissiveIntensity = 0; T.lit = -1; T.litT = .4; }
+    else if (T.lit < 0 && T.litT <= 0){
+      if (T.seqN < 9){ T.lit = Math.floor(Math.random()*3); T.dummies[T.lit].mat.emissiveIntensity = 1.1; T.litT = dk === 'valente' ? 2 : 2.6; T.seqN++; }
+      else if (T.endT < 0) T.endT = 1;
     }
-    if ((T.gi >= 4 || lim <= 0 || W.water <= 0) && T.endT < 0){
-      const pts = T.gi*60 + Math.round(W.water*6); T.score += pts; T.waterLeft = Math.round(W.water);
-      toast(`Percurso: ${T.gi} de 4 marcas, ${Math.round(W.water)}% de água. +${pts}`, 2); T.endT = 1.2; clearEnemies();
-    }
-  } else if (T.stage === 2){
-    const left = enemies.filter(e => e.training && alive(e)).length;
-    if ((left === 0 || T.stT > 60) && T.endT < 0){ const pts = Math.max(0, Math.round(300 - T.stT*5)); T.score += pts; if (pts) toast(`Tempo +${pts}`, 1); T.endT = 1.2; }
   }
   if (T.endT > 0){ T.endT -= dt; if (T.endT <= 0){ if (T.stage < 2) setupTraining(T.stage + 1); else finishTraining(); } }
 }
+function trainingDisarm(){
+  T.score += 150; T.disarms++; sfx.pull(); toast('Arrancou a lança! +150', 1);
+  T.I.armR.children.forEach((c,i) => { if (i > 0) c.visible = false; }); T.iState = 'rearm'; T.iT = 1.4;
+}
 function startTraining(){
-  setMood('training'); clearTraining(); mode = 'training'; T.score = 0; B.order = 'follow';
-  P.pos.set(TR.x, 0, TR.z - 4); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0); P.cor = 70; P.vida = 100;
-  W.hasJar = false; W.carry = false; spawnAllies(); placeDavid(true); placeJarProp(true);
+  setMood('training'); clearTraining(); mode = 'training'; T.score = 0; T.escaped = T.counters = T.disarms = 0;
+  setWeather('clear'); snowing = false; L.root.visible = false;
+  P.pos.set(TRN.x, 0, TRN.z - 3); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0); P.cor = 70; P.vida = 100;
   setupTraining(0); showHUD();
 }
 function finishTraining(){
-  const medal = T.score >= 2000 ? 'ouro' : T.score >= 1300 ? 'prata' : 'bronze';
+  const medal = T.score >= 1900 ? 'ouro' : T.score >= 1200 ? 'prata' : 'bronze';
   B.medal = medal; B.trainScore = T.score; B.corStart = ({bronze:55, prata:68, ouro:80})[medal] + (dk === 'pastor' ? 10 : 0);
-  mode = 'result'; hideHUD(); clearTraining(); clearAllies(); W.carry = false;
+  mode = 'result'; hideHUD(); clearTraining();
   const names = {ouro:'Ouro', prata:'Prata', bronze:'Bronze'};
   showOverlay(`
     <div class="eyebrow">Treino concluído · ${D_().name}</div>
-    <h2>Os três e o cântaro</h2>
+    <h2>O campo da guarda</h2>
     <div class="medal ${medal}">Medalha de ${names[medal]}</div>
     <dl class="tally">
-      <dt>Marcas seguradas</dt><dd>${T.marks} de 3</dd>
-      <dt>Água no fim do percurso</dt><dd>${T.waterLeft}%</dd>
-      <dt>Companheiros levantados</dt><dd>${T.revives}</dd>
-      <dt>Coragem inicial na missão</dt><dd>${B.corStart}</dd>
+      <dt>Botes evitados · contra-ataques</dt><dd>${T.escaped} · ${T.counters}</dd>
+      <dt>Lanças arrancadas</dt><dd>${T.disarms}</dd>
+      <dt>Coragem inicial</dt><dd>${B.corStart}</dd>
       <dt class="total">Pontos</dt><dd class="total">${T.score}</dd>
     </dl>
-    ${verseHTML('v13')}
+    ${verseHTML('v20a')}
     <div class="row">
       <button class="btn primary" data-act="next">${B.kind === 'full' ? 'Continuar' : 'Seguir para a missão'}</button>
       <button class="btn" data-act="again">Repetir o treino</button>
       <button class="btn" data-act="menu">Menu</button>
     </div>`, {
-    next: () => { hideOverlay(); tryLock(); desireCine(() => startBattle('choice')); },
+    next: () => { hideOverlay(); tryLock(); snowCine(() => startLion(true)); },
     again: () => { hideOverlay(); tryLock(); startTraining(); },
     menu: showMenu,
   });
 }
 
 // ================= A missão =================
-function populateCamp(){
-  const k = D_().camp;
-  for (const f of fires){ if (f.z < CAMP.z0 - 2) continue; const n = Math.round(2*k + rand(-.4,.4));
-    for (let i=0;i<n;i++){ const a = rand(0, PI*2), x = f.x + Math.cos(a)*2.2, z = f.z + Math.sin(a)*2.2; spawnEnemy(Math.random() < .2 ? 'tocha' : 'lanceiro', x, z, {state:'sleep'}); } }
-  for (const p of POSTS) spawnEnemy('sentinela', p.x + 1.5, p.z - 1.5, {baseYaw:PI + rand(-.6,.6)});
-  for (const x of k >= 1 ? [-9, 9] : [0]) spawnEnemy('sentinela', x, CAMP.z0 - 3, {baseYaw:PI});
-  for (let i=0;i<Math.round(3*k);i++) spawnEnemy('tocha', rand(-14,14), rand(CAMP.z0 + 6, CAMP.z1 - 6), {patrol:true});
-  // O desvio pelas colinas: poucas patrulhas
-  spawnEnemy('lanceiro', 36, 2, {patrol:true}); spawnEnemy('lanceiro', -37, 18, {patrol:true});
-  if (k >= 1) spawnEnemy('tocha', 38, 22, {patrol:true});
-  // A guarnição de Belém, na porta
-  for (let i=0;i<Math.round(4*k);i++) spawnEnemy('guarda', -6 + i*12/Math.max(1, Math.round(4*k) - 1), GATE_Z - 3 - rand(0,1.5), {wakeAt:999});
-  for (const sx of [-1,1]) spawnEnemy('arqueiro', sx*5, GATE_Z - 1.4, {fixed:true, wakeAt:999});
-  spawnEnemy('tocha', 1, GATE_Z - 6, {wakeAt:999});
-}
-function startBattle(at){
-  setMood(at === 'choice' ? 'quiet' : 'duel'); mode = 'battle'; modal = false; clearEnemies(); clearTraining();
-  P.vida = 100; W.atkHeld = false; W.carry = false; W.water = 0; W.actT = 0;
-  if (at === 'choice'){
-    Object.assign(B, {alarm:0, route:null, fieldWell:false, together:false, waterEnd:0, deaths:0, repelled:0, parries:0, time:0, warnedHills:false, warnedWell:false, choiceT:0, order:'follow', checkpoint:'cave', crossed:false, choiceHint:false});
-    P.cor = B.corStart; W.hasJar = false; placeJarProp(true); placeDavid(true);
-    P.pos.set(1, 0, -66.5); P.yaw = 0; P.pitch = -.08; P.vel.set(0,0,0);
-    B.state = 'choice';
-    setObj('Davi não deu ordem', 'Ninguém mandou. Se quiser atender ao desejo de Davi, pegue o cântaro vazio na entrada da caverna (segure E).');
-  } else {
-    W.hasJar = true; placeJarProp(false); B.state = 'out'; B.order = 'follow';
-    const spot = {cave:V(0,0,-62), field:V(0,0,44), cistern:V(CISTERN.x - 2, 0, CISTERN.z - 5)}[at];
-    P.pos.set(spot.x, 0, spot.z); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0);
-    B.alarm = at === 'cave' ? B.alarm*.5 : Math.max(B.alarm, 40);
-    setObj(at === 'cistern' ? 'A cisterna junto à porta' : 'Romper pelo arraial', at === 'cistern' ? 'Tire a água de novo e volte para Adulão.' : 'A cisterna de Belém fica junto à porta, do outro lado do vale.');
-  }
-  populateCamp(); spawnAllies();
+function startLion(fresh){
+  setMood('quiet'); mode = 'battle'; modal = false; clearTraining();
+  if (fresh) Object.assign(B, {waited:false, rocks:0, tookSword:false, disarmed:false, spearKill:false, deaths:0, time:0, parries:0, dodges:0, warnedSnow:false, warnedRocks:false, warnedSword:false, staffCapWarned:false});
+  setWeather('snow'); snowing = !B.waited; W.weapon = 'sword'; W.atkHeld = false;
+  P.vida = 100; P.cor = fresh ? B.corStart : Math.max(P.cor, B.corStart*.8);
+  placeLion(); E.root.visible = false;
+  P.pos.set(0, 0, -24); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0);
+  B.part = 'snow';
+  setObj('O dia da neve', 'Um leão caiu na cova junto ao caminho. Da borda há pedras; do lado, um abrigo com fogo. Benaia desceu.');
+  toast('"Um leão caiu na cova! Ninguém desce aí."', 2.6);
   showHUD();
 }
-function takeJar(){
-  W.hasJar = true; placeJarProp(false); B.state = 'out'; setMood('duel'); sfx.shout();
-  toast('"Vamos." Os três saem da caverna.', 2);
-  setObj('Romper pelo arraial', 'A cisterna de Belém fica junto à porta, do outro lado do vale. O caminho do relato passa pelo meio do arraial filisteu. Q: ordens aos companheiros.');
+function enterPit(){
+  B.part = 'pit'; L.state = 'prowl'; L.nextT = 1.6; L.roarT = 6; setMood('duel');
+  toast('A neve desliza atrás de você. Não há volta.', 2);
+  setObj('O leão na cova', 'Quando ele agachar e rosnar, vem o bote: desvie para o lado (Espaço). Depois do bote ele fica atordoado e os golpes valem o dobro. Escudo contra a patada.');
 }
-function askWell(){
-  modal = true; unlock(); attackUp(true); W.actT = 0;
-  showOverlay(`
-    <div class="eyebrow">O poço no campo</div>
-    <h2>Tirar água deste poço?</h2>
-    <p class="lede">Aqui não há guardas, e a água é a mesma para matar a sede. Mas Davi falou de um lugar:</p>
-    ${verseHTML('vgate')}
-    <div class="row"><button class="btn" data-act="take">Tirar água daqui</button><button class="btn primary" data-act="go">Seguir para a cisterna</button></div>
-    <p class="note">Tirar água deste poço faz perder o item de Fidelidade "Da cisterna junto à porta".</p>`, {
-    take: () => { B.warnedWell = true; hideOverlay(); modal = false; tryLock(); },
-    go: () => { B.warnedWell = true; hideOverlay(); modal = false; tryLock(); toast('A cisterna fica junto à porta de Belém.', 1.8); },
-  });
-}
-function drawWater(field){
-  W.carry = true; W.water = 100; B.fieldWell = field; B.state = 'back'; B.checkpoint = field ? 'field' : 'cistern';
-  B.alarm = Math.max(B.alarm, 40); B.spawnT = 2; sfx.water();
-  toast(field ? 'O cântaro está cheio.' : 'Água da cisterna de Belém!', 1.8);
-  setObj('A volta com a água', 'Leve a água a Davi, na caverna de Adulão. Sem escudo: golpes, correria e desvios derramam água. Os companheiros protegem você.');
-}
-function updateBattle(dt){
-  if (B.state === 'done') return;
-  B.time += dt; updateAllies(dt);
-  // Luta dentro do arraial faz barulho: o alarme sobe devagar.
-  if (B.noise){ B.alarm = clamp(B.alarm + 1.5*D_().alarm*dt, 0, 100); B.noise = false; }
-  const x = P.pos.x, z = P.pos.z;
-  if (B.state === 'choice'){
-    B.choiceT += dt;
-    if (B.choiceT > 25 && !B.choiceHint){ B.choiceHint = true; toast('Os dois companheiros pegam as armas e olham para você.', 3); }
-    return;
-  }
-  if (B.state === 'out'){
-    if (!B.warnedHills && Math.abs(x) > CAMP.hw + 8 && z > CAMP.z0 - 6 && z < CAMP.z1){ B.warnedHills = true; toast('O desvio pelas colinas é mais seguro, mas o relato diz: romperam pelo arraial.', 3.2); }
-    if (!B.crossed && z > 5){ B.crossed = true; B.route = Math.abs(x) < CAMP.hw + 4 ? 'camp' : 'hills'; if (B.route === 'camp') toast('Pelo meio do arraial!', 1.4); }
-    if (z > 42 && B.checkpoint === 'cave') B.checkpoint = 'field';
-    // A guarnição da porta acorda quando os três chegam perto.
-    if (Math.hypot(x - CISTERN.x, z - CISTERN.z) < 16) for (const e of enemies) if (e.state === 'watch' && e.root.position.z > GATE_Z - 10) wake(e, false);
-  }
-  if (B.state === 'back'){
-    B.spawnT -= dt;
-    const awake = enemies.filter(e => alive(e) && e.state !== 'sleep' && e.state !== 'watch').length;
-    if (B.spawnT <= 0 && z > CAMP.z0 - 10 && awake < Math.round(5*D_().camp) && B.alarm > 30){
-      const t = tents[Math.floor(Math.random()*tents.length)];
-      if (Math.hypot(t.x - x, t.z - z) < 34 && Math.hypot(t.x - x, t.z - z) > 8) spawnEnemy(Math.random() < .3 ? 'tocha' : 'lanceiro', t.x, t.z, {state:'advance'});
-      B.spawnT = 3.5 / D_().camp;
-    }
-    if (z < CAVE_Z + 1.5 && Math.abs(x) < 9) deliver();
-  }
-}
-function emptyJar(){
-  if (modal) return;
-  modal = true; attackUp(true); setMood('quiet');
-  const at = D_().toStart ? 'cave' : B.checkpoint;
-  showOverlay(`
-    <div class="eyebrow">A volta · ${D_().name}</div>
-    <h2>O cântaro ficou vazio</h2>
-    <p class="lede">${at === 'cave' ? 'Vocês voltam ao começo do vale para tentar de novo.' : 'Vocês voltam para tirar água de novo.'}</p>
-    ${verseHTML('v16a')}
-    <div class="row"><button class="btn primary" data-act="retry">Tentar de novo</button><button class="btn" data-act="menu">Menu</button></div>`, {
-    retry: () => { hideOverlay(); tryLock(); startBattle(at === 'field' && !B.fieldWell ? 'cistern' : at); },
-    menu: showMenu,
-  });
+function startEgypt(){
+  setMood('duel'); mode = 'battle'; modal = false;
+  setWeather('clear'); snowing = false; L.root.visible = false; E.root.visible = true;
+  W.weapon = 'staff'; W.atkHeld = false; rackSword.visible = true;
+  P.vida = 100; P.cor = Math.max(P.cor, 60);
+  placeEgy();
+  P.pos.set(EG.x, 0, EG.z - 12); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0);
+  B.part = 'egypt';
+  setObj('O egípcio', 'Ele alcança longe com a lança. Apare a estocada com o cajado (botão direito) e, com ele desequilibrado, segure E para arrancar a lança. Da varredura, desvie.');
+  showHUD();
 }
 function fall(reason){
   if (mode !== 'battle' || modal) return;
   modal = true; B.deaths++; attackUp(true); setMood('quiet');
-  const at = D_().toStart ? 'cave' : B.state === 'back' ? (B.fieldWell ? 'field' : 'cistern') : B.checkpoint;
+  const lion = D_().toLion || B.part === 'pit' || B.part === 'snow';
   setTimeout(() => {
     hideHUD();
     showOverlay(`
       <div class="eyebrow">Missão · ${D_().name}</div>
       <h2>${reason}</h2>
-      <p class="lede">${at === 'cave' ? 'Vocês recomeçam na saída da caverna, com o cântaro vazio.' : at === 'field' ? 'Vocês recomeçam depois do arraial, com o cântaro vazio.' : 'Vocês recomeçam perto da cisterna, com o cântaro vazio.'}</p>
-      ${verseHTML('v17')}
+      <p class="lede">${lion ? 'Você recomeça no caminho da cova do leão.' : 'Você recomeça a luta com o egípcio.'}</p>
+      ${verseHTML(lion ? 'v20b' : 'v21')}
       <div class="row"><button class="btn primary" data-act="retry">Tentar de novo</button><button class="btn" data-act="menu">Menu</button></div>`, {
-      retry: () => { hideOverlay(); tryLock(); startBattle(at); },
+      retry: () => { hideOverlay(); tryLock(); if (lion) startLion(false); else startEgypt(); },
       menu: showMenu,
     });
   }, 700);
 }
-let cineMen = [];
-function clearCineMen(){ cineMen.forEach(m => scene.remove(m.root)); cineMen = []; }
-function deliver(){
-  B.state = 'done'; B.waterEnd = W.water;
-  B.together = allies.every(a => !a.down && a.m.root.position.distanceTo(P.pos) < 20);
-  if (!B.together) toast('Faltou um dos três.', 2);
-  setMood('victory'); hideHUD(); attackUp(true); W.carry = false;
-  for (const e of enemies) if (alive(e) && e.state !== 'sleep'){ e.state = 'flee'; }
-  // Os três diante de Davi
-  clearCineMen();
-  const hero = buildMan({robe:0x8a7a52}); hero.root.position.set(.4, landH(.4,-70.5), -70.5); hero.root.rotation.y = PI; scene.add(hero.root); cineMen.push(hero);
-  allies.forEach((a,i) => { if (a.down){ a.down = false; a.m.root.rotation.x = 0; } const px = (i ? 2 : -1.4), pz = -69.6; a.m.root.position.set(px, landH(px,pz), pz); a.m.root.rotation.y = PI; });
-  placeDavid(false); david.root.rotation.y = 0; davidJar.visible = true; davidJar.rotation.set(0,0,0);
-  const dp = david.root.position;
-  let poured = false;
-  runCine([
-    {v:'v16a', dur:6, cam: p => camLook(tmp1.set(6 - p*2, dp.y + 2.4, -61 - p*2), tmp2.set(0, dp.y + 1.2, -71.5))},
-    {v:'v16b', dur:6, start: () => { sfx.pour(); },
-     update: (dt, p) => { david.armR.rotation.x = -Math.min(1, p*3)*1.3; davidJar.rotation.z = Math.min(1, p*2.5)*1.9;
-       if (p > .25 && p < .9 && Math.random() < .7){ davidJar.getWorldPosition(tmp1); burst(tmp1.add(V(0,.1,0)), 0x6aa6cf, 2, .5, .45, .7); } poured = true; },
-     cam: p => camLook(tmp1.set(dp.x + 2.6, dp.y + 1.6, dp.z + 3.2 - p*.6), tmp2.set(dp.x, dp.y + 1.1, dp.z))},
-    {v:'v17', dur:7, cam: p => camLook(tmp1.set(dp.x - 1.5 + p*3, dp.y + 1.7 + p, dp.z + 4 + p*3), tmp2.set(dp.x, dp.y + 1.2, dp.z + 1.5))},
-    {v:'v17b', dur:5, cam: p => camLook(tmp1.set(-4 + p*2, dp.y + 3 + p*2, -60 + p*3), tmp2.set(0, 3, 80))},
-  ], () => { clearCineMen(); showResults(); });
-}
 function showResults(){
   mode = 'result';
   const fid = [
-    {ok: B.route === 'camp', t:'Romperam pelo arraial dos filisteus', r:'23:16'},
-    {ok: !B.fieldWell, t:'Tiraram água da cisterna junto à porta', r:'23:16'},
-    {ok: B.together, t:'Os três voltaram juntos', r:'23:17'},
-    {ok: B.waterEnd >= 60, t:`A água chegou a Davi (${Math.round(B.waterEnd)}%)`, r:'23:16'},
+    {ok: !B.waited, t:'No tempo da neve (não esperou a neve passar)', r:'23:20'},
+    {ok: B.rocks === 0, t:'Desceu à cova (não atirou pedras de cima)', r:'23:20'},
+    {ok: !B.tookSword, t:'Desceu ao egípcio com um cajado', r:'23:21'},
+    {ok: B.spearKill, t:'Matou-o com a sua própria lança', r:'23:21'},
   ];
   const nf = fid.filter(f => f.ok).length;
-  const mission = Math.round(B.waterEnd*10) + B.repelled*30 + B.parries*25 + Math.max(0, Math.round(300 - B.alarm*3)) + Math.max(0, Math.round(600 - B.time));
+  const bosses = Math.max(0, 1000 + B.parries*30 + B.dodges*20 + Math.max(0, Math.round(800 - B.time*2)) - B.deaths*100);
   const fidPts = nf*250, train = B.medal ? B.trainScore : 0;
-  const total = Math.round((train + mission + fidPts) * D_().mult), stars = 1 + (nf >= 2 ? 1 : 0) + (nf === 4 ? 1 : 0);
-  const win = saveWin(4, stars, total);
+  const total = Math.round((train + bosses + fidPts) * D_().mult), stars = 1 + (nf >= 2 ? 1 : 0) + (nf === 4 ? 1 : 0);
+  const win = saveWin(5, stars, total);
   showOverlay(`
-    <div class="eyebrow">Adulão · ${D_().name}</div>
-    <h2>Derramou-a perante o Senhor</h2>
+    <div class="eyebrow">Benaia · ${D_().name}</div>
+    <h2>Davi o pôs sobre a sua guarda</h2>
     <div class="stars" aria-label="${stars} de 3 estrelas">${'★'.repeat(stars)}<i>${'★'.repeat(3-stars)}</i></div>
     <dl class="tally">
       <dt>Treino ${B.medal ? '(' + B.medal + ')' : '(não jogado)'}</dt><dd>${train}</dd>
-      <dt>Missão · água ${Math.round(B.waterEnd)}% · ${B.repelled} afastados · alarme ${Math.round(B.alarm)}% · ${Math.round(B.time)} s</dt><dd>${mission}</dd>
+      <dt>Leão e egípcio · ${B.parries} aparadas · ${B.dodges} desvios · ${Math.round(B.time)} s</dt><dd>${bosses}</dd>
       <dt>Fidelidade ao relato · ${nf} de 4</dt><dd>${fidPts}</dd>
       <dt>Multiplicador ${D_().name}</dt><dd>×${String(D_().mult).replace('.',',')}</dd>
       <dt class="total">Total</dt><dd class="total">${total}</dd>
     </dl>
     <ul class="checks">${fid.map(f => `<li><span class="${f.ok?'ok':'no'}">${f.ok?'✓':'✗'}</span><span>${f.t} <small>2 Sm ${f.r}</small></span></li>`).join('')}</ul>
-    ${verseHTML('v17')}
-    <p class="note">Os três não têm nome no texto ("três dos trinta cabeças"). Relato paralelo: 1 Crônicas 11:15-19.</p>
+    ${verseHTML('v22')}
+    <p class="note">Relato paralelo: 1 Crônicas 11:22-25 (o egípcio tinha cinco côvados de altura).</p>
     ${nextPhaseHTML(win)}
     <div class="row"><button class="btn primary" data-act="again">Jogar a fase de novo</button><button class="btn" data-act="battle">Repetir só a missão</button><button class="btn" data-act="menu">Menu</button></div>`, {
     again: startFull, battle: startBattleOnly, menu: showMenu,
@@ -1333,29 +1242,44 @@ function runCine(lines, onEnd){ cine = {lines, i:-1, t:0, onEnd}; $('cine').hidd
 function nextCineLine(){
   if (!cine) return;
   cine.i++; cine.t = 0;
-  if (cine.i >= cine.lines.length) return endCine();
-  const L = cine.lines[cine.i], q = $('cine-q'); q.style.opacity = 0;
-  const txt = VS[L.v][0]; L.durEff = Math.max(L.dur, narrationSeconds(txt));
-  setTimeout(() => { if (!cine) return; q.textContent = txt; $('cine-ref').textContent = VS[L.v][1]; q.style.opacity = 1; speak(txt); }, 180);
-  if (L.start) L.start();
+  if (cine.i >= cine.lines.length) return endCine_();
+  const Ln = cine.lines[cine.i], q = $('cine-q'); q.style.opacity = 0;
+  const txt = VS[Ln.v][0]; Ln.durEff = Math.max(Ln.dur, narrationSeconds(txt));
+  setTimeout(() => { if (!cine) return; q.textContent = txt; $('cine-ref').textContent = VS[Ln.v][1]; q.style.opacity = 1; speak(txt); }, 180);
+  if (Ln.start) Ln.start();
 }
-function endCine(){ stopSpeak(); if (!cine) return; const f = cine.onEnd; cine = null; $('cine').hidden = true; VM.visible = true; if (f) f(); }
-function updateCine(dt){ cine.t += dt; const L = cine.lines[cine.i]; if (!L) return; const D = L.durEff || L.dur, p = clamp(cine.t / D, 0, 1); if (L.cam) L.cam(p); if (L.update) L.update(dt, p); if (cine.t >= D) nextCineLine(); }
-function walkMen(dt, tz){ for (const m of cineMen){ const p = m.root.position; if (p.z > tz){ p.z -= 2.4*dt; p.y = landH(p.x, p.z); m.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*8 + i*PI)*.5); } else m.legs.forEach(l => l.rotation.x = 0); } }
+function endCine_(){ stopSpeak(); if (!cine) return; const f = cine.onEnd; cine = null; $('cine').hidden = true; VM.visible = true; if (f) f(); }
+function updateCine(dt){ cine.t += dt; const Ln = cine.lines[cine.i]; if (!Ln) return; const D = Ln.durEff || Ln.dur, p = clamp(cine.t / D, 0, 1); if (Ln.cam) Ln.cam(p); if (Ln.update) Ln.update(dt, p); if (cine.t >= D) nextCineLine(); }
+const hero = buildMan({robe:0x7a6a48}); addSpear(hero); hero.root.visible = false; scene.add(hero.root);
+function heroWalk(dt, tx, tz, spd=2.2){ const p = hero.root.position, dx = tx - p.x, dz = tz - p.z, d = Math.hypot(dx,dz); if (d > .3){ p.x += dx/d*spd*dt; p.z += dz/d*spd*dt; hero.root.rotation.y = Math.atan2(dx,dz); hero.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*8 + i*PI)*.5); } else hero.legs.forEach(l => l.rotation.x = 0); p.y = landH(p.x, p.z); }
 function introCine(then){
-  setMood('cine'); mode = 'cine'; clearEnemies(); clearAllies(); clearCineMen(); placeDavid(true); placeJarProp(true);
-  for (let i=0;i<3;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52][i]}); m.root.position.set(-1.5 + i*1.5, 0, -40 - i*1.2); m.root.rotation.y = PI; scene.add(m.root); cineMen.push(m); }
+  setMood('cine'); mode = 'cine'; setWeather('clear'); snowing = false; L.root.visible = false; E.root.visible = false;
+  hero.root.visible = true; hero.root.position.set(BX + 24, 0, 0);
   runCine([
-    {v:'v13', dur:7, update: dt => walkMen(dt, -66), cam: p => camLook(tmp1.set(lerp(-9,-5,p), lerp(12,6,p), lerp(-36,-52,p)), tmp2.set(0, 1.5, lerp(-44,-70,p)))},
-    {v:'v14', dur:6.5, update: dt => walkMen(dt, -66), cam: p => camLook(tmp1.set(lerp(-3,3,p), 24, -64), tmp2.set(0, 4, 84))},
-  ], () => { clearCineMen(); then(); });
+    {v:'v20a', dur:8, update: dt => heroWalk(dt, BX + 36, 22), cam: p => camLook(tmp1.set(BX + 20 + p*6, 4 + p, -6 + p*4), tmp2.set(BX + 32, 1, 14))},
+  ], () => { hero.root.visible = false; then(); });
 }
-function desireCine(then){
-  setMood('cine'); mode = 'cine'; clearEnemies(); clearAllies(); placeDavid(true); placeJarProp(true);
-  const dp = david.root.position;
+function snowCine(then){
+  setMood('cine'); mode = 'cine'; setWeather('snow'); snowing = true; placeLion(); E.root.visible = false;
   runCine([
-    {v:'v15', dur:7, cam: p => camLook(tmp1.set(dp.x + 1.4 - p*.8, dp.y + 1.7, dp.z + 2.2 + p*1.5), tmp2.set(lerp(dp.x, 0, p), lerp(dp.y + 1.1, 5, p), lerp(dp.z, 84, p)))},
+    {v:'v20b', dur:7, cam: p => camLook(tmp1.set(Math.sin(p*1.2)*16, 9 - p*3, PIT.z - 16 + p*4), tmp2.set(PIT.x, -1.5, PIT.z))},
   ], then);
+}
+function egyptCine(){
+  setMood('cine'); mode = 'cine'; setWeather('clear'); snowing = false; L.root.visible = false; placeEgy(); E.root.visible = true;
+  runCine([
+    {v:'v21', dur:9, cam: p => camLook(tmp1.set(EG.x + 6 - p*9, 2.2 + p*1.5, EG.z - 4 + p*2), tmp2.set(EG.x, 2.4, EG.z + 6))},
+  ], startEgypt);
+}
+function endCine(){
+  setMood('victory'); mode = 'cine'; hideHUD(); attackUp(true); E.root.visible = false;
+  hero.root.visible = true; hero.root.position.set(CAMPD.x, 0, CAMPD.z + 22);
+  david.root.rotation.y = 0; david.armR.rotation.x = 0;
+  runCine([
+    {v:'v22', dur:7, update: dt => heroWalk(dt, CAMPD.x, CAMPD.z + 8), cam: p => camLook(tmp1.set(CAMPD.x + 7 - p*3, 2.6, CAMPD.z + 16 - p*3), tmp2.set(CAMPD.x, 1.4, CAMPD.z + 10))},
+    {v:'v23', dur:8, update: (dt, p) => { heroWalk(dt, CAMPD.x, CAMPD.z + 8); david.armR.rotation.x = -Math.min(1, p*3)*1.9; guards.forEach(g => g.root.rotation.y += ((g.root.position.x < CAMPD.x ? PI/2 + .6 : -PI/2 - .6) - g.root.rotation.y)*Math.min(1, dt*2)); },
+     cam: p => camLook(tmp1.set(CAMPD.x - 4 + p*2, 2 + p, CAMPD.z + 13 + p*2), tmp2.set(CAMPD.x, 1.5, CAMPD.z + 7))},
+  ], () => { hero.root.visible = false; showResults(); });
 }
 
 // ================= Telas =================
@@ -1487,14 +1411,14 @@ function nextPhaseHTML(w){
 
 function showMenu(){
   pauseOn = false; modal = false; timeScale = 1; if (cine){ cine = null; $('cine').hidden = true; } stopSpeak();
-  mode = 'menu'; setMood('menu'); hideHUD(); clearTraining(); clearEnemies(); clearAllies(); clearCineMen(); placeDavid(true); placeJarProp(true);
-  W.carry = false; W.hasJar = false;
+  mode = 'menu'; setMood('menu'); hideHUD(); clearTraining(); hero.root.visible = false;
+  setWeather('snow'); snowing = true; placeLion(); E.root.visible = false; W.weapon = 'sword';
   const html = () => `
-    <div class="eyebrow">Protótipo jogável · Fase 4</div>
-    <h1>Os três valentes e a água de Belém</h1>
-    <p class="lede">2 Samuel 23:13-17. Davi só diz um desejo. Três valentes rompem pelo arraial filisteu, tiram água da cisterna junto à porta de Belém e a trazem a ele.</p>
-    ${phaseMapHTML(4)}
-    ${!phaseOpen(4) ? lockedHTML(4) : `
+    <div class="eyebrow">Protótipo jogável · Fase 5</div>
+    <h1>Benaia: o leão na cova e o egípcio</h1>
+    <p class="lede">2 Samuel 23:20-23. Num dia de neve, Benaia desce à cova onde está um leão. Depois desce ao egípcio gigante levando só um cajado, arranca-lhe a lança e vence com ela.</p>
+    ${phaseMapHTML(5)}
+    ${!phaseOpen(5) ? lockedHTML(5) : `
     <div class="sect">Dificuldade</div>
     <div class="choices" role="group" aria-label="Dificuldade">
       ${Object.entries(DIFF).map(([k,d]) => `<button class="choice" data-act="diff" data-k="${k}" aria-pressed="${k===dk}"><strong>${d.name}</strong><span>${d.desc}</span></button>`).join('')}
@@ -1505,21 +1429,20 @@ function showMenu(){
       <button class="btn" data-act="battle">Só a missão</button>
       <button class="btn" data-act="tutorial">Como jogar</button>
     </div>`}
-    ${!phaseOpen(4) ? '<div class="row"><button class="btn" data-act="tutorial">Como jogar</button></div>' : ''}
+    ${!phaseOpen(5) ? '<div class="row"><button class="btn" data-act="tutorial">Como jogar</button></div>' : ''}
     <div class="row">
       <button class="btn" data-act="music" aria-pressed="${musicOn}">Música: ${musicOn ? 'ligada' : 'desligada'}</button>
       <button class="btn" data-act="voice" aria-pressed="${narrOn}">Narração: ${narrOn ? 'ligada' : 'desligada'}</button>
     </div>
     <dl class="controls">
-      <dt>Clique esquerdo</dt><dd>Golpe · três rápidos formam a sequência · segure e solte para o golpe forte</dd>
-      <dt>Botão direito</dt><dd>Segurar: escudo · no instante do golpe: aparar (com o cântaro na mão, só aparar)</dd>
-      <dt>Espaço</dt><dd>Desviar (com o cântaro, derrama um pouco)</dd>
-      <dt>Q</dt><dd>Ordem aos companheiros: "Comigo" ou "Segurem aqui"</dd>
-      <dt>E (segurar)</dt><dd>Ação: pegar o cântaro, tirar água, levantar um companheiro</dd>
-      <dt>F (segurar) · Shift</dt><dd>Orar · correr (com o cântaro, derrama)</dd>
+      <dt>Clique esquerdo</dt><dd>Golpe (espada, cajado ou lança) · segure e solte para o golpe forte</dd>
+      <dt>Botão direito</dt><dd>Segurar: escudo (com a espada) · no instante do golpe: aparar</dd>
+      <dt>Espaço</dt><dd>Desviar: o bote do leão e a varredura do egípcio</dd>
+      <dt>E (segurar)</dt><dd>Ação: arrancar a lança do egípcio desequilibrado · outras escolhas do lugar</dd>
+      <dt>F (segurar) · Shift</dt><dd>Orar · correr (na neve o chão escorrega)</dd>
       <dt>Esc · M · N</dt><dd>Pausa · música · narração</dd>
     </dl>
-    <p class="note">No celular: direcional, arrastar para olhar e os botões Golpe, Escudo, Desviar, Ordem, Orar e Ação. Os versículos são provisórios.</p>`;
+    <p class="note">No celular: direcional, arrastar para olhar e os botões Golpe, Escudo/Aparar, Desviar, Orar e Ação. Os versículos são provisórios.</p>`;
   showOverlay(html(), {
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
@@ -1529,7 +1452,7 @@ function showMenu(){
   });
 }
 function startFull(){ if (!tutorialSeen()) return showTutorial(startFull); B.kind = 'full'; B.medal = null; hideOverlay(); tryLock(); introCine(() => startTraining()); }
-function startBattleOnly(){ B.kind = 'battle'; B.medal = null; B.corStart = 65 + (dk === 'pastor' ? 10 : 0); hideOverlay(); tryLock(); desireCine(() => startBattle('choice')); }
+function startBattleOnly(){ B.kind = 'battle'; B.medal = null; B.corStart = 65 + (dk === 'pastor' ? 10 : 0); hideOverlay(); tryLock(); snowCine(() => startLion(true)); }
 function showPause(){
   pauseOn = true; stopSpeak(); attackUp(true); mouseR = false;
   const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Missão';
@@ -1547,8 +1470,8 @@ function showPause(){
     </div>`;
   showOverlay(html(), {
     resume: () => { hideOverlay(); pauseOn = false; tryLock(); },
-    skip: () => { hideOverlay(); pauseOn = false; tryLock(); endCine(); },
-    restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else startBattle('choice'); },
+    skip: () => { hideOverlay(); pauseOn = false; tryLock(); endCine_(); },
+    restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else if (B.part === 'egypt') startEgypt(); else startLion(false); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
     voice: () => { setNarration(!narrOn); $('ov-card').innerHTML = html(); },
     menu: showMenu,
@@ -1561,16 +1484,15 @@ function update(dt, rdt){
   gt += dt;
   shake = Math.max(0, shake - rdt*1.6);
   if (toastT > 0){ toastT -= rdt; if (toastT <= 0) $('toast').classList.remove('on'); }
-  fires.forEach((f,i) => { const k = .85 + .25*Math.sin(gt*11 + i*1.7) + .1*Math.sin(gt*23 + i); f.f.scale.set(1, k, 1); });
-  fireLights.forEach((L,i) => L.intensity = (i === fireLights.length - 1 ? 1.2 : 1.8) * (.85 + .15*Math.sin(gt*9 + i*2.1)));
+  shelterFire.scale.y = .85 + .25*Math.sin(gt*11);
   if (cine) updateCine(dt);
-  else if (mode === 'menu'){ const a = gt*.05; camLook(tmp1.set(Math.sin(a)*34, 18, Math.cos(a)*34 + 4), tmp2.set(0,2,6)); }
+  else if (mode === 'menu'){ const a = gt*.05; camLook(tmp1.set(PIT.x + Math.sin(a)*18, 9, PIT.z + Math.cos(a)*18), tmp2.set(PIT.x, -1.5, PIT.z)); }
   else if (playing()){
     updatePlayer(dt);
-    if (mode === 'training'){ updateAllies(dt); updateTraining(dt); } else updateBattle(dt);
+    if (mode === 'training') updateTraining(dt); else B.time += dt;
     fpCamera(); animateViewmodel();
   }
-  updateEnemies(dt); updateArrows(dt); updateParts(dt);
+  updateLion(dt); updateEgy(dt); updateRocks(dt); updateParts(dt); updateSnow(dt);
   VM.visible = playing();
   updateHUD(); drawGauge();
 }
@@ -1586,3 +1508,6 @@ requestAnimationFrame(loop);
 
 })();
 </script>
+
+</body>
+</html>
