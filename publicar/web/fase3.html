@@ -155,6 +155,21 @@
   #tswap{font-size:14px !important;width:74px !important}
   #thorn{position:absolute;left:calc(22px + env(safe-area-inset-left,0px));top:calc(64px + env(safe-area-inset-top,0px));width:84px;height:40px;border-radius:3px;
     background:rgba(20,15,10,.6);border:1px solid rgba(234,220,189,.4);color:var(--parch);font-size:14px}
+  /* ---------- Mapa das fases ---------- */
+  .phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:0 0 8px;padding:0;list-style:none}
+  .phases li{display:flex}
+  .sect{margin:6px 0 -4px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--parch-dim)}
+  .phase{position:relative;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1px solid var(--line);border-radius:3px;background:rgba(33,24,16,.75);color:var(--parch);text-decoration:none;flex:1}
+  .phase b{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--bronze-hi);font-weight:400}
+  .phase strong{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.15}
+  .phase small{color:var(--parch-dim);font-size:13px}
+  .phase .ps{font-size:13px;color:var(--parch-dim)}
+  .phase .ps em{font-style:normal;color:var(--bronze-hi);letter-spacing:.08em}
+  a.phase:hover{border-color:var(--bronze-hi);background:rgba(200,144,63,.12)}
+  .phase.cur{border-color:var(--bronze-hi);background:rgba(200,144,63,.18)}
+  .phase.locked{opacity:.5;border-style:dashed}
+  .phase.locked strong::before{content:"🔒 ";font-size:15px}
+  .lockmsg{padding:14px 16px;border:1px dashed var(--bronze);border-radius:3px;background:rgba(33,24,16,.6)}
 </style>
 
 <canvas id="game"></canvas>
@@ -1078,6 +1093,7 @@ function showResults(){
   const advance = 3*300 + B.repelled*40 + B.parries*30 + Math.max(0, Math.round(600 - B.time*2));
   const fidPts = nf*250, train = B.medal ? B.trainScore : 0;
   const total = Math.round((train + advance + fidPts) * D_().mult), stars = 1 + (nf >= 2 ? 1 : 0) + (nf === 4 ? 1 : 0);
+  const win = saveWin(3, stars, total);
   showOverlay(`
     <div class="eyebrow">Pas-Damim · ${D_().name}</div>
     <h2>A mão pegada à espada</h2>
@@ -1091,6 +1107,7 @@ function showResults(){
     </dl>
     <ul class="checks">${fid.map(f => `<li><span class="${f.ok?'ok':'no'}">${f.ok?'✓':'✗'}</span><span>${f.t} <small>2 Sm ${f.r}</small></span></li>`).join('')}</ul>
     ${verseHTML('v10b')}
+    ${nextPhaseHTML(win)}
     <div class="row"><button class="btn primary" data-act="again">Jogar a fase de novo</button><button class="btn" data-act="battle">Repetir só a batalha</button><button class="btn" data-act="menu">Menu</button></div>`, {
     again: startFull, battle: startBattleOnly, menu: showMenu,
   });
@@ -1201,7 +1218,49 @@ function showTutorial(then, i=0){
   function done(){ try { localStorage.setItem('vdd-tutorial', 'ok'); } catch(e) {} if (then) then(); else showMenu(); }
 }
 
+// ================= Fases e progresso =================
+// A fase seguinte só abre depois de vencer a anterior. O progresso fica no navegador (vdd-progress).
+// Para testes, abrir a página com ?liberar libera todas as fases.
+const PHASES = [
+  {n:1, href:'index.html', title:'Davi × Golias', ref:'1 Samuel 17'},
+  {n:2, href:'fase2.html', title:'Samá e o campo de lentilhas', ref:'2 Samuel 23:11-12'},
+  {n:3, href:'fase3.html', title:'Eleazar e a mão pegada à espada', ref:'2 Samuel 23:9-10'},
+];
 const onSite = /netlify\.app$|^localhost$|^127\./.test(location.hostname) || location.protocol === 'file:';
+const unlockAll = /[?&]liberar(=|&|$)/.test(location.search);
+function loadProgress(){ try { return JSON.parse(localStorage.getItem('vdd-progress')) || {}; } catch(e) { return {}; } }
+function phaseOpen(n, prog = loadProgress()){ return !onSite || unlockAll || n === 1 || !!(prog[n-1] && prog[n-1].won); }
+// Registra a vitória e diz se ela acabou de liberar a fase seguinte.
+function saveWin(n, stars, score){
+  const prog = loadProgress(), before = phaseOpen(n + 1, prog), o = prog[n] || {};
+  prog[n] = {won:true, stars:Math.max(o.stars || 0, stars), best:Math.max(o.best || 0, score)};
+  try { localStorage.setItem('vdd-progress', JSON.stringify(prog)); } catch(e) {}
+  const next = PHASES.find(p => p.n === n + 1);
+  return next && onSite ? {next, fresh: !before && phaseOpen(n + 1, prog)} : null;
+}
+function phaseMapHTML(cur){
+  if (!onSite) return '';
+  const prog = loadProgress();
+  return `<div class="sect">Escolha a fase</div><ol class="phases" aria-label="Fases">${PHASES.map(p => {
+    const open = phaseOpen(p.n, prog), done = prog[p.n] && prog[p.n].won, st = done ? prog[p.n].stars : 0;
+    const status = !open ? `Vença a fase ${p.n - 1} para liberar`
+      : done ? `<em>${'★'.repeat(st)}${'☆'.repeat(3 - st)}</em> · recorde ${prog[p.n].best}`
+      : p.n === cur ? 'Você está aqui' : 'Liberada';
+    const inner = `<b>Fase ${p.n}${p.n === cur ? ' · atual' : ''}</b><strong>${p.title}</strong><small>${p.ref}</small><span class="ps">${status}</span>`;
+    if (p.n === cur) return `<li><div class="phase cur${open ? '' : ' locked'}" aria-current="page">${inner}</div></li>`;
+    if (!open) return `<li><div class="phase locked" aria-disabled="true">${inner}</div></li>`;
+    return `<li><a class="phase" href="${p.href}${unlockAll ? '?liberar' : ''}">${inner}</a></li>`;
+  }).join('')}</ol>`;
+}
+function lockedHTML(n){
+  const prev = PHASES.find(p => p.n === n - 1);
+  return `<div class="lockmsg"><p class="lede" style="margin:0 0 10px">🔒 Esta fase ainda está trancada. Vença a Fase ${prev.n}, <em>${prev.title}</em>, para liberar.</p>
+    <a class="btn primary" style="display:inline-block;text-decoration:none" href="${prev.href}">Ir para a Fase ${prev.n}</a></div>`;
+}
+function nextPhaseHTML(w){
+  if (!w) return '';
+  return `<p class="note">${w.fresh ? `<strong style="color:var(--bronze-hi)">Fase ${w.next.n} liberada!</strong> ` : ''}<a class="phase-link" style="color:var(--bronze-hi)" href="${w.next.href}${unlockAll ? '?liberar' : ''}">Ir para a Fase ${w.next.n}: ${w.next.title} →</a></p>`;
+}
 function showMenu(){
   pauseOn = false; modal = false; timeScale = 1; if (cine){ cine = null; $('cine').hidden = true; } stopSpeak();
   mode = 'menu'; setMood('menu'); hideHUD(); clearTraining(); clearEnemies(); clearAllies(); clearBanners(); placeSoldiers(); F.stuck = false; F.v = 0;
@@ -1209,6 +1268,9 @@ function showMenu(){
     <div class="eyebrow">Protótipo jogável · Fase 3</div>
     <h1>Eleazar e a mão pegada à espada</h1>
     <p class="lede">2 Samuel 23:9-10. Quando os homens de Israel sobem a colina, Eleazar desce ao vale de Pas-Damim e luta até a mão ficar pegada à espada.</p>
+    ${phaseMapHTML(3)}
+    ${!phaseOpen(3) ? lockedHTML(3) : `
+    <div class="sect">Dificuldade</div>
     <div class="choices" role="group" aria-label="Dificuldade">
       ${Object.entries(DIFF).map(([k,d]) => `<button class="choice" data-act="diff" data-k="${k}" aria-pressed="${k===dk}"><strong>${d.name}</strong><span>${d.desc}</span></button>`).join('')}
     </div>
@@ -1217,7 +1279,8 @@ function showMenu(){
       <button class="btn" data-act="train">Só o treino</button>
       <button class="btn" data-act="battle">Só a batalha</button>
       <button class="btn" data-act="tutorial">Como jogar</button>
-    </div>
+    </div>`}
+    ${!phaseOpen(3) ? '<div class="row"><button class="btn" data-act="tutorial">Como jogar</button></div>' : ''}
     <div class="row">
       <button class="btn" data-act="music" aria-pressed="${musicOn}">Música: ${musicOn ? 'ligada' : 'desligada'}</button>
       <button class="btn" data-act="voice" aria-pressed="${narrOn}">Narração: ${narrOn ? 'ligada' : 'desligada'}</button>
@@ -1230,8 +1293,7 @@ function showMenu(){
       <dt>F (segurar) · T</dt><dd>Orar · tocar a trombeta</dd>
       <dt>Esc · M · N</dt><dd>Pausa · música · narração</dd>
     </dl>
-    <p class="note">No celular: direcional, arrastar para olhar e os botões Golpe, Aparar, Desviar, Orar e Trombeta. Os versículos são provisórios.</p>
-    ${onSite ? '<p class="note"><a class="phase-link" href="fase2.html">← Fase 2: Samá e o campo de lentilhas</a></p>' : ''}`;
+    <p class="note">No celular: direcional, arrastar para olhar e os botões Golpe, Aparar, Desviar, Orar e Trombeta. Os versículos são provisórios.</p>`;
   showOverlay(html(), {
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
