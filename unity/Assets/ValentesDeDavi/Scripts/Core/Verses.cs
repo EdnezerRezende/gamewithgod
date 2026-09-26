@@ -36,6 +36,11 @@ namespace Valentes
             { "f2v11b", new Verse("...e o povo fugiu de diante dos filisteus.", "2 Samuel 23:11") },
             { "f2v12a", new Verse("Este, porém, se pôs no meio daquele pedaço de campo, e o defendeu, e feriu os filisteus;", "2 Samuel 23:12") },
             { "f2v12b", new Verse("...e o Senhor operou um grande livramento.", "2 Samuel 23:12") },
+            { "f3v1cr",  new Verse("Este esteve com Davi em Pas-Damim, quando os filisteus se ajuntaram ali à peleja...", "1 Crônicas 11:13") },
+            { "f3v9",    new Verse("E depois dele Eleazar, filho de Dodô, filho de Aoí, entre os três valentes que estavam com Davi, quando provocaram os filisteus que se ajuntaram ali à peleja, e subiram os homens de Israel.", "2 Samuel 23:9") },
+            { "f3v10a",  new Verse("Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada;", "2 Samuel 23:10") },
+            { "f3vhand", new Verse("...até que a sua mão se cansou e ficou pegada à espada.", "2 Samuel 23:10") },
+            { "f3v10b",  new Verse("...e naquele dia o Senhor operou um grande livramento; e o povo voltou após ele somente para despojar.", "2 Samuel 23:10") },
             { "v46", new Verse("...e toda a terra saberá que há Deus em Israel.", "1 Samuel 17:46") },
         };
 

@@ -17,14 +17,13 @@ enquanto a arte definitiva não existe.
 
 Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualizar a cena da Fase 1**.
 
-A **Fase 2** (Samá e o campo de lentilhas) tem cena própria, criada junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`. As duas ficam nas Build Settings.
+A **Fase 2** (Samá e o campo de lentilhas) e a **Fase 3** (Eleazar e a mão pegada à espada) têm cenas próprias, criadas junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity` e `Fase3_Eleazar.unity`. As três ficam nas Build Settings, em ordem.
 
 ### Mapa das fases e trava
 
 O menu de cada fase mostra todas as fases em cartões (atual, liberada, concluída com estrelas e
 recorde, ou trancada). A fase seguinte só abre depois de vencer a anterior; vencer é chegar à tela
-de resultados. O progresso fica no `PlayerPrefs` (`Scripts/Core/Progress.cs`). A Fase 3 aparece
-como "em breve" até ganhar cena na Unity.
+de resultados. O progresso fica no `PlayerPrefs` (`Scripts/Core/Progress.cs`).
 
 Para testar sem vencer tudo, use o menu **Valentes de Davi → Progresso → Liberar todas as fases
 (testes)**. **Apagar o progresso** tranca tudo de novo.
@@ -49,6 +48,18 @@ esquerda para andar (empurrar até a borda corre), arrastar na metade direita pa
 **Funda** (segurar para girar, soltar para atirar) e botão **❚❚** de pausa. Tocar avança a cena
 animada. Eles ficam em `Scripts/UI/TouchControls.cs`.
 
+### Controles da Fase 3
+
+| Tecla | Ação |
+|---|---|
+| Clique esquerdo | Golpe; três rápidos seguidos formam a sequência |
+| Segurar e soltar | Golpe forte (abre a falange) |
+| Botão direito | Aparar no instante do golpe inimigo (o próximo golpe é crítico) |
+| Espaço | Desviar |
+| F (segurar) · T | Orar · tocar a trombeta |
+
+No toque, os botões viram **Golpe**, **Aparar**, **Desviar**, **Orar** e **Trombeta**.
+
 ## Como o código está organizado
 
 | Pasta | O que tem |
@@ -62,7 +73,8 @@ animada. Eles ficam em `Scripts/UI/TouchControls.cs`.
 | `Scripts/Flow` | Fluxo da fase (`Game`) e cenas animadas (`Cutscene`) |
 | `Scripts/UI` | Interface feita com UI Toolkit: HUD, telas e desenho das pedras |
 | `Scripts/Fase2` | Fase 2: campo de lentilhas e fogo, espada e escudo, filisteus, flechas, treino, batalha e o fluxo da fase |
-| `Editor` | Cria as cenas das duas fases e os materiais automaticamente |
+| `Scripts/Fase3` | Fase 3: vale de Pas-Damim, espada de Eleazar (sequência, aparar, desviar, Cansaço e mão pegada), filisteus em linhas, treino, batalha com estandartes e trombeta, e o fluxo da fase |
+| `Editor` | Cria as cenas das fases e os materiais automaticamente |
 
 Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, velocidades) ficam em
 `Scripts/Core/Difficulty.cs`, espelhando a tabela de dificuldade de `docs/fases/01-davi-golias.md`.

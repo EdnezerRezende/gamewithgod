@@ -9,9 +9,9 @@ namespace Valentes
     /// </summary>
     public class World
     {
-        public enum Area { Valley, Field, Lentils }
+        public enum Area { Valley, Field, Lentils, PasDamim }
 
-        public GameObject valley, field, lentils;
+        public GameObject valley, field, lentils, pasDamim;
         public Army israel, philistines;
         public Area current = Area.Valley;
         public Light sun;
@@ -19,6 +19,7 @@ namespace Valentes
         public float Height(float x, float z)
         {
             if (current == Area.Lentils) return LentilHeight(x, z);
+            if (current == Area.PasDamim) return Valentes.PasDamim.Height(x, z);
             return current == Area.Valley ? ValleyHeight(x, z) : FieldHeight(x, z);
         }
 
@@ -68,6 +69,19 @@ namespace Valentes
             w.lentils.transform.SetParent(root, false);
             BuildTerrain(w.lentils.transform, LentilHeight, LentilGround);
             w.current = Area.Lentils;
+            return w;
+        }
+
+        /// <summary>Fase 3: o vale estreito de Pas-Damim, com a plantação à esquerda e pedras nas encostas.</summary>
+        public static World ForPasDamim(Transform root, Material skyMaterial)
+        {
+            World w = new World();
+            w.BuildAtmosphere(root, skyMaterial);
+            w.pasDamim = new GameObject("Vale de Pas-Damim");
+            w.pasDamim.transform.SetParent(root, false);
+            BuildTerrain(w.pasDamim.transform, Valentes.PasDamim.Height, Valentes.PasDamim.Ground);
+            Valentes.PasDamim.BuildProps(w.pasDamim.transform);
+            w.current = Area.PasDamim;
             return w;
         }
 

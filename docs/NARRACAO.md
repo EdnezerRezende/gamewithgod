@@ -57,3 +57,8 @@ edição escolhida **antes** de gravar.
 | `f2v12a` | 2 Samuel 23:12 | Cena animada | Este, porém, se pôs no meio daquele pedaço de campo, e o defendeu, e feriu os filisteus; |
 | `f2v12b` | 2 Samuel 23:12 | Cena animada | ...e o Senhor operou um grande livramento. |
 | `v46` | 1 Samuel 17:46 | Telas | ...e toda a terra saberá que há Deus em Israel. |
+| `f3v1cr` | 1 Crônicas 11:13 | Cena animada | Este esteve com Davi em Pas-Damim, quando os filisteus se ajuntaram ali à peleja... |
+| `f3v9` | 2 Samuel 23:9 | Cena animada | E depois dele Eleazar, filho de Dodô, filho de Aoí, entre os três valentes que estavam com Davi, quando provocaram os filisteus que se ajuntaram ali à peleja, e subiram os homens de Israel. |
+| `f3v10a` | 2 Samuel 23:10 | Cena animada e telas | Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada; |
+| `f3vhand` | 2 Samuel 23:10 | Durante a batalha | ...até que a sua mão se cansou e ficou pegada à espada. |
+| `f3v10b` | 2 Samuel 23:10 | Cena animada e telas | ...e naquele dia o Senhor operou um grande livramento; e o povo voltou após ele somente para despojar. |

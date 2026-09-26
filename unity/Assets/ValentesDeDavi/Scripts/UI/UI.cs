@@ -21,6 +21,9 @@ namespace Valentes
         VisualElement statCampo, campoFill, statArma, holdBar, holdFill;
         Label armaLabel, waveLabel, zoneLabel;
         VisualElement hud, cine, overlay, hurt, stonesRow, vidaFill, corFill, statStones, statVida, statCor, statScore, gauge;
+        VisualElement statFad, fadFill, stuckFx;
+        float stuckAlpha;
+        bool stuckOn;
         Label esc, cineHint;
         Label obj, sub, toast, opening, score, cineQuote, cineRef, gaugeText;
         ScrollView overlayScroll;
@@ -140,7 +143,8 @@ namespace Valentes
             statScore = Stat(tr, "PONTOS"); score = Text(statScore, "0", 24, Parch, true);
             statCampo = Stat(tr, "CAMPO"); campoFill = Bar(statCampo, Olive);
             statArma = Stat(tr, "ARMA"); armaLabel = Text(statArma, "", 16, Parch, true);
-            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+            statFad = Stat(tr, "CANSAÇO"); fadFill = Bar(statFad, U.Hex(0xd08a4a));
+            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None; statFad.style.display = DisplayStyle.None;
 
             VisualElement tc = Box(hud);
             Abs(tc, 0, 14, 0, null);
@@ -199,6 +203,20 @@ namespace Valentes
 
             esc = Text(hud, "Esc · pausa e menu · H · ajuda de mira · M · música", 14, ParchDim);
             Abs(esc, 24, null, null, 20);
+
+            // Borda escura da "mão pegada à espada" (fase 3).
+            stuckFx = Layer(hud);
+            Texture2D vig = new Texture2D(64, 64, TextureFormat.RGBA32, false);
+            for (int y = 0; y < 64; y++)
+                for (int x = 0; x < 64; x++)
+                {
+                    float dx = (x - 31.5f) / 32f, dy = (y - 31.5f) / 32f, r = Mathf.Sqrt(dx * dx + dy * dy);
+                    vig.SetPixel(x, y, new Color(0.16f, 0.04f, 0.02f, U.SStep(0.55f, 1.25f, r) * 0.8f));
+                }
+            vig.wrapMode = TextureWrapMode.Clamp;
+            vig.Apply();
+            stuckFx.style.backgroundImage = new StyleBackground(Background.FromTexture2D(vig));
+            stuckFx.style.opacity = 0f;
 
             hurt = Layer(hud);
             hurt.style.backgroundColor = new Color(0.63f, 0.12f, 0.06f, 1f);
@@ -260,6 +278,7 @@ namespace Valentes
             statCor.style.display = DisplayStyle.None; statScore.style.display = DisplayStyle.Flex;
             statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
             waveLabel.text = ""; holdBar.style.display = DisplayStyle.None; zoneLabel.style.display = DisplayStyle.None;
+            statFad.style.display = DisplayStyle.None;
             score.text = points.ToString();
             opening.style.display = DisplayStyle.None;
         }
@@ -268,7 +287,7 @@ namespace Valentes
         {
             statStones.style.display = DisplayStyle.Flex; statVida.style.display = DisplayStyle.Flex;
             statCor.style.display = DisplayStyle.Flex; statScore.style.display = DisplayStyle.None;
-            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None; statFad.style.display = DisplayStyle.None;
             for (int i = 0; i < 5; i++)
                 stonesRow[i].style.backgroundColor = i < stonesLeft ? U.Hex(0x9a9a92) : new Color(0, 0, 0, 0);
             vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
@@ -281,7 +300,7 @@ namespace Valentes
         {
             statStones.style.display = DisplayStyle.Flex; statVida.style.display = DisplayStyle.Flex;
             statCor.style.display = DisplayStyle.Flex; statScore.style.display = DisplayStyle.None;
-            statCampo.style.display = DisplayStyle.Flex; statArma.style.display = DisplayStyle.Flex;
+            statCampo.style.display = DisplayStyle.Flex; statArma.style.display = DisplayStyle.Flex; statFad.style.display = DisplayStyle.None;
             opening.style.display = DisplayStyle.None;
             for (int i = 0; i < 5; i++)
                 stonesRow[i].style.backgroundColor = i < stonesLeft ? U.Hex(0x9a9a92) : new Color(0, 0, 0, 0);
@@ -293,6 +312,30 @@ namespace Valentes
             holdBar.style.display = hold01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
             if (hold01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(hold01) * 100f);
             zoneLabel.style.display = zoneWarning ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        /// <summary>
+        /// HUD da fase 3. No treino: pontos e cansaço. Na batalha: vida, coragem, cansaço, a linha
+        /// atual, a barra da resistência final e o aviso de recuo para trás do estandarte.
+        /// </summary>
+        public void SetFase3Stats(bool battle, int points, float health, float courage, float fatigue, string wave, float hold01, bool zoneWarning, bool stuck)
+        {
+            statStones.style.display = DisplayStyle.None; statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+            statVida.style.display = battle ? DisplayStyle.Flex : DisplayStyle.None;
+            statCor.style.display = battle ? DisplayStyle.Flex : DisplayStyle.None;
+            statScore.style.display = battle ? DisplayStyle.None : DisplayStyle.Flex;
+            statFad.style.display = DisplayStyle.Flex;
+            opening.style.display = DisplayStyle.None;
+            score.text = points.ToString();
+            vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
+            corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
+            fadFill.style.width = Length.Percent(Mathf.Clamp(fatigue, 0, 100));
+            waveLabel.text = wave;
+            holdBar.style.display = hold01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
+            if (hold01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(hold01) * 100f);
+            zoneLabel.text = "Você recuou para trás do estandarte. Eleazar não voltou atrás.";
+            zoneLabel.style.display = zoneWarning ? DisplayStyle.Flex : DisplayStyle.None;
+            stuckOn = stuck;
         }
 
         /// <summary>Indicador simples em anel (espada carregando o golpe forte, oração).</summary>
@@ -324,6 +367,8 @@ namespace Valentes
                 toastT -= unscaledDt;
                 if (toastT <= 0f) toast.style.opacity = 0f;
             }
+            stuckAlpha = Mathf.MoveTowards(stuckAlpha, stuckOn ? 1f : 0f, unscaledDt / 1.2f);
+            stuckFx.style.opacity = stuckAlpha;
             if (hurtT > 0f) hurtT -= unscaledDt;
             hurt.style.opacity = Mathf.Clamp01(hurtT / 0.45f) * 0.4f;
         }

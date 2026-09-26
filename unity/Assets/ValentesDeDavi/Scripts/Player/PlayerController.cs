@@ -31,6 +31,15 @@ namespace Valentes
 
         /// <summary>Limita a posição (área do treino ou do vale).</summary>
         public Func<Vector3, Vector3> clampPosition;
+        /// <summary>Tremor da mão cansada (fase 3), em radianos.</summary>
+        public float tremble;
+        Vector3 dashVelocity;
+        float dashTime;
+
+        /// <summary>Arranque curto numa direção (desviar), ignorando o direcional.</summary>
+        public void Dash(Vector3 v, float seconds) { dashVelocity = v; dashTime = seconds; }
+        public bool Dashing { get { return dashTime > 0f; } }
+
         /// <summary>Quanto o tremor extra da funda (girar demais) soma ao balanço, em graus.</summary>
         public float extraSwayDegrees;
 
@@ -77,7 +86,8 @@ namespace Valentes
             if (armor) speed *= 0.58f;
             speed *= speedMultiplier;
             wish = mag > 0f ? wish.normalized * speed * mag : Vector3.zero;
-            velocity = Vector3.Lerp(velocity, wish, Mathf.Clamp01(dt * 10f));
+            if (dashTime > 0f) { dashTime -= dt; velocity = dashVelocity; }
+            else velocity = Vector3.Lerp(velocity, wish, Mathf.Clamp01(dt * 10f));
             Vector3 p = transform.position + velocity * dt;
             if (clampPosition != null) p = clampPosition(p);
             p.y = world.Height(p.x, p.z);
@@ -101,7 +111,8 @@ namespace Valentes
             float sp = A * (Mathf.Sin(t * 1.7f + 2f) * 0.6f + Mathf.Sin(t * 0.9f) * 0.4f);
             float jx = (UnityEngine.Random.value - 0.5f) * shake * 0.04f, jy = (UnityEngine.Random.value - 0.5f) * shake * 0.04f;
             cam.transform.position = transform.position + Vector3.up * (eyeHeight + bob);
-            cam.transform.rotation = Quaternion.Euler(-(pitch + sp + jx) * Mathf.Rad2Deg, (yaw + sy + jy) * Mathf.Rad2Deg, 0f);
+            float tp = Mathf.Sin(t * 17f) * tremble, ty = Mathf.Sin(t * 13f) * tremble;
+            cam.transform.rotation = Quaternion.Euler(-(pitch + sp + jx + tp) * Mathf.Rad2Deg, (yaw + sy + jy + ty) * Mathf.Rad2Deg, 0f);
         }
 
         public void Damage(float amount, UI ui, string message)

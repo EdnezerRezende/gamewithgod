@@ -7,7 +7,7 @@ namespace Valentes
     /// Espada e escudo de Samá. Clique: golpe rápido. Segurar e soltar: golpe forte (quebra a guarda
     /// do escudeiro). Botão direito: erguer o escudo; erguê-lo no instante do golpe apara e atordoa.
     /// </summary>
-    public class SwordShield : MonoBehaviour
+    public class SwordShield : MonoBehaviour, IDefender
     {
         public const float HeavyHold = 0.45f;
 
@@ -52,6 +52,9 @@ namespace Valentes
             foreach (Renderer r in view.GetComponentsInChildren<Renderer>())
                 r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
+
+        public PlayerController Player { get { return player; } }
+        public void ArrowHit(Vector3 from, float damage) { ResolveIncoming(from, damage, "A flecha acertou Samá.", null); }
 
         public void SetVisible(bool v) { if (view != null) view.gameObject.SetActive(v); }
 

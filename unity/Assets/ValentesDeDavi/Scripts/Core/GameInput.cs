@@ -45,6 +45,11 @@ namespace Valentes
         /// <summary>Orar: segurar F ou o botão Orar.</summary>
         public static bool PrayHeld() { return TouchControls.PrayHeld || RawKeyHeld("f"); }
 
+        /// <summary>Desviar (fase 3): Espaço ou o botão Desviar (o mesmo lugar do ⇄ da fase 2).</summary>
+        public static bool DashPressed() { return TouchControls.ConsumeSwap() || RawKeyDown("space"); }
+        /// <summary>Tocar a trombeta (fase 3): T ou o botão Trombeta.</summary>
+        public static bool HornPressed() { return TouchControls.ConsumeHorn() || RawKeyDown("t"); }
+
         /// <summary>Toque ou clique em qualquer lugar (avançar a cena animada).</summary>
         public static bool TapPressed() { return RawTap(); }
 
@@ -82,7 +87,11 @@ namespace Valentes
         static UnityEngine.InputSystem.Controls.KeyControl KeyFor(string k)
         {
             if (K == null) return null;
-            switch (k) { case "q": return K.qKey; case "f": return K.fKey; case "1": return K.digit1Key; case "2": return K.digit2Key; }
+            switch (k)
+            {
+                case "q": return K.qKey; case "f": return K.fKey; case "1": return K.digit1Key; case "2": return K.digit2Key;
+                case "space": return K.spaceKey; case "t": return K.tKey;
+            }
             return null;
         }
         static bool RawKeyDown(string k) { var c = KeyFor(k); return c != null && c.wasPressedThisFrame; }
@@ -118,7 +127,11 @@ namespace Valentes
         static bool RawRightHeld() { return Input.GetMouseButton(1); }
         static KeyCode CodeFor(string k)
         {
-            switch (k) { case "q": return KeyCode.Q; case "f": return KeyCode.F; case "1": return KeyCode.Alpha1; case "2": return KeyCode.Alpha2; }
+            switch (k)
+            {
+                case "q": return KeyCode.Q; case "f": return KeyCode.F; case "1": return KeyCode.Alpha1; case "2": return KeyCode.Alpha2;
+                case "space": return KeyCode.Space; case "t": return KeyCode.T;
+            }
             return KeyCode.None;
         }
         static bool RawKeyDown(string k) { return Input.GetKeyDown(CodeFor(k)); }

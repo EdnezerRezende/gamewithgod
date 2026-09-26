@@ -53,6 +53,7 @@ namespace Valentes
             Narration.Create(transform);
             world = World.ForLentilField(transform, skyMaterial);
             Fx.SetWorld(world);
+            Arrow.ground = World.LentilHeight;
 
             GameObject camGo = new GameObject("Câmera");
             camGo.tag = "MainCamera";

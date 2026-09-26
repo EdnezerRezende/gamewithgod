@@ -17,9 +17,10 @@ namespace Valentes
         public static bool FireHeld;
         public static bool ShieldHeld;
         public static bool PrayHeld;
-        static bool swapPending;
-        static VisualElement shieldBtn, prayBtn, swapBtn;
-        static Label fireLabel;
+        static bool swapPending, hornPending;
+        static VisualElement shieldBtn, prayBtn, swapBtn, hornBtn;
+        static Label fireLabel, shieldLabel;
+        static Button swapButton;
 
         static Vector2 lookAccum;
         static bool firePending, pausePending;
@@ -33,6 +34,17 @@ namespace Valentes
         public static bool ConsumeFireDown() { bool v = firePending; firePending = false; return v; }
         public static bool ConsumePause() { bool v = pausePending; pausePending = false; return v; }
         public static bool ConsumeSwap() { bool v = swapPending; swapPending = false; return v; }
+        public static bool ConsumeHorn() { bool v = hornPending; hornPending = false; return v; }
+
+        /// <summary>Fase 3: o botão Escudo vira "Aparar" e o ⇄ vira "Desviar".</summary>
+        public static void SetShieldLabel(string text) { if (shieldLabel != null) shieldLabel.text = text; }
+        public static void SetSwapLabel(string text, float fontSize)
+        {
+            if (swapButton == null) return;
+            swapButton.text = text; swapButton.style.fontSize = fontSize;
+            swapButton.style.width = fontSize < 20f ? 86f : 62f;
+        }
+        public static void ShowHorn(bool v) { if (hornBtn != null) hornBtn.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
 
         /// <summary>Liga os botões de combate da fase 2 (Escudo, ⇄ e Orar).</summary>
         public static void SetCombatButtons(bool on)
@@ -45,7 +57,9 @@ namespace Valentes
         public static void SetFireLabel(string text) { if (fireLabel != null) fireLabel.text = text; }
 
         /// <summary>Botão que fica "segurado" enquanto o dedo está nele.</summary>
-        static VisualElement HoldButton(string text, float right, float bottom, float size, System.Action<bool> set)
+        static VisualElement HoldButton(string text, float right, float bottom, float size, System.Action<bool> set) { Label l; return HoldButton(text, right, bottom, size, set, out l); }
+
+        static VisualElement HoldButton(string text, float right, float bottom, float size, System.Action<bool> set, out Label label)
         {
             VisualElement b = new VisualElement();
             UI.Abs(b, null, null, right, bottom);
@@ -53,7 +67,7 @@ namespace Valentes
             b.style.alignItems = Align.Center; b.style.justifyContent = Justify.Center;
             b.style.backgroundColor = new Color(0.43f, 0.35f, 0.24f, 0.55f);
             UI.Border(b, new Color(0.92f, 0.86f, 0.74f, 0.6f), 2, size / 2f);
-            Label l = UI.Text(b, text, 15, UI.Parch, true);
+            Label l = label = UI.Text(b, text, 15, UI.Parch, true);
             l.pickingMode = PickingMode.Ignore;
             int pid = -1;
             b.RegisterCallback<PointerDownEvent>(e =>
@@ -175,7 +189,7 @@ namespace Valentes
             UI.Border(pause, new Color(0.92f, 0.86f, 0.74f, 0.3f), 1, 3);
             layer.Add(pause);
 
-            shieldBtn = HoldButton("Escudo", 168, 34, 92, v => ShieldHeld = v);
+            shieldBtn = HoldButton("Escudo", 168, 34, 92, v => ShieldHeld = v, out shieldLabel);
             prayBtn = HoldButton("Orar", 176, 140, 70, v => PrayHeld = v);
             layer.Add(shieldBtn); layer.Add(prayBtn);
             Button swap = new Button(() => swapPending = true);
@@ -186,7 +200,17 @@ namespace Valentes
             swap.style.backgroundColor = new Color(0.08f, 0.06f, 0.04f, 0.6f);
             UI.Border(swap, new Color(0.92f, 0.86f, 0.74f, 0.4f), 1, 3);
             layer.Add(swap);
-            swapBtn = swap;
+            swapBtn = swap; swapButton = swap;
+            Button horn = new Button(() => hornPending = true);
+            horn.text = "Trombeta";
+            UI.Abs(horn, 28, 64, null, null);
+            horn.style.width = 96; horn.style.height = 42; horn.style.fontSize = 15;
+            horn.style.color = UI.Parch;
+            horn.style.backgroundColor = new Color(0.08f, 0.06f, 0.04f, 0.6f);
+            UI.Border(horn, new Color(0.92f, 0.86f, 0.74f, 0.4f), 1, 3);
+            layer.Add(horn);
+            hornBtn = horn;
+            ShowHorn(false);
             SetCombatButtons(false);
 
             ResetAll();

@@ -23,7 +23,7 @@ namespace Valentes
         {
             new Phase(1, "Davi × Golias", "1 Samuel 17", "Fase1_DaviGolias"),
             new Phase(2, "Samá e o campo de lentilhas", "2 Samuel 23:11-12", "Fase2_Sama"),
-            new Phase(3, "Eleazar e a mão pegada à espada", "2 Samuel 23:9-10", null),
+            new Phase(3, "Eleazar e a mão pegada à espada", "2 Samuel 23:9-10", "Fase3_Eleazar"),
         };
 
         const string UnlockKey = "valentes.unlockAll";

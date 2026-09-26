@@ -2,16 +2,26 @@ using UnityEngine;
 
 namespace Valentes
 {
+    /// <summary>Quem as flechas miram: Samá (escudo) ou Eleazar (aparar e desviar).</summary>
+    public interface IDefender
+    {
+        PlayerController Player { get; }
+        void ArrowHit(Vector3 from, float damage);
+    }
+
     /// <summary>Flecha filisteia (ou sem ponta, no treino). O escudo virado para ela bloqueia.</summary>
     public class Arrow : MonoBehaviour
     {
+        /// <summary>Relevo da fase atual, para a flecha cravar no chão.</summary>
+        public static System.Func<float, float, float> ground = World.LentilHeight;
+
         Vector3 v, from;
         float t, damage;
         bool stuck, training;
-        SwordShield defender;
+        IDefender defender;
         System.Action onMissed;
 
-        public static void Shoot(Vector3 start, Vector3 target, Vector3 targetVelocity, float damage, bool blunt, SwordShield defender, System.Action onMissed)
+        public static void Shoot(Vector3 start, Vector3 target, Vector3 targetVelocity, float damage, bool blunt, IDefender defender, System.Action onMissed)
         {
             float T = Mathf.Clamp(Vector3.Distance(start, target) / 24f, 0.6f, 1.6f);
             target += targetVelocity * T * 0.6f;
@@ -35,14 +45,14 @@ namespace Valentes
             v.y -= Stone.Gravity * dt;
             transform.position += v * dt;
             transform.rotation = Quaternion.LookRotation(v);
-            PlayerController p = defender.player;
+            PlayerController p = defender.Player;
             if (Vector3.Distance(transform.position, p.Position + Vector3.up * 1.3f) < 0.75f)
             {
-                defender.ResolveIncoming(from, damage, "A flecha acertou Samá.", null);
+                defender.ArrowHit(from, damage);
                 Destroy(gameObject);
                 return;
             }
-            if (transform.position.y < World.LentilHeight(transform.position.x, transform.position.z))
+            if (transform.position.y < ground(transform.position.x, transform.position.z))
             {
                 stuck = true; t = 0f;
                 if (onMissed != null) onMissed();
