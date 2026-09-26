@@ -160,9 +160,9 @@ const VS = {
 const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]}</cite></blockquote>`;
 
 const DIFF = {
-  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:3,   arc:140, preview:true,  arcVisible:true,  sway:.5, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
-  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:2,   arc:100, preview:false, arcVisible:true,  sway:1,  roar:15, dardo:25, spear:35, lion:6,   fore:.22, restart:'duel',    mult:1.5, gSpeed:.95},
-  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:1.1, arc:60, preview:false, arcVisible:false, sway:1.6,roar:22, dardo:35, spear:50, lion:7.5, fore:.17, restart:'ribeiro', mult:2,   gSpeed:1.1},
+  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:5,   arc:140, preview:true,  arcVisible:true,  sway:.5, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
+  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:3.5, arc:100, preview:false, arcVisible:true,  sway:1,  roar:15, dardo:25, spear:35, lion:6,   fore:.22, restart:'duel',    mult:1.5, gSpeed:.95},
+  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:2,   arc:60, preview:false, arcVisible:false, sway:1.6,roar:22, dardo:35, spear:50, lion:7.5, fore:.17, restart:'ribeiro', mult:2,   gSpeed:1.1},
 };
 let dk = 'guerreiro';
 try { const s = localStorage.getItem('vdd-diff'); if (DIFF[s]) dk = s; } catch(e) {}

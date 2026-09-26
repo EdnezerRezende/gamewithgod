@@ -189,7 +189,7 @@ margem de erro ao redor delas.
 
 | Parâmetro | Pastor (fácil) | Guerreiro (normal) | Valente (difícil) |
 |---|---|---|---|
-| Tempo da testa exposta | 3 s | 2 s | 1 s |
+| Tempo da testa exposta | 5 s | 3,5 s | 2 s |
 | Indicador do tiro perfeito | Grande e visível | Visível | Apenas som sutil |
 | Linha de trajetória | Prévia curta | Não | Não |
 | Balanço da mira (Coragem baixa) | Leve | Médio | Forte |

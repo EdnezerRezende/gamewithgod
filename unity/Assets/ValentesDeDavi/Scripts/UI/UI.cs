@@ -1,0 +1,506 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace Valentes
+{
+    /// <summary>
+    /// Toda a interface da fase (HUD, cenas animadas e telas de menu), montada em código com UI Toolkit.
+    /// Paleta: terra escura, pergaminho e bronze, a mesma do protótipo em navegador.
+    /// </summary>
+    public class UI
+    {
+        public static readonly Color Earth = U.Hex(0x140f0a), Earth2 = U.Hex(0x211810), Parch = U.Hex(0xeadcbd),
+            ParchDim = U.Hex(0xb3a483), Bronze = U.Hex(0xc8903f), BronzeHi = U.Hex(0xecbd6a), Olive = U.Hex(0x93a35a),
+            Blood = U.Hex(0xc0533a);
+        static readonly Color Line = new Color(0.917f, 0.862f, 0.741f, 0.16f);
+
+        public readonly VisualElement root;
+        VisualElement hud, cine, overlay, hurt, stonesRow, vidaFill, corFill, statStones, statVida, statCor, statScore, gauge;
+        Label obj, sub, toast, opening, score, cineQuote, cineRef, gaugeText;
+        ScrollView overlayScroll;
+        Texture2D gaugeTex;
+        Color32[] gaugePx;
+        float toastT, hurtT;
+
+        public bool OverlayOpen { get { return overlay.style.display == DisplayStyle.Flex; } }
+
+        public UI(Transform parent, PanelSettings panelSettings)
+        {
+            GameObject go = new GameObject("Interface");
+            go.SetActive(false);
+            go.transform.SetParent(parent, false);
+            if (panelSettings == null)
+            {
+                panelSettings = ScriptableObject.CreateInstance<PanelSettings>();
+            }
+            panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+            panelSettings.referenceResolution = new Vector2Int(1600, 900);
+            panelSettings.match = 0.5f;
+            UIDocument doc = go.AddComponent<UIDocument>();
+            doc.panelSettings = panelSettings;
+            go.SetActive(true);
+            root = doc.rootVisualElement;
+            root.style.flexGrow = 1f;
+            Font f = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (f != null) root.style.unityFontDefinition = new StyleFontDefinition(FontDefinition.FromFont(f));
+            root.style.color = Parch;
+
+            BuildHud();
+            BuildCine();
+            BuildOverlay();
+            ShowHud(false);
+            ShowCine(false);
+            CloseOverlay();
+        }
+
+        // ------------------------------------------------------------------ helpers de estilo
+
+        public static void Abs(VisualElement e, float? left, float? top, float? right, float? bottom)
+        {
+            e.style.position = Position.Absolute;
+            if (left.HasValue) e.style.left = left.Value;
+            if (top.HasValue) e.style.top = top.Value;
+            if (right.HasValue) e.style.right = right.Value;
+            if (bottom.HasValue) e.style.bottom = bottom.Value;
+        }
+
+        public static void Pad(VisualElement e, float v, float h)
+        {
+            e.style.paddingTop = v; e.style.paddingBottom = v; e.style.paddingLeft = h; e.style.paddingRight = h;
+        }
+
+        public static void Border(VisualElement e, Color c, float w, float radius)
+        {
+            e.style.borderTopColor = c; e.style.borderBottomColor = c; e.style.borderLeftColor = c; e.style.borderRightColor = c;
+            e.style.borderTopWidth = w; e.style.borderBottomWidth = w; e.style.borderLeftWidth = w; e.style.borderRightWidth = w;
+            e.style.borderTopLeftRadius = radius; e.style.borderTopRightRadius = radius;
+            e.style.borderBottomLeftRadius = radius; e.style.borderBottomRightRadius = radius;
+        }
+
+        public static Label Text(VisualElement parent, string text, float size, Color color, bool bold = false, bool italic = false)
+        {
+            Label l = new Label(text);
+            l.style.fontSize = size;
+            l.style.color = color;
+            l.style.whiteSpace = WhiteSpace.Normal;
+            l.style.marginTop = 0f; l.style.marginBottom = 0f; l.style.marginLeft = 0f; l.style.marginRight = 0f;
+            l.style.paddingLeft = 0f; l.style.paddingRight = 0f;
+            FontStyle fs = bold && italic ? FontStyle.BoldAndItalic : bold ? FontStyle.Bold : italic ? FontStyle.Italic : FontStyle.Normal;
+            l.style.unityFontStyleAndWeight = fs;
+            if (parent != null) parent.Add(l);
+            return l;
+        }
+
+        static VisualElement Box(VisualElement parent)
+        {
+            VisualElement v = new VisualElement();
+            v.pickingMode = PickingMode.Ignore;
+            if (parent != null) parent.Add(v);
+            return v;
+        }
+
+        static VisualElement Layer(VisualElement parent)
+        {
+            VisualElement v = Box(parent);
+            Abs(v, 0, 0, 0, 0);
+            return v;
+        }
+
+        // ------------------------------------------------------------------ HUD
+
+        void BuildHud()
+        {
+            hud = Layer(root);
+
+            VisualElement tl = Box(hud);
+            Abs(tl, 24, 20, null, null);
+            tl.style.maxWidth = 620f;
+            obj = Text(tl, "", 26, Parch);
+            sub = Text(tl, "", 18, ParchDim);
+
+            VisualElement tr = Box(hud);
+            Abs(tr, null, 20, 24, null);
+            tr.style.alignItems = Align.FlexEnd;
+            statStones = Stat(tr, "PEDRAS"); stonesRow = Box(statStones); stonesRow.style.flexDirection = FlexDirection.Row;
+            for (int i = 0; i < 5; i++)
+            {
+                VisualElement pip = Box(stonesRow);
+                pip.style.width = 14f; pip.style.height = 14f; pip.style.marginLeft = 5f;
+                Border(pip, Line, 1, 7);
+            }
+            statVida = Stat(tr, "VIDA"); vidaFill = Bar(statVida, Blood);
+            statCor = Stat(tr, "CORAGEM"); corFill = Bar(statCor, BronzeHi);
+            statScore = Stat(tr, "PONTOS"); score = Text(statScore, "0", 24, Parch, true);
+
+            VisualElement cross = Layer(hud);
+            cross.style.alignItems = Align.Center;
+            cross.style.justifyContent = Justify.Center;
+            VisualElement ch = Box(cross);
+            ch.style.width = 20f; ch.style.height = 20f;
+            VisualElement h1 = Box(ch); Abs(h1, 9, 0, null, null); h1.style.width = 2f; h1.style.height = 20f; h1.style.backgroundColor = new Color(0.92f, 0.86f, 0.74f, 0.85f);
+            VisualElement h2 = Box(ch); Abs(h2, 0, 9, null, null); h2.style.width = 20f; h2.style.height = 2f; h2.style.backgroundColor = new Color(0.92f, 0.86f, 0.74f, 0.85f);
+
+            VisualElement centerTop = Box(hud);
+            Abs(centerTop, 0, null, 0, null);
+            centerTop.style.top = Length.Percent(22);
+            centerTop.style.alignItems = Align.Center;
+            toast = Text(centerTop, "", 24, Parch, true);
+            toast.style.unityTextAlign = TextAnchor.MiddleCenter;
+            toast.style.maxWidth = 900f;
+            opening = Text(centerTop, "ABERTURA", 36, BronzeHi, true);
+            opening.style.marginTop = 60f;
+            opening.style.letterSpacing = 8f;
+
+            VisualElement bottom = Box(hud);
+            Abs(bottom, 0, null, 0, 20);
+            bottom.style.alignItems = Align.Center;
+            gauge = Box(bottom);
+            gauge.style.width = 140f; gauge.style.height = 140f;
+            gauge.style.alignItems = Align.Center; gauge.style.justifyContent = Justify.Center;
+            gaugeTex = new Texture2D(140, 140, TextureFormat.RGBA32, false);
+            gaugeTex.filterMode = FilterMode.Bilinear;
+            gaugePx = new Color32[140 * 140];
+            gauge.style.backgroundImage = new StyleBackground(Background.FromTexture2D(gaugeTex));
+            gaugeText = Text(gauge, "segure para girar", 13, ParchDim);
+            gaugeText.style.unityTextAlign = TextAnchor.MiddleCenter;
+
+            Label esc = Text(hud, "Esc · pausa e menu", 14, ParchDim);
+            Abs(esc, 24, null, null, 20);
+
+            hurt = Layer(hud);
+            hurt.style.backgroundColor = new Color(0.63f, 0.12f, 0.06f, 1f);
+            hurt.style.opacity = 0f;
+        }
+
+        VisualElement Stat(VisualElement parent, string label)
+        {
+            VisualElement row = Box(parent);
+            row.style.flexDirection = FlexDirection.Row;
+            row.style.alignItems = Align.Center;
+            row.style.marginBottom = 8f;
+            Label l = Text(row, label, 13, ParchDim);
+            l.style.letterSpacing = 3f;
+            l.style.marginRight = 10f;
+            return row;
+        }
+
+        VisualElement Bar(VisualElement parent, Color c)
+        {
+            VisualElement b = Box(parent);
+            b.style.width = 160f; b.style.height = 9f;
+            b.style.backgroundColor = new Color(0, 0, 0, 0.45f);
+            Border(b, Line, 1, 0);
+            VisualElement fill = Box(b);
+            fill.style.height = Length.Percent(100);
+            fill.style.backgroundColor = c;
+            return fill;
+        }
+
+        public void ShowHud(bool v) { hud.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
+
+        public void SetObjective(string title, string detail) { obj.text = title; sub.text = detail; }
+
+        public void Toast(string msg, float dur = 2.2f) { toast.text = msg; toast.style.opacity = 1f; toastT = dur; }
+
+        public void Hurt() { hurtT = 0.45f; }
+
+        public void SetTrainingStats(int points)
+        {
+            statStones.style.display = DisplayStyle.None; statVida.style.display = DisplayStyle.None;
+            statCor.style.display = DisplayStyle.None; statScore.style.display = DisplayStyle.Flex;
+            score.text = points.ToString();
+            opening.style.display = DisplayStyle.None;
+        }
+
+        public void SetDuelStats(int stonesLeft, float health, float courage, bool showOpening)
+        {
+            statStones.style.display = DisplayStyle.Flex; statVida.style.display = DisplayStyle.Flex;
+            statCor.style.display = DisplayStyle.Flex; statScore.style.display = DisplayStyle.None;
+            for (int i = 0; i < 5; i++)
+                stonesRow[i].style.backgroundColor = i < stonesLeft ? U.Hex(0x9a9a92) : new Color(0, 0, 0, 0);
+            vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
+            corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
+            opening.style.display = showOpening ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        public void Tick(float unscaledDt)
+        {
+            if (toastT > 0f)
+            {
+                toastT -= unscaledDt;
+                if (toastT <= 0f) toast.style.opacity = 0f;
+            }
+            if (hurtT > 0f) hurtT -= unscaledDt;
+            hurt.style.opacity = Mathf.Clamp01(hurtT / 0.45f) * 0.4f;
+        }
+
+        /// <summary>Desenha o indicador do giro da funda: faixa dourada, ponto da pedra e anel de força.</summary>
+        public void DrawGauge(Sling s)
+        {
+            bool arcVisible = Difficulty.Current.sweetArcVisible;
+            float half = s.SweetArcDegrees() / 2f;
+            float dotAng = (s.Phase - 0.75f) * 360f;
+            float dotR = s.inZone ? 8f : 6f;
+            Vector2 dot = new Vector2(Mathf.Sin(dotAng * Mathf.Deg2Rad), Mathf.Cos(dotAng * Mathf.Deg2Rad)) * 44f;
+            Color32 track = new Color32(234, 220, 189, 50), gold = new Color32(236, 189, 106, 255),
+                powerC = s.chargeTime > 3f ? new Color32(192, 83, 58, 255) : new Color32(147, 163, 90, 255),
+                dotC = s.inZone ? new Color32(255, 241, 196, 255) : new Color32(234, 220, 189, 255), clear = new Color32(0, 0, 0, 0);
+            float powerDeg = s.Power * 360f;
+            for (int y = 0; y < 140; y++)
+            {
+                for (int x = 0; x < 140; x++)
+                {
+                    float dx = x - 69.5f, dy = y - 69.5f, r = Mathf.Sqrt(dx * dx + dy * dy);
+                    float ang = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg;
+                    if (ang < 0f) ang += 360f;
+                    Color32 c = clear;
+                    if (r > 41f && r < 47f) c = track;
+                    if (arcVisible && r > 40f && r < 48f && Mathf.Min(ang, 360f - ang) <= half) c = gold;
+                    if (s.charging)
+                    {
+                        if (r > 53f && r < 57f && ang <= powerDeg) c = powerC;
+                        if (arcVisible && (new Vector2(dx, dy) - dot).sqrMagnitude < dotR * dotR) c = dotC;
+                    }
+                    gaugePx[y * 140 + x] = c;
+                }
+            }
+            gaugeTex.SetPixels32(gaugePx);
+            gaugeTex.Apply(false);
+            gaugeText.text = s.charging ? (arcVisible ? "" : "ouça o giro") : "segure para girar";
+        }
+
+        // ------------------------------------------------------------------ cenas animadas
+
+        void BuildCine()
+        {
+            cine = Layer(root);
+            VisualElement top = Box(cine); Abs(top, 0, 0, 0, null); top.style.height = Length.Percent(11); top.style.backgroundColor = Color.black;
+            VisualElement bot = Box(cine); Abs(bot, 0, null, 0, 0); bot.style.height = Length.Percent(11); bot.style.backgroundColor = Color.black;
+            VisualElement text = Box(cine);
+            Abs(text, 24, null, 24, null);
+            text.style.bottom = Length.Percent(13);
+            text.style.alignItems = Align.Center;
+            cineQuote = Text(text, "", 28, Parch, false, true);
+            cineQuote.style.unityTextAlign = TextAnchor.MiddleCenter;
+            cineQuote.style.maxWidth = 1000f;
+            cineRef = Text(text, "", 15, BronzeHi);
+            cineRef.style.letterSpacing = 4f;
+            cineRef.style.marginTop = 8f;
+            Label hint = Text(cine, "Clique: avançar · Enter: pular · Esc: pausa", 14, ParchDim);
+            Abs(hint, null, null, 24, 14);
+        }
+
+        public void ShowCine(bool v) { cine.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
+
+        public void SetCineLine(string quote, string reference)
+        {
+            cineQuote.text = quote;
+            cineRef.text = reference.ToUpperInvariant();
+        }
+
+        // ------------------------------------------------------------------ telas
+
+        void BuildOverlay()
+        {
+            overlay = new VisualElement();
+            Abs(overlay, 0, 0, 0, 0);
+            overlay.style.backgroundColor = new Color(0.078f, 0.059f, 0.039f, 0.86f);
+            root.Add(overlay);
+            overlayScroll = new ScrollView(ScrollViewMode.Vertical);
+            overlayScroll.style.flexGrow = 1f;
+            overlay.Add(overlayScroll);
+        }
+
+        public Card OpenCard()
+        {
+            overlayScroll.Clear();
+            VisualElement wrap = new VisualElement();
+            wrap.style.alignItems = Align.Center;
+            Pad(wrap, 56, 24);
+            overlayScroll.Add(wrap);
+            VisualElement card = new VisualElement();
+            card.style.width = Length.Percent(100);
+            card.style.maxWidth = 860f;
+            wrap.Add(card);
+            overlay.style.display = DisplayStyle.Flex;
+            overlayScroll.scrollOffset = Vector2.zero;
+            return new Card(card);
+        }
+
+        public void CloseOverlay() { overlay.style.display = DisplayStyle.None; }
+    }
+
+    /// <summary>Monta o conteúdo de uma tela (menu, resultado, escolhas).</summary>
+    public class Card
+    {
+        public readonly VisualElement el;
+        public Card(VisualElement e) { el = e; }
+
+        VisualElement Gap(VisualElement v, float g) { v.style.marginBottom = g; el.Add(v); return v; }
+
+        public void Eyebrow(string t)
+        {
+            Label l = UI.Text(null, t.ToUpperInvariant(), 14, UI.BronzeHi);
+            l.style.letterSpacing = 4f;
+            Gap(l, 10);
+        }
+
+        public void Title(string t, float size = 46) { Gap(UI.Text(null, t, size, UI.Parch), 18); }
+
+        public void Lede(string t) { Label l = UI.Text(null, t, 20, UI.ParchDim); l.style.maxWidth = 760f; Gap(l, 20); }
+
+        public void Note(string t) { Gap(UI.Text(null, t, 15, UI.ParchDim), 12); }
+
+        public void Verse(string key)
+        {
+            Verses.Verse v = Verses.Get(key);
+            VisualElement b = new VisualElement();
+            b.style.borderLeftColor = UI.Bronze; b.style.borderLeftWidth = 3f; b.style.paddingLeft = 16f;
+            b.style.maxWidth = 760f;
+            UI.Text(b, v.text, 20, UI.Parch, false, true);
+            Label r = UI.Text(b, v.reference.ToUpperInvariant(), 13, UI.BronzeHi);
+            r.style.letterSpacing = 3f; r.style.marginTop = 6f;
+            Gap(b, 22);
+        }
+
+        public void Medal(string t, Color c) { Gap(UI.Text(null, t, 30, c), 14); }
+
+        public void Stars(int n)
+        {
+            VisualElement row = new VisualElement(); row.style.flexDirection = FlexDirection.Row;
+            for (int i = 0; i < 3; i++) UI.Text(row, "★", 44, i < n ? UI.BronzeHi : new Color(0.92f, 0.86f, 0.74f, 0.2f));
+            Gap(row, 12);
+        }
+
+        /// <summary>Linhas rótulo/valor. A última linha é o total quando highlightLast = true.</summary>
+        public void Tally(string[] labels, string[] values, bool highlightLast)
+        {
+            VisualElement t = new VisualElement(); t.style.maxWidth = 520f;
+            for (int i = 0; i < labels.Length; i++)
+            {
+                bool total = highlightLast && i == labels.Length - 1;
+                VisualElement row = new VisualElement();
+                row.style.flexDirection = FlexDirection.Row; row.style.justifyContent = Justify.SpaceBetween;
+                row.style.marginBottom = 6f;
+                if (total) { row.style.borderTopWidth = 1f; row.style.borderTopColor = new Color(0.92f, 0.86f, 0.74f, 0.2f); row.style.paddingTop = 8f; }
+                UI.Text(row, labels[i], total ? 26 : 18, total ? UI.Parch : UI.ParchDim);
+                UI.Text(row, values[i], total ? 26 : 18, UI.Parch, total);
+                t.Add(row);
+            }
+            Gap(t, 18);
+        }
+
+        public void Check(bool ok, string text, string reference)
+        {
+            VisualElement row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.marginBottom = 6f;
+            Label m = UI.Text(row, ok ? "✓" : "✗", 20, ok ? UI.Olive : UI.Blood, true); m.style.width = 26f;
+            UI.Text(row, text, 18, UI.Parch);
+            Label r = UI.Text(row, "  1 Sm " + reference, 15, UI.ParchDim); r.style.alignSelf = Align.FlexEnd;
+            el.Add(row);
+        }
+
+        public void Space(float h) { VisualElement v = new VisualElement(); v.style.height = h; el.Add(v); }
+
+        public VisualElement Row()
+        {
+            VisualElement r = new VisualElement();
+            r.style.flexDirection = FlexDirection.Row; r.style.flexWrap = Wrap.Wrap;
+            Gap(r, 18);
+            return r;
+        }
+
+        public static Button Btn(VisualElement row, string text, bool primary, Action onClick)
+        {
+            Button b = new Button(onClick);
+            b.text = text;
+            b.style.fontSize = 18f;
+            b.style.color = primary ? U.Hex(0x1b120a) : UI.Parch;
+            b.style.backgroundColor = primary ? UI.Bronze : new Color(0.92f, 0.86f, 0.74f, 0.07f);
+            b.style.unityFontStyleAndWeight = primary ? FontStyle.Bold : FontStyle.Normal;
+            UI.Border(b, primary ? UI.Bronze : new Color(0.92f, 0.86f, 0.74f, 0.25f), 1, 3);
+            UI.Pad(b, 12, 22);
+            b.style.marginRight = 12f; b.style.marginBottom = 10f; b.style.marginLeft = 0f; b.style.marginTop = 0f;
+            row.Add(b);
+            return b;
+        }
+
+        /// <summary>Grade de opções grandes (dificuldade, armadura).</summary>
+        public VisualElement Choices()
+        {
+            VisualElement g = new VisualElement();
+            g.style.flexDirection = FlexDirection.Row; g.style.flexWrap = Wrap.Wrap;
+            Gap(g, 16);
+            return g;
+        }
+
+        public static Button Choice(VisualElement grid, string title, string desc, bool pressed, Action onClick)
+        {
+            Button b = new Button(onClick);
+            b.text = "";
+            b.style.flexDirection = FlexDirection.Column;
+            b.style.alignItems = Align.FlexStart;
+            b.style.width = 260f; b.style.minHeight = 120f;
+            b.style.backgroundColor = pressed ? new Color(0.78f, 0.56f, 0.25f, 0.18f) : new Color(0.13f, 0.094f, 0.063f, 0.85f);
+            UI.Border(b, pressed ? UI.BronzeHi : new Color(0.92f, 0.86f, 0.74f, 0.2f), pressed ? 2 : 1, 3);
+            UI.Pad(b, 14, 16);
+            b.style.marginRight = 12f; b.style.marginBottom = 12f; b.style.marginLeft = 0f; b.style.marginTop = 0f;
+            UI.Text(b, title, 24, UI.Parch);
+            Label d = UI.Text(b, desc, 16, UI.ParchDim); d.style.marginTop = 6f;
+            grid.Add(b);
+            return b;
+        }
+
+        /// <summary>Grade de pedras do ribeiro, cada uma com sua imagem gerada.</summary>
+        public List<Button> Stones(Texture2D[] images, Action<int> onClick)
+        {
+            VisualElement g = new VisualElement();
+            g.style.flexDirection = FlexDirection.Row; g.style.flexWrap = Wrap.Wrap; g.style.maxWidth = 600f;
+            List<Button> list = new List<Button>();
+            for (int i = 0; i < images.Length; i++)
+            {
+                int idx = i;
+                Button b = new Button(() => onClick(idx));
+                b.text = "";
+                b.style.width = 128f; b.style.height = 128f;
+                b.style.marginRight = 12f; b.style.marginBottom = 12f; b.style.marginLeft = 0f; b.style.marginTop = 0f;
+                b.style.backgroundColor = new Color(0.24f, 0.31f, 0.32f, 0.35f);
+                UI.Border(b, new Color(0.92f, 0.86f, 0.74f, 0.2f), 1, 3);
+                VisualElement img = new VisualElement();
+                img.pickingMode = PickingMode.Ignore;
+                img.style.flexGrow = 1f;
+                img.style.backgroundImage = new StyleBackground(Background.FromTexture2D(images[i]));
+                b.Add(img);
+                Label n = UI.Text(b, "", 15, UI.BronzeHi, true);
+                UI.Abs(n, 6, 4, null, null);
+                n.name = "ordem";
+                g.Add(b);
+                list.Add(b);
+            }
+            Gap(g, 18);
+            return list;
+        }
+
+        public static void MarkStone(Button b, int order)
+        {
+            bool on = order > 0;
+            b.style.backgroundColor = on ? new Color(0.78f, 0.56f, 0.25f, 0.22f) : new Color(0.24f, 0.31f, 0.32f, 0.35f);
+            UI.Border(b, on ? UI.BronzeHi : new Color(0.92f, 0.86f, 0.74f, 0.2f), on ? 2 : 1, 3);
+            Label n = b.Q<Label>("ordem");
+            if (n != null) n.text = on ? order.ToString() : "";
+        }
+
+        public static void Controls(Card c, string[] keys, string[] actions)
+        {
+            for (int i = 0; i < keys.Length; i++)
+            {
+                VisualElement row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.marginBottom = 4f;
+                Label k = UI.Text(row, keys[i], 16, UI.Parch, true); k.style.width = 230f;
+                UI.Text(row, actions[i], 16, UI.ParchDim);
+                c.el.Add(row);
+            }
+            c.Space(14);
+        }
+    }
+}
