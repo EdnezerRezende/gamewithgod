@@ -41,6 +41,14 @@ namespace Valentes
             { "f3v10a",  new Verse("Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada;", "2 Samuel 23:10") },
             { "f3vhand", new Verse("...até que a sua mão se cansou e ficou pegada à espada.", "2 Samuel 23:10") },
             { "f3v10b",  new Verse("...e naquele dia o Senhor operou um grande livramento; e o povo voltou após ele somente para despojar.", "2 Samuel 23:10") },
+            { "f4v13",  new Verse("Também três dos trinta cabeças desceram, e no tempo da sega vieram a Davi, à caverna de Adulão; e a tropa dos filisteus se acampara no vale de Refaim.", "2 Samuel 23:13") },
+            { "f4v14",  new Verse("E Davi estava então no lugar forte, e a guarnição dos filisteus estava então em Belém.", "2 Samuel 23:14") },
+            { "f4v15",  new Verse("E teve Davi desejo, e disse: Quem me dera beber da água da cisterna de Belém, que está junto à porta!", "2 Samuel 23:15") },
+            { "f4vgate", new Verse("...da água da cisterna de Belém, que está junto à porta.", "2 Samuel 23:15") },
+            { "f4v16a", new Verse("Então aqueles três valentes romperam pelo arraial dos filisteus, e tiraram água da cisterna de Belém, que está junto à porta, e a tomaram, e a trouxeram a Davi;", "2 Samuel 23:16") },
+            { "f4v16b", new Verse("...porém ele não a quis beber, mas derramou-a perante o Senhor.", "2 Samuel 23:16") },
+            { "f4v17",  new Verse("E disse: Guarda-me, ó Senhor, de que tal faça; beberia eu o sangue dos homens que foram a risco da sua vida? De maneira que não a quis beber.", "2 Samuel 23:17") },
+            { "f4v17b", new Verse("Isto fizeram aqueles três valentes.", "2 Samuel 23:17") },
             { "v46", new Verse("...e toda a terra saberá que há Deus em Israel.", "1 Samuel 17:46") },
         };
 

@@ -9,9 +9,9 @@ namespace Valentes
     /// </summary>
     public class World
     {
-        public enum Area { Valley, Field, Lentils, PasDamim }
+        public enum Area { Valley, Field, Lentils, PasDamim, Refaim }
 
-        public GameObject valley, field, lentils, pasDamim;
+        public GameObject valley, field, lentils, pasDamim, refaim;
         public Army israel, philistines;
         public Area current = Area.Valley;
         public Light sun;
@@ -20,6 +20,7 @@ namespace Valentes
         {
             if (current == Area.Lentils) return LentilHeight(x, z);
             if (current == Area.PasDamim) return Valentes.PasDamim.Height(x, z);
+            if (current == Area.Refaim) return Valentes.Refaim.Height(x, z);
             return current == Area.Valley ? ValleyHeight(x, z) : FieldHeight(x, z);
         }
 
@@ -82,6 +83,20 @@ namespace Valentes
             BuildTerrain(w.pasDamim.transform, Valentes.PasDamim.Height, Valentes.PasDamim.Ground);
             Valentes.PasDamim.BuildProps(w.pasDamim.transform);
             w.current = Area.PasDamim;
+            return w;
+        }
+
+        /// <summary>Fase 4: de noite, da caverna de Adulão a Belém pelo vale de Refaim.</summary>
+        public static World ForRefaim(Transform root, Material skyMaterial)
+        {
+            World w = new World();
+            w.BuildAtmosphere(root, skyMaterial);
+            Valentes.Refaim.MakeNight(w.sun, skyMaterial);
+            w.refaim = new GameObject("Vale de Refaim");
+            w.refaim.transform.SetParent(root, false);
+            BuildTerrain(w.refaim.transform, Valentes.Refaim.Height, Valentes.Refaim.Ground);
+            Valentes.Refaim.BuildProps(w.refaim.transform);
+            w.current = Area.Refaim;
             return w;
         }
 

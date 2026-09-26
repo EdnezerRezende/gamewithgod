@@ -122,6 +122,7 @@ namespace Valentes
             TouchControls.SetFireLabel("Golpe");
             TouchControls.SetShieldLabel("Aparar");
             TouchControls.SetSwapLabel("Desviar", 15f);
+            TouchControls.SwapIsDash = true;
             TouchControls.ShowHorn(mode == Mode.Battle && !battle.hornUsed);
 
             if (control && mode == Mode.Battle && GameInput.HornPressed()) AskHorn();

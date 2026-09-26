@@ -17,8 +17,13 @@ namespace Valentes
         public static bool FireHeld;
         public static bool ShieldHeld;
         public static bool PrayHeld;
-        static bool swapPending, hornPending;
-        static VisualElement shieldBtn, prayBtn, swapBtn, hornBtn;
+        /// <summary>Botão Ação segurado (fase 4: pegar o cântaro, tirar água, levantar um companheiro).</summary>
+        public static bool ActHeld;
+        /// <summary>Fase 3: o botão ⇄ vira "Desviar". Nas outras fases ele troca de arma ou dá ordens.</summary>
+        public static bool SwapIsDash;
+        static bool swapPending, hornPending, dashPending;
+        static VisualElement shieldBtn, prayBtn, swapBtn, hornBtn, dashBtn, actBtn;
+        static Label actLabel;
         static Label fireLabel, shieldLabel;
         static Button swapButton;
 
@@ -35,6 +40,17 @@ namespace Valentes
         public static bool ConsumePause() { bool v = pausePending; pausePending = false; return v; }
         public static bool ConsumeSwap() { bool v = swapPending; swapPending = false; return v; }
         public static bool ConsumeHorn() { bool v = hornPending; hornPending = false; return v; }
+        public static bool ConsumeDash() { bool v = dashPending; dashPending = false; return v; }
+
+        /// <summary>Fase 4: botões Desviar e Ação (com o nome da ação possível agora).</summary>
+        public static void ShowPhase4Buttons(bool v, string actText)
+        {
+            if (dashBtn == null) return;
+            DisplayStyle d = v ? DisplayStyle.Flex : DisplayStyle.None;
+            dashBtn.style.display = d; actBtn.style.display = d;
+            actLabel.text = string.IsNullOrEmpty(actText) ? "Ação" : actText;
+            actBtn.style.opacity = string.IsNullOrEmpty(actText) ? 0.5f : 1f;
+        }
 
         /// <summary>Fase 3: o botão Escudo vira "Aparar" e o ⇄ vira "Desviar".</summary>
         public static void SetShieldLabel(string text) { if (shieldLabel != null) shieldLabel.text = text; }
@@ -95,7 +111,7 @@ namespace Valentes
         {
             stickPointer = lookPointer = firePointer = -1;
             Move = Vector2.zero;
-            FireHeld = false; ShieldHeld = false; PrayHeld = false;
+            FireHeld = false; ShieldHeld = false; PrayHeld = false; ActHeld = false;
             if (knob != null) PlaceKnob(Vector2.zero);
             if (fire != null) fire.style.backgroundColor = new Color(0.78f, 0.56f, 0.25f, 0.55f);
         }
@@ -211,6 +227,19 @@ namespace Valentes
             layer.Add(horn);
             hornBtn = horn;
             ShowHorn(false);
+            Button dash = new Button(() => dashPending = true);
+            dash.text = "Desviar";
+            UI.Abs(dash, null, null, 40, 226);
+            dash.style.width = 88; dash.style.height = 44; dash.style.fontSize = 15;
+            dash.style.color = UI.Parch;
+            dash.style.backgroundColor = new Color(0.08f, 0.06f, 0.04f, 0.6f);
+            UI.Border(dash, new Color(0.92f, 0.86f, 0.74f, 0.4f), 1, 3);
+            layer.Add(dash);
+            dashBtn = dash;
+            actBtn = HoldButton("Ação", 150, 200, 84, v => ActHeld = v, out actLabel);
+            actBtn.style.backgroundColor = new Color(0.42f, 0.65f, 0.81f, 0.4f);
+            layer.Add(actBtn);
+            ShowPhase4Buttons(false, null);
             SetCombatButtons(false);
 
             ResetAll();

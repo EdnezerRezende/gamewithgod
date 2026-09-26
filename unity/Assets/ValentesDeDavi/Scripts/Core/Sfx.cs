@@ -50,6 +50,9 @@ namespace Valentes
             clips["shofar"] = Tone("shofar", 147f, 1.6f, Wave.Saw, 222f, 0.7f, 0.15f);
             clips["heart"] = Tone("heart", 62f, 0.16f, Wave.Sine, 48f, 1f, 0.01f);
             clips["horn"] = Tone("horn", 196f, 1.8f, Wave.Saw, 262f, 0.6f, 0.2f);
+            clips["alarm"] = Tone("alarm", 130f, 2f, Wave.Saw, 98f, 0.6f, 0.25f);
+            clips["water"] = Noise("water", 0.3f, 700f, 0.03f, r);
+            clips["pour"] = Noise("pour", 3f, 500f, 0.4f, r);
         }
 
         public static void Play(string name, float volume = 1f, float pitch = 1f)

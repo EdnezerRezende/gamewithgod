@@ -125,6 +125,7 @@ namespace Valentes
             ui.ShowHud(playing && !ui.OverlayOpen);
             ui.ShowTouch(playing && !Game.Paused && !ui.OverlayOpen);
             TouchControls.SetCombatButtons(true);
+            TouchControls.SwapIsDash = false;
             TouchControls.SetFireLabel(slingMode ? "Funda" : "Golpe");
 
             if (control)

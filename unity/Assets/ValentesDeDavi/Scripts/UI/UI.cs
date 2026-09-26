@@ -21,7 +21,7 @@ namespace Valentes
         VisualElement statCampo, campoFill, statArma, holdBar, holdFill;
         Label armaLabel, waveLabel, zoneLabel;
         VisualElement hud, cine, overlay, hurt, stonesRow, vidaFill, corFill, statStones, statVida, statCor, statScore, gauge;
-        VisualElement statFad, fadFill, stuckFx;
+        VisualElement statFad, fadFill, stuckFx, statAgua, aguaFill, statAlarme, alarmeFill;
         float stuckAlpha;
         bool stuckOn;
         Label esc, cineHint;
@@ -144,6 +144,9 @@ namespace Valentes
             statCampo = Stat(tr, "CAMPO"); campoFill = Bar(statCampo, Olive);
             statArma = Stat(tr, "ARMA"); armaLabel = Text(statArma, "", 16, Parch, true);
             statFad = Stat(tr, "CANSAÇO"); fadFill = Bar(statFad, U.Hex(0xd08a4a));
+            statAgua = Stat(tr, "ÁGUA"); aguaFill = Bar(statAgua, U.Hex(0x6aa6cf));
+            statAlarme = Stat(tr, "ALARME"); alarmeFill = Bar(statAlarme, Blood);
+            statAgua.style.display = DisplayStyle.None; statAlarme.style.display = DisplayStyle.None;
             statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None; statFad.style.display = DisplayStyle.None;
 
             VisualElement tc = Box(hud);
@@ -336,6 +339,31 @@ namespace Valentes
             zoneLabel.text = "Você recuou para trás do estandarte. Eleazar não voltou atrás.";
             zoneLabel.style.display = zoneWarning ? DisplayStyle.Flex : DisplayStyle.None;
             stuckOn = stuck;
+        }
+
+        /// <summary>
+        /// HUD da fase 4. No treino: pontos (e água no percurso do cântaro). Na missão: vida, coragem,
+        /// água (com o cântaro cheio), alarme do arraial e o aviso sobre os companheiros.
+        /// </summary>
+        public void SetFase4Stats(bool mission, int points, float health, float courage, bool carrying, float water, bool showAlarm, float alarm, string wave, string warning)
+        {
+            statStones.style.display = DisplayStyle.None; statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+            statFad.style.display = DisplayStyle.None; opening.style.display = DisplayStyle.None;
+            statVida.style.display = mission ? DisplayStyle.Flex : DisplayStyle.None;
+            statCor.style.display = mission ? DisplayStyle.Flex : DisplayStyle.None;
+            statScore.style.display = mission ? DisplayStyle.None : DisplayStyle.Flex;
+            statAgua.style.display = carrying ? DisplayStyle.Flex : DisplayStyle.None;
+            statAlarme.style.display = showAlarm ? DisplayStyle.Flex : DisplayStyle.None;
+            score.text = points.ToString();
+            vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
+            corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
+            aguaFill.style.width = Length.Percent(Mathf.Clamp(water, 0, 100));
+            alarmeFill.style.width = Length.Percent(Mathf.Clamp(alarm, 0, 100));
+            waveLabel.text = wave;
+            holdBar.style.display = DisplayStyle.None;
+            zoneLabel.text = warning ?? "";
+            zoneLabel.style.display = string.IsNullOrEmpty(warning) ? DisplayStyle.None : DisplayStyle.Flex;
+            stuckOn = false;
         }
 
         /// <summary>Indicador simples em anel (espada carregando o golpe forte, oração).</summary>

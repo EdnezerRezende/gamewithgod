@@ -62,3 +62,11 @@ edição escolhida **antes** de gravar.
 | `f3v10a` | 2 Samuel 23:10 | Cena animada e telas | Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada; |
 | `f3vhand` | 2 Samuel 23:10 | Durante a batalha | ...até que a sua mão se cansou e ficou pegada à espada. |
 | `f3v10b` | 2 Samuel 23:10 | Cena animada e telas | ...e naquele dia o Senhor operou um grande livramento; e o povo voltou após ele somente para despojar. |
+| `f4v13` | 2 Samuel 23:13 | Cena animada e telas | Também três dos trinta cabeças desceram, e no tempo da sega vieram a Davi, à caverna de Adulão; e a tropa dos filisteus se acampara no vale de Refaim. |
+| `f4v14` | 2 Samuel 23:14 | Cena animada | E Davi estava então no lugar forte, e a guarnição dos filisteus estava então em Belém. |
+| `f4v15` | 2 Samuel 23:15 | Cena animada | E teve Davi desejo, e disse: Quem me dera beber da água da cisterna de Belém, que está junto à porta! |
+| `f4vgate` | 2 Samuel 23:15 | Telas | ...da água da cisterna de Belém, que está junto à porta. |
+| `f4v16a` | 2 Samuel 23:16 | Cena animada e telas | Então aqueles três valentes romperam pelo arraial dos filisteus, e tiraram água da cisterna de Belém, que está junto à porta, e a tomaram, e a trouxeram a Davi; |
+| `f4v16b` | 2 Samuel 23:16 | Cena animada | ...porém ele não a quis beber, mas derramou-a perante o Senhor. |
+| `f4v17` | 2 Samuel 23:17 | Cena animada e telas | E disse: Guarda-me, ó Senhor, de que tal faça; beberia eu o sangue dos homens que foram a risco da sua vida? De maneira que não a quis beber. |
+| `f4v17b` | 2 Samuel 23:17 | Cena animada | Isto fizeram aqueles três valentes. |

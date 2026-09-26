@@ -46,7 +46,16 @@ namespace Valentes
         public static bool PrayHeld() { return TouchControls.PrayHeld || RawKeyHeld("f"); }
 
         /// <summary>Desviar (fase 3): Espaço ou o botão Desviar (o mesmo lugar do ⇄ da fase 2).</summary>
-        public static bool DashPressed() { return TouchControls.ConsumeSwap() || RawKeyDown("space"); }
+        public static bool DashPressed()
+        {
+            if (TouchControls.ConsumeDash()) return true;
+            if (TouchControls.SwapIsDash && TouchControls.ConsumeSwap()) return true;
+            return RawKeyDown("space");
+        }
+        /// <summary>Ordem aos companheiros (fase 4): Q ou o botão Ordem.</summary>
+        public static bool OrderPressed() { return (!TouchControls.SwapIsDash && TouchControls.ConsumeSwap()) || RawKeyDown("q"); }
+        /// <summary>Ação contextual (segurar): E ou o botão Ação.</summary>
+        public static bool ActionHeld() { return TouchControls.ActHeld || RawKeyHeld("e"); }
         /// <summary>Tocar a trombeta (fase 3): T ou o botão Trombeta.</summary>
         public static bool HornPressed() { return TouchControls.ConsumeHorn() || RawKeyDown("t"); }
 
@@ -90,7 +99,7 @@ namespace Valentes
             switch (k)
             {
                 case "q": return K.qKey; case "f": return K.fKey; case "1": return K.digit1Key; case "2": return K.digit2Key;
-                case "space": return K.spaceKey; case "t": return K.tKey;
+                case "space": return K.spaceKey; case "t": return K.tKey; case "e": return K.eKey;
             }
             return null;
         }
@@ -130,7 +139,7 @@ namespace Valentes
             switch (k)
             {
                 case "q": return KeyCode.Q; case "f": return KeyCode.F; case "1": return KeyCode.Alpha1; case "2": return KeyCode.Alpha2;
-                case "space": return KeyCode.Space; case "t": return KeyCode.T;
+                case "space": return KeyCode.Space; case "t": return KeyCode.T; case "e": return KeyCode.E;
             }
             return KeyCode.None;
         }

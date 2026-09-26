@@ -17,7 +17,7 @@ enquanto a arte definitiva não existe.
 
 Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualizar a cena da Fase 1**.
 
-A **Fase 2** (Samá e o campo de lentilhas) e a **Fase 3** (Eleazar e a mão pegada à espada) têm cenas próprias, criadas junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity` e `Fase3_Eleazar.unity`. As três ficam nas Build Settings, em ordem.
+A **Fase 2** (Samá e o campo de lentilhas), a **Fase 3** (Eleazar e a mão pegada à espada) e a **Fase 4** (os três valentes e a água de Belém) têm cenas próprias, criadas junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`, `Fase3_Eleazar.unity` e `Fase4_Agua.unity`. Todas ficam nas Build Settings, em ordem. A Fase 4 é de noite e usa um céu próprio (`Generated/CeuNoite.mat`).
 
 ### Mapa das fases e trava
 
@@ -60,6 +60,19 @@ animada. Eles ficam em `Scripts/UI/TouchControls.cs`.
 
 No toque, os botões viram **Golpe**, **Aparar**, **Desviar**, **Orar** e **Trombeta**.
 
+### Controles da Fase 4
+
+| Tecla | Ação |
+|---|---|
+| Clique esquerdo | Golpe; três rápidos formam a sequência; segurar e soltar é o golpe forte |
+| Botão direito | Segurar: escudo · apertar no instante do golpe: aparar (com o cântaro, só aparar) |
+| Espaço | Desviar (com o cântaro, derrama um pouco) |
+| Q | Ordem aos companheiros: "Comigo" ou "Segurem aqui" |
+| E (segurar) | Ação: pegar o cântaro, tirar água, levantar um companheiro caído |
+| F (segurar) | Orar |
+
+No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, **Orar** e **Ação**.
+
 ## Como o código está organizado
 
 | Pasta | O que tem |
@@ -74,6 +87,7 @@ No toque, os botões viram **Golpe**, **Aparar**, **Desviar**, **Orar** e **Trom
 | `Scripts/UI` | Interface feita com UI Toolkit: HUD, telas e desenho das pedras |
 | `Scripts/Fase2` | Fase 2: campo de lentilhas e fogo, espada e escudo, filisteus, flechas, treino, batalha e o fluxo da fase |
 | `Scripts/Fase3` | Fase 3: vale de Pas-Damim, espada de Eleazar (sequência, aparar, desviar, Cansaço e mão pegada), filisteus em linhas, treino, batalha com estandartes e trombeta, e o fluxo da fase |
+| `Scripts/Fase4` | Fase 4: vale de Refaim à noite, as mãos do valente (espada, escudo, cântaro), filisteus do arraial com sentinelas e alarme, companheiros com ordens, treino, missão e o fluxo da fase |
 | `Editor` | Cria as cenas das fases e os materiais automaticamente |
 
 Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, velocidades) ficam em
