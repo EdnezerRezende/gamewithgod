@@ -490,7 +490,7 @@ namespace Valentes
             VisualElement row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.marginBottom = 6f;
             Label m = UI.Text(row, ok ? "✓" : "✗", 20, ok ? UI.Olive : UI.Blood, true); m.style.width = 26f;
             UI.Text(row, text, 18, UI.Parch);
-            Label r = UI.Text(row, "  1 Sm " + reference, 15, UI.ParchDim); r.style.alignSelf = Align.FlexEnd;
+            if (!string.IsNullOrEmpty(reference)) { Label r = UI.Text(row, "  " + reference, 15, UI.ParchDim); r.style.alignSelf = Align.FlexEnd; }
             el.Add(row);
         }
 
@@ -543,6 +543,81 @@ namespace Valentes
             Label d = UI.Text(b, desc, 16, UI.ParchDim); d.style.marginTop = 6f;
             grid.Add(b);
             return b;
+        }
+
+        /// <summary>Rótulo pequeno em maiúsculas que separa as partes do menu.</summary>
+        public void Section(string t)
+        {
+            Label l = UI.Text(null, t.ToUpperInvariant(), 13, UI.ParchDim);
+            l.style.letterSpacing = 3f;
+            Gap(l, 8);
+        }
+
+        /// <summary>
+        /// Mapa das fases: atual, liberada (clicar leva à fase), concluída (estrelas e recorde),
+        /// trancada ou ainda não montada na Unity.
+        /// </summary>
+        public void PhaseMap(int current)
+        {
+            Section("Escolha a fase");
+            VisualElement g = new VisualElement();
+            g.style.flexDirection = FlexDirection.Row; g.style.flexWrap = Wrap.Wrap;
+            Gap(g, 14);
+            foreach (Progress.Phase ph in Progress.All)
+            {
+                Progress.Phase p = ph;
+                bool cur = p.n == current, open = Progress.IsOpen(p.n), won = Progress.Won(p.n);
+                bool clickable = !cur && open && p.Built;
+                Button b = new Button(() => { if (clickable) Progress.Load(p); });
+                b.text = "";
+                b.focusable = clickable;
+                b.style.flexDirection = FlexDirection.Column; b.style.alignItems = Align.FlexStart;
+                b.style.width = 240f; b.style.minHeight = 118f;
+                b.style.backgroundColor = cur ? new Color(0.78f, 0.56f, 0.25f, 0.18f) : new Color(0.13f, 0.094f, 0.063f, 0.85f);
+                UI.Border(b, cur ? UI.BronzeHi : new Color(0.92f, 0.86f, 0.74f, 0.2f), cur ? 2 : 1, 3);
+                UI.Pad(b, 12, 14);
+                b.style.marginRight = 10f; b.style.marginBottom = 10f; b.style.marginLeft = 0f; b.style.marginTop = 0f;
+                if (!open || !p.Built) b.style.opacity = 0.5f;
+                Label eb = UI.Text(b, ("Fase " + p.n + (cur ? " · atual" : "")).ToUpperInvariant(), 12, UI.BronzeHi);
+                eb.style.letterSpacing = 3f;
+                Label t = UI.Text(b, p.title, 20, UI.Parch);
+                t.style.whiteSpace = WhiteSpace.Normal; t.style.marginTop = 4f;
+                UI.Text(b, p.reference, 14, UI.ParchDim);
+                string status = !open ? "Trancada: vença a fase " + (p.n - 1) + " para liberar"
+                    : won ? new string('★', Progress.Stars(p.n)) + " (" + Progress.Stars(p.n) + " de 3) · recorde " + Progress.Best(p.n)
+                    : !p.Built ? "Em breve na Unity (já jogável no navegador)"
+                    : cur ? "Você está aqui" : "Liberada";
+                Label st = UI.Text(b, status, 14, won ? UI.BronzeHi : UI.ParchDim);
+                st.style.whiteSpace = WhiteSpace.Normal; st.style.marginTop = 6f;
+                g.Add(b);
+            }
+        }
+
+        /// <summary>Aviso no lugar dos botões de jogar quando a fase ainda está trancada.</summary>
+        public void Locked(int n)
+        {
+            Progress.Phase prev = Progress.Get(n - 1);
+            VisualElement box = new VisualElement();
+            box.style.maxWidth = 760f;
+            box.style.backgroundColor = new Color(0.13f, 0.094f, 0.063f, 0.7f);
+            UI.Border(box, UI.Bronze, 1, 3);
+            UI.Pad(box, 14, 16);
+            Label l = UI.Text(box, "Esta fase ainda está trancada. Vença a Fase " + prev.n + ", " + prev.title + ", para liberar.", 19, UI.Parch);
+            l.style.whiteSpace = WhiteSpace.Normal; l.style.marginBottom = 12f;
+            VisualElement row = new VisualElement(); row.style.flexDirection = FlexDirection.Row;
+            Btn(row, "Ir para a Fase " + prev.n, true, () => Progress.Load(prev));
+            box.Add(row);
+            Gap(box, 18);
+        }
+
+        /// <summary>Na tela de resultados: avisa a liberação e leva à fase seguinte.</summary>
+        public void NextPhase(int n, bool fresh)
+        {
+            Progress.Phase next = Progress.Get(n + 1);
+            if (next == null) return;
+            if (fresh) Gap(UI.Text(null, "Fase " + next.n + " liberada!", 22, UI.BronzeHi, true), 8);
+            if (next.Built) Btn(Row(), "Ir para a Fase " + next.n + ": " + next.title + " →", false, () => Progress.Load(next));
+            else Note("A Fase " + next.n + " (" + next.title + ") ainda não foi montada na Unity.");
         }
 
         /// <summary>Grade de pedras do ribeiro, cada uma com sua imagem gerada.</summary>

@@ -199,6 +199,8 @@ namespace Valentes
             c.Eyebrow("Fase 1 · Davi × Golias");
             c.Title("Os Valentes de Davi", 64);
             c.Lede("1 Samuel 17. Treine a funda nos campos de Belém, escolha as pedras no ribeiro e enfrente o gigante no Vale de Elá.");
+            c.PhaseMap(1);
+            c.Section("Dificuldade");
             VisualElement grid = c.Choices();
             foreach (Difficulty d in Difficulty.All)
             {
@@ -216,12 +218,6 @@ namespace Valentes
                         "Olhar sem mouse", "Pausa: continuar, recomeçar ou voltar ao menu", "Pular a cena animada",
                         "Ajuda de mira: trajetória e marcador de onde a pedra vai cair", "Ligar ou desligar a música" });
             c.Note("Modelos e sons provisórios. Os versículos são provisórios (Almeida, domínio público).");
-            Card.Btn(c.Row(), "Fase 2: Samá e o campo de lentilhas →", false, () =>
-            {
-                Paused = false;
-                Time.timeScale = 1f;
-                UnityEngine.SceneManagement.SceneManager.LoadScene(Fase2Game.SceneName);
-            });
         }
 
         /// <summary>Botões de música e ajuda de mira; ao trocar, redesenha a tela atual.</summary>
@@ -473,6 +469,7 @@ namespace Valentes
             int fidPts = nf * 250, train = trainingDone ? trainingScore : 0;
             int total = Mathf.RoundToInt((train + duelPts + fidPts) * d.scoreMultiplier);
             int stars = 1 + (nf >= 2 ? 1 : 0) + (nf == 4 ? 1 : 0);
+            bool unlocked = Progress.SaveWin(1, stars, total);
             string[] medals = { "bronze", "prata", "ouro" };
 
             Card c = ui.OpenCard();
@@ -485,9 +482,10 @@ namespace Valentes
                         "Fidelidade ao relato · " + nf + " de 4", "Multiplicador " + d.name, "Total" },
                 new[] { train.ToString(), duelPts.ToString(), fidPts.ToString(), "×" + d.scoreMultiplier.ToString("0.#"), total.ToString() },
                 true);
-            for (int i = 0; i < 4; i++) c.Check(ok[i], txt[i], refs[i]);
+            for (int i = 0; i < 4; i++) c.Check(ok[i], txt[i], "1 Sm " + refs[i]);
             c.Space(16);
             c.Verse("v46");
+            c.NextPhase(1, unlocked);
             VisualElement row = c.Row();
             Card.Btn(row, "Jogar a fase de novo", true, StartFull);
             Card.Btn(row, "Repetir só o duelo", false, StartDuelOnly);

@@ -194,6 +194,14 @@ namespace Valentes
             c.Eyebrow("Fase 2 · Samá");
             c.Title("Samá e o campo de lentilhas", 56);
             c.Lede("2 Samuel 23:11-12. Todos fogem; Samá fica no meio do campo e o defende de espada e escudo, até o grande livramento.");
+            c.PhaseMap(2);
+            if (!Progress.IsOpen(2))
+            {
+                c.Locked(2);
+                SettingsRow(c, ShowMenu);
+                return;
+            }
+            c.Section("Dificuldade");
             VisualElement grid = c.Choices();
             foreach (Difficulty d in Difficulty.All)
             {
@@ -210,14 +218,6 @@ namespace Valentes
                 new[] { "Golpe rápido · segure e solte para o golpe forte (quebra escudos)", "Erguer o escudo · no instante do golpe, apara",
                         "Trocar entre espada e funda", "Orar por 2 s, parado: recupera coragem", "Andar · correr", "Pausa · ajuda de mira · música" });
             c.Note("No celular: direcional, arrastar para olhar e os botões Golpe, Escudo, ⇄ e Orar. Modelos, sons e versículos provisórios.");
-            Card.Btn(c.Row(), "← Fase 1: Davi × Golias", false, () => LoadScene("Fase1_DaviGolias"));
-        }
-
-        static void LoadScene(string name)
-        {
-            Game.Paused = false;
-            Time.timeScale = 1f;
-            SceneManager.LoadScene(name);
         }
 
         void SettingsRow(Card c, Action redraw)
@@ -406,6 +406,7 @@ namespace Valentes
             int fidPts = nf * 250, train = medal != null ? trainingScore : 0;
             int total = Mathf.RoundToInt((train + defense + fidPts) * par.scoreMultiplier);
             int stars = 1 + (nf >= 2 ? 1 : 0) + (nf == 4 ? 1 : 0);
+            bool unlocked = Progress.SaveWin(2, stars, total);
 
             Card c = ui.OpenCard();
             c.Eyebrow("O campo de lentilhas · " + Difficulty.Current.name);
@@ -416,10 +417,11 @@ namespace Valentes
                         "Defesa · campo " + Mathf.RoundToInt(battle.integrity) + "% · " + battle.repelled + " afastados · " + sword.parries + " aparadas",
                         "Fidelidade ao relato · " + nf + " de 4", "Multiplicador " + Difficulty.Current.name, "Total" },
                 new[] { train.ToString(), defense.ToString(), fidPts.ToString(), "×" + par.scoreMultiplier.ToString("0.#"), total.ToString() }, true);
-            for (int i = 0; i < 4; i++) c.Check(ok[i], txt[i], i == 0 ? "23:11" : "23:12");
+            for (int i = 0; i < 4; i++) c.Check(ok[i], txt[i], i == 0 ? "2 Sm 23:11" : "2 Sm 23:12");
             c.Space(16);
             c.Verse("f2v12b");
             c.Note("Relato paralelo: 1 Crônicas 11:12-14 descreve uma batalha parecida num campo de cevada, com Eleazar ao lado de Davi.");
+            c.NextPhase(2, unlocked);
             VisualElement row = c.Row();
             Card.Btn(row, "Jogar a fase de novo", true, StartFull);
             Card.Btn(row, "Repetir só a batalha", false, StartBattleOnly);

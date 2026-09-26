@@ -17,7 +17,17 @@ enquanto a arte definitiva não existe.
 
 Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualizar a cena da Fase 1**.
 
-A **Fase 2** (Samá e o campo de lentilhas) tem cena própria, criada junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`. O menu de cada fase tem um botão para ir à outra; as duas ficam nas Build Settings.
+A **Fase 2** (Samá e o campo de lentilhas) tem cena própria, criada junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`. As duas ficam nas Build Settings.
+
+### Mapa das fases e trava
+
+O menu de cada fase mostra todas as fases em cartões (atual, liberada, concluída com estrelas e
+recorde, ou trancada). A fase seguinte só abre depois de vencer a anterior; vencer é chegar à tela
+de resultados. O progresso fica no `PlayerPrefs` (`Scripts/Core/Progress.cs`). A Fase 3 aparece
+como "em breve" até ganhar cena na Unity.
+
+Para testar sem vencer tudo, use o menu **Valentes de Davi → Progresso → Liberar todas as fases
+(testes)**. **Apagar o progresso** tranca tudo de novo.
 
 ## Controles
 

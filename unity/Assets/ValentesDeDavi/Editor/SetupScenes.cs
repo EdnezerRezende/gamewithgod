@@ -56,6 +56,21 @@ namespace Valentes.EditorTools
             if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) EditorSceneManager.OpenScene(ScenePath);
         }
 
+        const string UnlockMenu = "Valentes de Davi/Progresso/Liberar todas as fases (testes)";
+
+        [MenuItem(UnlockMenu, false, 100)]
+        public static void ToggleUnlockAll() { Progress.UnlockAll = !Progress.UnlockAll; }
+
+        [MenuItem(UnlockMenu, true)]
+        public static bool ToggleUnlockAllCheck() { Menu.SetChecked(UnlockMenu, Progress.UnlockAll); return true; }
+
+        [MenuItem("Valentes de Davi/Progresso/Apagar o progresso", false, 101)]
+        public static void ResetProgress()
+        {
+            if (EditorUtility.DisplayDialog("Apagar o progresso", "Trancar de novo as fases 2 em diante e apagar estrelas e recordes?", "Apagar", "Cancelar"))
+                Progress.Reset();
+        }
+
         static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;
