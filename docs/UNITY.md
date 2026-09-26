@@ -31,6 +31,7 @@ A **Fase 2** (Samá e o campo de lentilhas) tem cena própria, criada junto: `As
 | Enter | Pular a cena animada |
 | H | Ajuda de mira: trajetória, marcador de impacto e mira dourada sobre alvos |
 | M | Ligar ou desligar a música |
+| N | Ligar ou desligar a narração |
 | Clique durante a cena | Avançar o plano |
 
 No celular ou tablet (e no navegador do celular), aparecem controles na tela: direcional à
@@ -63,6 +64,8 @@ Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, veloc
   precisará ter, para a troca ser direta.
 - **Cenas animadas:** planos de câmera por código (`Cutscene.cs`). Serão refeitas com Timeline e
   Cinemachine.
+- **Narração:** a Unity toca gravações dos versículos (roteiro e formato em `docs/NARRACAO.md`); sem gravação, a cena mostra só o texto.
+- **Tutorial:** "Como jogar" aparece antes da primeira partida completa e fica no menu (`Scripts/UI/Tutorial.cs`).
 - **Sons e música:** sintetizados ao iniciar o jogo (`Sfx.cs` e `Music.cs`), até termos áudio gravado, trilha e narração.
 - **Versículos:** texto provisório, a revisar contra a edição da Almeida escolhida.
 

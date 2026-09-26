@@ -55,6 +55,7 @@ namespace Valentes
             Mats.Init(baseMaterial);
             Sfx.Create(transform);
             Music.Create(transform);
+            Narration.Create(transform);
             world = new World(transform, skyMaterial);
             Fx.SetWorld(world);
 
@@ -130,6 +131,7 @@ namespace Valentes
             ui.ShowTouch(playing && !Paused && !ui.OverlayOpen);
             if (playing) { ui.DrawGauge(sling); ui.SetCrosshair(sling.aimOnTarget); }
 
+            if (GameInput.NarrationPressed()) { Settings.Narration = !Settings.Narration; ui.Toast(Settings.Narration ? "Narração ligada" : "Narração desligada", 1.2f); }
             if (GameInput.MusicPressed())
             {
                 Settings.Music = !Settings.Music;
@@ -228,6 +230,8 @@ namespace Valentes
             VisualElement row = c.Row();
             Card.Btn(row, "Música: " + (Settings.Music ? "ligada" : "desligada"), false, () => { Settings.Music = !Settings.Music; redraw(); });
             Card.Btn(row, "Ajuda de mira: " + (Settings.AimHelp ? "ligada" : "desligada"), false, () => { Settings.AimHelp = !Settings.AimHelp; redraw(); });
+            Card.Btn(row, "Narração: " + (Settings.Narration ? "ligada" : "desligada"), false, () => { Settings.Narration = !Settings.Narration; redraw(); });
+            Card.Btn(row, "Como jogar", false, () => Tutorial.Show(ui, null, redraw));
         }
 
         void ShowPause()
@@ -270,6 +274,7 @@ namespace Valentes
 
         void StartFull()
         {
+            if (!Tutorial.Seen) { Tutorial.Show(ui, StartFull, ShowMenu); return; }
             kind = Kind.Full;
             trainingDone = false;
             ui.CloseOverlay();

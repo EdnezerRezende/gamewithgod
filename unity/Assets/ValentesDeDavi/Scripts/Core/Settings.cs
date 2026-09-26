@@ -14,6 +14,12 @@ namespace Valentes
             set { PlayerPrefs.SetInt(AimKey, value ? 1 : 0); PlayerPrefs.Save(); }
         }
 
+        public static bool Narration
+        {
+            get { return PlayerPrefs.GetInt("valentes.narration", 1) == 1; }
+            set { PlayerPrefs.SetInt("valentes.narration", value ? 1 : 0); PlayerPrefs.Save(); if (!value) Valentes.Narration.Stop(); }
+        }
+
         public static bool Music
         {
             get { return PlayerPrefs.GetInt(MusicKey, 1) == 1; }

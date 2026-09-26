@@ -51,6 +51,11 @@ namespace Valentes
             foreach (KeyValuePair<string, Mood> kv in instance.moods) instance.clips[kv.Key] = Render(kv.Key, kv.Value, r);
         }
 
+        static bool ducked;
+
+        /// <summary>Abaixa a música enquanto a narração fala.</summary>
+        public static void Duck(bool on) { ducked = on; }
+
         public static void Set(string name)
         {
             if (instance == null || instance.mood == name) return;
@@ -66,7 +71,7 @@ namespace Valentes
 
         void Update()
         {
-            float target = Settings.Music ? Volume : 0f, k = Mathf.Clamp01(Time.unscaledDeltaTime / 1.2f);
+            float target = Settings.Music ? Volume * (ducked ? 0.35f : 1f) : 0f, k = Mathf.Clamp01(Time.unscaledDeltaTime / 1.2f);
             foreach (AudioSource s in new[] { a, b })
             {
                 float goal = s == current ? target : 0f;

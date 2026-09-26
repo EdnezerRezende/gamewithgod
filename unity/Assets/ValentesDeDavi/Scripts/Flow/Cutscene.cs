@@ -35,6 +35,7 @@ namespace Valentes
         public bool Playing { get { return shots != null; } }
 
         List<Shot> shots;
+        float duration;
         Action onEnd;
         int index;
         float t;
@@ -57,12 +58,15 @@ namespace Valentes
             Shot s = shots[index];
             Verses.Verse v = Verses.Get(s.verse);
             ui.SetCineLine(v.text, v.reference);
+            // Com narração gravada, o plano espera a leitura terminar.
+            duration = Mathf.Max(s.duration, Narration.Play(s.verse) + 0.8f);
             if (s.start != null) s.start();
         }
 
         public void End()
         {
             if (shots == null) return;
+            Narration.Stop();
             Action f = onEnd;
             shots = null;
             onEnd = null;
@@ -73,6 +77,7 @@ namespace Valentes
         /// <summary>Interrompe sem chamar a continuação (voltar ao menu).</summary>
         public void Abort()
         {
+            Narration.Stop();
             shots = null;
             onEnd = null;
             ui.ShowCine(false);
@@ -85,10 +90,10 @@ namespace Valentes
             if (GameInput.TapPressed()) { Next(); if (shots == null) return; }
             t += Time.deltaTime;
             Shot s = shots[index];
-            float p = Mathf.Clamp01(t / s.duration);
+            float p = Mathf.Clamp01(t / duration);
             if (s.update != null) s.update(p);
             if (s.camera != null) s.camera(cam, p);
-            if (t >= s.duration) Next();
+            if (t >= duration) Next();
         }
     }
 }

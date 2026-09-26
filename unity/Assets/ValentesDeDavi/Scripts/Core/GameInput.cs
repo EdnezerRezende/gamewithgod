@@ -89,6 +89,7 @@ namespace Valentes
         static bool RawKeyHeld(string k) { var c = KeyFor(k); return c != null && c.isPressed; }
         public static bool AimHelpPressed() { return K != null && K.hKey.wasPressedThisFrame; }
         public static bool MusicPressed() { return K != null && K.mKey.wasPressedThisFrame; }
+        public static bool NarrationPressed() { return K != null && K.nKey.wasPressedThisFrame; }
 #else
         static Vector2 KeyboardMove()
         {
@@ -124,6 +125,7 @@ namespace Valentes
         static bool RawKeyHeld(string k) { return Input.GetKey(CodeFor(k)); }
         public static bool AimHelpPressed() { return Input.GetKeyDown(KeyCode.H); }
         public static bool MusicPressed() { return Input.GetKeyDown(KeyCode.M); }
+        public static bool NarrationPressed() { return Input.GetKeyDown(KeyCode.N); }
 #endif
     }
 }
