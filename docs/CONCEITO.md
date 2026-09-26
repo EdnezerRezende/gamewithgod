@@ -45,6 +45,7 @@ bíblico de um valente, jogado de forma fiel ao texto.
 | Benaia | 2 Sm 23:20 | Sobrevivência contra o leão no poço |
 | Os três valentes | 2 Sm 23:13-17 | Romper pelo arraial em grupo e trazer a água de Belém |
 | Abisai | 2 Sm 23:18-19; 21:15-17 | A lança contra trezentos e o socorro a Davi contra o gigante |
+| Josebe-Bassebete (fase final) | 2 Sm 23:8 | Um contra oitocentos no desfiladeiro; encerra com a lista dos valentes |
 
 ## Regras de conteúdo
 

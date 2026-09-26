@@ -65,6 +65,17 @@ namespace Valentes
             { "f6v2117a", new Verse("Porém Abisai, filho de Zeruia, o socorreu, e feriu o filisteu, e o matou;", "2 Samuel 21:17") },
             { "f6v2117b", new Verse("...então os homens de Davi lhe juraram, dizendo: Nunca mais sairás conosco à peleja, para que não apagues a lâmpada de Israel.", "2 Samuel 21:17") },
             { "f6v19",   new Verse("Porventura este não era o mais nobre dentre os três? Portanto foi o seu chefe; porém aos primeiros três não chegou.", "2 Samuel 23:19") },
+            { "f7v8a", new Verse("Estes são os nomes dos valentes que Davi teve: Josebe-Bassebete, o taquemonita, o principal dos capitães;", "2 Samuel 23:8") },
+            { "f7v8b", new Verse("...este era Adino, o eznita, que se opôs a oitocentos, e os feriu de uma vez.", "2 Samuel 23:8") },
+            { "f7v1cr", new Verse("...o qual, brandindo a sua lança contra trezentos, os feriu de uma vez.", "1 Crônicas 11:11") },
+            { "f7rc1", new Verse("E Davi pôs a mão no alforje, e tomou dali uma pedra, e com a funda lha atirou, e feriu o filisteu na testa.", "1 Samuel 17:49") },
+            { "f7rc2", new Verse("Este, porém, se pôs no meio daquele pedaço de campo, e o defendeu, e feriu os filisteus.", "2 Samuel 23:12") },
+            { "f7rc3", new Verse("Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada.", "2 Samuel 23:10") },
+            { "f7rc4", new Verse("Isto fizeram aqueles três valentes.", "2 Samuel 23:17") },
+            { "f7rc5", new Verse("Estas coisas fez Benaia, filho de Joiada; e teve nome entre os três valentes.", "2 Samuel 23:22") },
+            { "f7rc6", new Verse("Também Abisai, irmão de Joabe... alçou a sua lança contra trezentos, e os feriu.", "2 Samuel 23:18") },
+            { "f7rc7", new Verse("Josebe-Bassebete, o principal dos capitães... se opôs a oitocentos, e os feriu de uma vez.", "2 Samuel 23:8") },
+            { "f7v39", new Verse("...Urias, o heteu; trinta e sete ao todo.", "2 Samuel 23:39") },
             { "v46", new Verse("...e toda a terra saberá que há Deus em Israel.", "1 Samuel 17:46") },
         };
 

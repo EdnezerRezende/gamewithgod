@@ -9,9 +9,9 @@ namespace Valentes
     /// </summary>
     public class World
     {
-        public enum Area { Valley, Field, Lentils, PasDamim, Refaim, Benaia, Abisai }
+        public enum Area { Valley, Field, Lentils, PasDamim, Refaim, Benaia, Abisai, Josebe }
 
-        public GameObject valley, field, lentils, pasDamim, refaim, benaia, abisai;
+        public GameObject valley, field, lentils, pasDamim, refaim, benaia, abisai, josebe;
         public Army israel, philistines;
         public Area current = Area.Valley;
         public Light sun;
@@ -23,6 +23,7 @@ namespace Valentes
             if (current == Area.Refaim) return Valentes.Refaim.Height(x, z);
             if (current == Area.Benaia) return Valentes.Snowland.Height(x, z);
             if (current == Area.Abisai) return Valentes.Battlefield.Height(x, z);
+            if (current == Area.Josebe) return Valentes.Gorge.Height(x, z);
             return current == Area.Valley ? ValleyHeight(x, z) : FieldHeight(x, z);
         }
 
@@ -128,6 +129,18 @@ namespace Valentes
             BuildTerrain(w.abisai.transform, Valentes.Battlefield.Height, Valentes.Battlefield.Ground);
             Valentes.Battlefield.BuildProps(w.abisai.transform);
             w.current = Area.Abisai;
+            return w;
+        }
+
+        public static World ForJosebe(Transform root, Material skyMaterial)
+        {
+            World w = new World();
+            w.BuildAtmosphere(root, skyMaterial);
+            w.josebe = new GameObject("Desfiladeiro");
+            w.josebe.transform.SetParent(root, false);
+            BuildTerrain(w.josebe.transform, Valentes.Gorge.Height, Valentes.Gorge.Ground);
+            Valentes.Gorge.BuildProps(w.josebe.transform);
+            w.current = Area.Josebe;
             return w;
         }
 

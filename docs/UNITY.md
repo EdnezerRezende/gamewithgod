@@ -17,7 +17,7 @@ enquanto a arte definitiva não existe.
 
 Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualizar a cena da Fase 1**.
 
-A **Fase 2** (Samá e o campo de lentilhas), a **Fase 3** (Eleazar e a mão pegada à espada) a **Fase 4** (os três valentes e a água de Belém) a **Fase 5** (Benaia: o leão na cova e o egípcio) e a **Fase 6** (Abisai: a lança contra trezentos) têm cenas próprias, criadas junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`, `Fase3_Eleazar.unity`, `Fase4_Agua.unity`, `Fase5_Benaia.unity` e `Fase6_Abisai.unity`. Todas ficam nas Build Settings, em ordem. As fases 4 (noite) e 5 (neve) mudam o céu e usam materiais próprios (`Generated/CeuNoite.mat` e `Generated/CeuNeve.mat`).
+A **Fase 2** (Samá e o campo de lentilhas), a **Fase 3** (Eleazar e a mão pegada à espada) a **Fase 4** (os três valentes e a água de Belém) a **Fase 5** (Benaia: o leão na cova e o egípcio) a **Fase 6** (Abisai: a lança contra trezentos) e a **Fase 7**, a final (Josebe-Bassebete: oitocentos de uma vez), têm cenas próprias, criadas junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`, `Fase3_Eleazar.unity`, `Fase4_Agua.unity`, `Fase5_Benaia.unity`, `Fase6_Abisai.unity` e `Fase7_Josebe.unity`. Todas ficam nas Build Settings, em ordem. As fases 4 (noite) e 5 (neve) mudam o céu e usam materiais próprios (`Generated/CeuNoite.mat` e `Generated/CeuNeve.mat`).
 
 ### Mapa das fases e trava
 
@@ -93,6 +93,16 @@ No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, 
 | Q | Trocar entre a lança e a espada da cintura |
 | F (segurar) | Orar |
 
+### Controles da Fase 7
+
+| Tecla | Ação |
+|---|---|
+| Clique esquerdo | Estocada da lança; segurar e soltar é a varredura, que derruba a fileira e os escudeiros |
+| Botão direito | Aparar no instante do golpe (também as flechas dos arqueiros nas encostas) |
+| Espaço | Desviar |
+| Q | Trocar entre a lança e a espada da cintura |
+| F (segurar) | Orar |
+
 ## Como o código está organizado
 
 | Pasta | O que tem |
@@ -110,6 +120,7 @@ No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, 
 | `Scripts/Fase4` | Fase 4: vale de Refaim à noite, as mãos do valente (espada, escudo, cântaro), filisteus do arraial com sentinelas e alarme, companheiros com ordens, treino, missão e o fluxo da fase |
 | `Scripts/Fase5` | Fase 5: aldeia na neve e planície, neve caindo, as armas de Benaia (espada e escudo, cajado, lança), o leão da cova, o egípcio, treino e o fluxo da fase |
 | `Scripts/Fase6` | Fase 6: os campos de batalha, a multidão dos trezentos, Isbi-Benobe, Davi cansado, a regra de alcance da lança, treino e o fluxo da fase (as mãos de Abisai reaproveitam as de Benaia) |
+| `Scripts/Fase7` | Fase 7 (final): o desfiladeiro com a pedra do capitão, as fileiras com escudeiros, os arqueiros nas encostas, o treino, a lista dos valentes e a galeria de todas as fases (as mãos do capitão reaproveitam as de Benaia) |
 | `Editor` | Cria as cenas das fases e os materiais automaticamente |
 
 Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, velocidades) ficam em

@@ -86,3 +86,14 @@ edição escolhida **antes** de gravar.
 | `f6v2117a` | 2 Samuel 21:17 | Cena animada e telas | Porém Abisai, filho de Zeruia, o socorreu, e feriu o filisteu, e o matou; |
 | `f6v2117b` | 2 Samuel 21:17 | Cena animada | ...então os homens de Davi lhe juraram, dizendo: Nunca mais sairás conosco à peleja, para que não apagues a lâmpada de Israel. |
 | `f6v19` | 2 Samuel 23:19 | Telas | Porventura este não era o mais nobre dentre os três? Portanto foi o seu chefe; porém aos primeiros três não chegou. |
+| `f7v8a` | 2 Samuel 23:8 | Cena animada e telas | Estes são os nomes dos valentes que Davi teve: Josebe-Bassebete, o taquemonita, o principal dos capitães; |
+| `f7v8b` | 2 Samuel 23:8 | Cena animada e telas | ...este era Adino, o eznita, que se opôs a oitocentos, e os feriu de uma vez. |
+| `f7v1cr` | 1 Crônicas 11:11 | Telas | ...o qual, brandindo a sua lança contra trezentos, os feriu de uma vez. |
+| `f7rc1` | 1 Samuel 17:49 | Cena animada | E Davi pôs a mão no alforje, e tomou dali uma pedra, e com a funda lha atirou, e feriu o filisteu na testa. |
+| `f7rc2` | 2 Samuel 23:12 | Cena animada | Este, porém, se pôs no meio daquele pedaço de campo, e o defendeu, e feriu os filisteus. |
+| `f7rc3` | 2 Samuel 23:10 | Cena animada | Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada. |
+| `f7rc4` | 2 Samuel 23:17 | Cena animada | Isto fizeram aqueles três valentes. |
+| `f7rc5` | 2 Samuel 23:22 | Cena animada | Estas coisas fez Benaia, filho de Joiada; e teve nome entre os três valentes. |
+| `f7rc6` | 2 Samuel 23:18 | Cena animada | Também Abisai, irmão de Joabe... alçou a sua lança contra trezentos, e os feriu. |
+| `f7rc7` | 2 Samuel 23:8 | Cena animada | Josebe-Bassebete, o principal dos capitães... se opôs a oitocentos, e os feriu de uma vez. |
+| `f7v39` | 2 Samuel 23:39 | Cena animada e telas | ...Urias, o heteu; trinta e sete ao todo. |

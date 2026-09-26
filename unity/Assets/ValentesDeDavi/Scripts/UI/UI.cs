@@ -722,6 +722,36 @@ namespace Valentes
             else Note("A Fase " + next.n + " (" + next.title + ") ainda não foi montada na Unity.");
         }
 
+        /// <summary>Galeria dos valentes (fim da campanha): todas as fases, com estrelas e recorde, e o total de estrelas.</summary>
+        public void Gallery()
+        {
+            Section("Os valentes de Davi");
+            VisualElement t = new VisualElement(); t.style.maxWidth = 760f;
+            int total = 0;
+            foreach (Progress.Phase p in Progress.All)
+            {
+                bool won = Progress.Won(p.n);
+                int st = won ? Progress.Stars(p.n) : 0;
+                total += st;
+                VisualElement row = new VisualElement();
+                row.style.flexDirection = FlexDirection.Row; row.style.alignItems = Align.Center;
+                row.style.borderBottomWidth = 1f; row.style.borderBottomColor = new Color(0.92f, 0.86f, 0.74f, 0.12f);
+                row.style.paddingTop = 6f; row.style.paddingBottom = 6f;
+                Label n = UI.Text(row, "Fase " + p.n, 15, UI.BronzeHi); n.style.width = 70f;
+                VisualElement mid = new VisualElement(); mid.style.flexGrow = 1f;
+                UI.Text(mid, p.title, 18, UI.Parch);
+                UI.Text(mid, p.reference, 13, UI.ParchDim);
+                row.Add(mid);
+                Label s = UI.Text(row, won ? new string('★', st) + new string('☆', 3 - st) : "—", 20, won ? UI.BronzeHi : UI.ParchDim);
+                s.style.width = 80f;
+                Label b = UI.Text(row, won ? Progress.Best(p.n).ToString() : "", 16, UI.ParchDim); b.style.width = 70f;
+                b.style.unityTextAlign = TextAnchor.MiddleRight;
+                t.Add(row);
+            }
+            Gap(t, 10);
+            Note("Total: " + total + " de " + Progress.All.Length * 3 + " estrelas.");
+        }
+
         /// <summary>Grade de pedras do ribeiro, cada uma com sua imagem gerada.</summary>
         public List<Button> Stones(Texture2D[] images, Action<int> onClick)
         {

@@ -890,7 +890,7 @@ function startTraining(){
   setupTraining(0); showHUD();
 }
 function finishTraining(){
-  const medal = T.score >= 1700 ? 'ouro' : T.score >= 1100 ? 'prata' : 'bronze';
+  const medal = T.score >= 1400 ? 'ouro' : T.score >= 900 ? 'prata' : 'bronze';
   B.medal = medal; B.trainScore = T.score; B.corStart = ({bronze:55, prata:68, ouro:80})[medal] + (dk === 'pastor' ? 10 : 0);
   mode = 'result'; hideHUD(); clearTraining();
   const names = {ouro:'Ouro', prata:'Prata', bronze:'Bronze'};
