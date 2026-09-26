@@ -117,6 +117,8 @@
     .bar{width:90px} .lbl{font-size:10px} #toast{font-size:16px} #opening{font-size:22px}
     #gauge{width:104px;height:104px;bottom:calc(10px + env(safe-area-inset-bottom,0px))}
   }
+  .listen{margin-left:10px;font:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid rgba(234,220,189,.3);color:var(--bronze-hi);padding:2px 8px;border-radius:3px;cursor:pointer}
+  .listen:hover{border-color:var(--bronze-hi)}
   @media (prefers-reduced-motion:reduce){#game,#toast,#fade,#cine-q{transition:none}}
 </style>
 
@@ -135,7 +137,7 @@
   <canvas id="gauge" width="280" height="280"></canvas>
   <div id="toast"></div>
   <div id="hurt"></div>
-  <div class="esc-hint">Esc · pausa e menu · H · ajuda de mira · M · música</div>
+  <div class="esc-hint">Esc · pausa e menu · H · ajuda de mira · M · música · N · narração</div>
 </div>
 
 <div id="cine" hidden>
@@ -185,7 +187,7 @@ const VS = {
   v51: ['...vendo os filisteus que o seu campeão era morto, fugiram.', '1 Samuel 17:51'],
   v46: ['...e toda a terra saberá que há Deus em Israel.', '1 Samuel 17:46'],
 };
-const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]}</cite></blockquote>`;
+const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]} <button class="listen" data-act="speak" data-k="${k}" aria-label="Ouvir o versículo">▶ Ouvir</button></cite></blockquote>`;
 
 const DIFF = {
   pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:5,   arc:140, preview:true,  arcVisible:true,  sway:.35, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
@@ -1149,18 +1151,20 @@ function nextCineLine(){
   if (cine.i >= cine.lines.length) return endCine();
   const L = cine.lines[cine.i], q = $('cine-q');
   q.style.opacity = 0;
-  setTimeout(() => { if (!cine) return; q.textContent = L.v ? VS[L.v][0] : L.text; $('cine-ref').textContent = L.v ? VS[L.v][1] : (L.ref||''); q.style.opacity = 1; }, 180);
+  const txt = L.v ? VS[L.v][0] : L.text; L.durEff = Math.max(L.dur, narrationSeconds(txt));
+  setTimeout(() => { if (!cine) return; q.textContent = txt; $('cine-ref').textContent = L.v ? VS[L.v][1] : (L.ref||''); q.style.opacity = 1; speak(txt); }, 180);
   if (L.start) L.start();
 }
 function endCine(){
+  stopSpeak();
   if (!cine) return; const f = cine.onEnd; cine = null; $('cine').hidden = true; VM.visible = true; timeScale = 1; slowT = 0; if (f) f();
 }
 function updateCine(dt){
   cine.t += dt; const L = cine.lines[cine.i]; if (!L) return;
-  const p = clamp(cine.t / L.dur, 0, 1);
+  const D = L.durEff || L.dur, p = clamp(cine.t / D, 0, 1);
   if (L.cam) L.cam(p, cine.t);
   if (L.update) L.update(dt, p);
-  if (cine.t >= L.dur) nextCineLine();
+  if (cine.t >= D) nextCineLine();
 }
 function introPace(dt){
   const g = GL.root; g.position.x = Math.sin(gt*.25)*7; g.position.z = 6; g.position.y = valleyH(g.position.x, 6);
@@ -1206,9 +1210,84 @@ function showHUD(){ $('hud').hidden = false; VM.visible = true; }
 function hideHUD(){ $('hud').hidden = true; preview.visible = false; marker.visible = false; }
 function showOverlay(html, acts){
   unlock(); const ov = $('ov'); $('ov-card').innerHTML = html; ov.hidden = false; ov.scrollTop = 0;
-  ov.onclick = e => { const b = e.target.closest('[data-act]'); if (!b || b.disabled) return; audio(); const f = acts[b.dataset.act]; if (f) f(b); };
+  ov.onclick = e => { const b = e.target.closest('[data-act]'); if (!b || b.disabled) return; audio();
+    if (b.dataset.act === 'speak'){ speak(VS[b.dataset.k][0]); return; }
+    if (b.dataset.act !== 'speak') stopSpeak();
+    const f = acts[b.dataset.act]; if (f) f(b); };
 }
 function hideOverlay(){ $('ov').hidden = true; }
+
+// ================= Narração dos versículos (voz do navegador) =================
+// Procura uma voz masculina em português; o tom mais grave e o ritmo lento deixam a leitura calma.
+let narrOn = true;
+try { narrOn = localStorage.getItem('vdd-voice') !== 'off'; } catch(e) {}
+let ptVoice = null, voiceIsMale = false;
+const MALE_VOICE = /antonio|ant[oô]nio|daniel|felipe|ricardo|thiago|f[aá]bio|francisco|heitor|jo[aã]o|paulo|male|masculin|homem/i;
+function pickVoice(){
+  try {
+    const all = speechSynthesis.getVoices(), pt = all.filter(v => /^pt/i.test(v.lang));
+    ptVoice = pt.find(v => /pt.?BR/i.test(v.lang) && MALE_VOICE.test(v.name)) || pt.find(v => MALE_VOICE.test(v.name))
+           || pt.find(v => /pt.?BR/i.test(v.lang)) || pt[0] || null;
+    voiceIsMale = !!(ptVoice && MALE_VOICE.test(ptVoice.name));
+  } catch(e) { ptVoice = null; }
+}
+try { if ('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } } catch(e) {}
+function speak(text){
+  if (!narrOn || !text) return;
+  try {
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/^\.\.\.\s*/, '').replace(/\s*\.\.\.$/, '').replace(/\.\.\./g, ', '));
+    u.lang = 'pt-BR'; if (ptVoice) u.voice = ptVoice;
+    u.rate = .86; u.pitch = voiceIsMale ? .85 : .6; u.volume = 1;
+    if (AC && musicBus && musicOn) musicBus.gain.setTargetAtTime(MUSIC_VOL*.35, AC.currentTime, .3);
+    u.onend = u.onerror = () => { if (AC && musicBus && musicOn) musicBus.gain.setTargetAtTime(MUSIC_VOL, AC.currentTime, .6); };
+    speechSynthesis.speak(u);
+  } catch(e) {}
+}
+function stopSpeak(){ try { speechSynthesis.cancel(); } catch(e) {} if (AC && musicBus && musicOn) musicBus.gain.setTargetAtTime(MUSIC_VOL, AC.currentTime, .3); }
+function setNarration(on){ narrOn = on; try { localStorage.setItem('vdd-voice', on ? 'on' : 'off'); } catch(e) {} if (!on) stopSpeak(); }
+/** Tempo para a voz terminar de ler (cerca de 2,4 palavras por segundo), para a cena não cortar a leitura. */
+function narrationSeconds(text){ return narrOn ? text.split(/\s+/).length * .42 + 1.2 : 0; }
+addEventListener('keydown', e => { if (e.code === 'KeyN' && !e.repeat){ setNarration(!narrOn); toast(narrOn ? 'Narração ligada' : 'Narração desligada', 1.2); } });
+
+// ================= Como jogar (tutorial) =================
+const TUTORIAL = [
+  {t:'Bem-vindo, valente', b:`<p class="lede">Os Valentes de Davi conta, em primeira pessoa, as histórias dos guerreiros de Davi registradas na Bíblia. Cada fase é um relato que você vive por dentro: você é o valente.</p>
+     <blockquote class="verse">Estes são os nomes dos valentes que Davi teve...<cite>2 Samuel 23:8</cite></blockquote>`},
+  {t:'O texto é a sua missão', b:`<p class="lede">Toda fase começa com o texto bíblico, lido em voz alta. Preste atenção nele: <strong>o que o texto diz que o herói fez é o que a fase vai pedir de você.</strong></p>
+     <ul class="checks"><li><span class="ok">✓</span><span>Davi recusou a armadura de Saul e venceu Golias com uma única pedra.</span></li>
+     <li><span class="ok">✓</span><span>Samá ficou no meio do campo de lentilhas quando todo o povo fugiu.</span></li></ul>`},
+  {t:'Fidelidade ao relato', b:`<p class="lede">Vencer não basta. Cada fase tem conquistas de <strong>Fidelidade ao relato</strong>: fazer o que o texto conta. Elas valem pontos, e só a fidelidade completa dá as três estrelas.</p>
+     <p class="lede">Às vezes o caminho fácil vai contra o texto, como vestir a armadura ou fugir com o povo. O jogo deixa você escolher, mas sempre lembra o que está escrito.</p>`},
+  {t:'Como cada fase funciona', b:`<dl class="tally"><dt>1. Abertura</dt><dd>o texto e a cena</dd><dt>2. Treino</dt><dd>pratique a habilidade; a medalha define sua coragem inicial</dd>
+     <dt>3. Missão</dt><dd>viva o relato</dd><dt>4. Resultado</dt><dd>fidelidade, pontos e o versículo final</dd></dl>`},
+  {t:'Coragem', b:`<p class="lede">O medo é real: com pouca <strong>coragem</strong>, a mira treme e os golpes ficam lentos. Você ganha coragem agindo como no texto: avançando contra o gigante, permanecendo na posição, orando.</p>
+     <p class="note">Não é magia: é o que acontece dentro do herói quando ele confia em Deus e age.</p>`},
+  {t:'Controles', b:`<dl class="controls"><dt>Computador</dt><dd>mouse para olhar e mirar · W A S D para andar · botão esquerdo para usar a arma (segurar muda o golpe ou gira a funda)</dd>
+     <dt>Celular</dt><dd>direcional à esquerda · arraste à direita para olhar · botões de ação à direita · melhor na horizontal</dd>
+     <dt>Sempre</dt><dd>Esc pausa · H ajuda de mira · M música · N narração</dd></dl>
+     <p class="note">Cada fase explica os controles próprios dela no menu e durante o treino.</p>`},
+];
+function tutorialSeen(){ try { return localStorage.getItem('vdd-tutorial') === 'ok'; } catch(e) { return false; } }
+function showTutorial(then, i=0){
+  const p = TUTORIAL[i], last = i === TUTORIAL.length - 1;
+  showOverlay(`
+    <div class="eyebrow">Como jogar · ${i+1} de ${TUTORIAL.length}</div>
+    <h2>${p.t}</h2>
+    ${p.b}
+    <div class="row">
+      ${i > 0 ? '<button class="btn" data-act="back">Voltar</button>' : ''}
+      <button class="btn primary" data-act="next">${last ? (then ? 'Começar' : 'Fechar') : 'Próximo'}</button>
+      ${!last ? `<button class="btn" data-act="skip">${then ? 'Pular e começar' : 'Fechar'}</button>` : ''}
+    </div>`, {
+    back: () => showTutorial(then, i-1),
+    next: () => { if (!last) return showTutorial(then, i+1); done(); },
+    skip: () => done(),
+  });
+  function done(){ try { localStorage.setItem('vdd-tutorial', 'ok'); } catch(e) {} if (then) then(); else showMenu(); }
+}
+
 function showMenu(){
   pauseOn = false; timeScale = 1; slowT = 0; S.charging = false;
   mode = 'menu'; setMood('menu'); hideHUD(); placeDuel(); GL.root.rotation.x = 0; if (cine) { cine = null; $('cine').hidden = true; }
@@ -1223,10 +1302,12 @@ function showMenu(){
       <button class="btn primary" data-act="full">Jogar a fase completa</button>
       <button class="btn" data-act="train">Só o treino</button>
       <button class="btn" data-act="duel">Só o duelo</button>
+      <button class="btn" data-act="tutorial">Como jogar</button>
     </div>
     <div class="row">
       <button class="btn" data-act="music" aria-pressed="${musicOn}">Música: ${musicOn ? 'ligada' : 'desligada'}</button>
       <button class="btn" data-act="aim" aria-pressed="${aimHelp}">Ajuda de mira: ${aimHelp ? 'ligada' : 'desligada'}</button>
+      <button class="btn" data-act="voice" aria-pressed="${narrOn}">Narração: ${narrOn ? 'ligada' : 'desligada'}</button>
     </div>
     <dl class="controls">
       <dt>Mouse</dt><dd>Olhar e mirar (clique na tela para travar o cursor)</dd>
@@ -1244,12 +1325,14 @@ function showMenu(){
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
     aim: () => { setAimHelp(!aimHelp); $('ov-card').innerHTML = html(); },
+    tutorial: () => showTutorial(null),
+    voice: () => { setNarration(!narrOn); $('ov-card').innerHTML = html(); },
     full: () => startFull(), train: () => { flow.kind = 'train'; hideOverlay(); tryLock(); startTraining(); }, duel: () => startDuelOnly(),
   };
   showOverlay(html(), acts);
 }
 function showPause(){
-  pauseOn = true; S.charging = false; preview.visible = false; marker.visible = false;
+  pauseOn = true; stopSpeak(); S.charging = false; preview.visible = false; marker.visible = false;
   const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Duelo';
   const html = () => `
     <div class="eyebrow">Pausa · ${where} · ${D_().name}</div>
@@ -1262,11 +1345,13 @@ function showPause(){
     <div class="row">
       <button class="btn" data-act="music" aria-pressed="${musicOn}">Música: ${musicOn ? 'ligada' : 'desligada'}</button>
       <button class="btn" data-act="aim" aria-pressed="${aimHelp}">Ajuda de mira: ${aimHelp ? 'ligada' : 'desligada'}</button>
+      <button class="btn" data-act="voice" aria-pressed="${narrOn}">Narração: ${narrOn ? 'ligada' : 'desligada'}</button>
     </div>
     <p class="note">Esc pausa a qualquer momento. No duelo, recomeçar mantém a armadura e as pedras escolhidas.</p>`;
   showOverlay(html(), {
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
     aim: () => { setAimHelp(!aimHelp); $('ov-card').innerHTML = html(); },
+    voice: () => { setNarration(!narrOn); $('ov-card').innerHTML = html(); },
     resume: () => { hideOverlay(); pauseOn = false; tryLock(); },
     skip: () => { hideOverlay(); pauseOn = false; tryLock(); endCine(); },
     restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else { placeDuel(); beginDuel(); } },
@@ -1274,6 +1359,7 @@ function showPause(){
   });
 }
 function startFull(){
+  if (!tutorialSeen()) return showTutorial(startFull);
   flow.kind = 'full'; flow.medal = null; hideOverlay(); tryLock();
   startIntroCine(() => startFlashbackCine(() => startTraining()));
 }
