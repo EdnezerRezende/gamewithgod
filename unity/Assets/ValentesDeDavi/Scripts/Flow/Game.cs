@@ -49,6 +49,9 @@ namespace Valentes
         {
             Paused = false;
             Time.timeScale = 1f;
+#if !ENABLE_INPUT_SYSTEM
+            Input.simulateMouseWithTouches = false;   // toque não vira clique (os controles de toque cuidam disso)
+#endif
             Mats.Init(baseMaterial);
             Sfx.Create(transform);
             Music.Create(transform);
@@ -115,12 +118,16 @@ namespace Valentes
             bool playing = (mode == Mode.Training || mode == Mode.Duel) && !cutscene.Playing && !duel.Over;
             if (!Paused && (playing || cutscene.Playing) && GameInput.PausePressed()) ShowPause();
 
-            bool lockCursor = playing && !Paused && !ui.OverlayOpen;
+            // Notebook com tela de toque: voltar a usar o mouse desliga os controles de toque.
+            if (TouchControls.Active && !Application.isMobilePlatform && GameInput.MouseUsed()) TouchControls.Active = false;
+            bool control = playing && !Paused && !ui.OverlayOpen;
+            bool lockCursor = control && !TouchControls.Active;   // no toque não há cursor para travar
             UnityEngine.Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
             UnityEngine.Cursor.visible = !lockCursor;
-            player.controlling = lockCursor;
+            player.controlling = control;
             sling.SetVisible(playing && !Paused);
             ui.ShowHud(playing && !ui.OverlayOpen);
+            ui.ShowTouch(playing && !Paused && !ui.OverlayOpen);
             if (playing) { ui.DrawGauge(sling); ui.SetCrosshair(sling.aimOnTarget); }
 
             if (GameInput.MusicPressed())

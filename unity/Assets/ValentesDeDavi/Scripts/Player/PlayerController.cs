@@ -10,6 +10,7 @@ namespace Valentes
     {
         public const float EyeHeight = 1.6f;
         const float MouseSensitivity = 0.0022f;
+        const float TouchSensitivity = 0.0048f;
 
         public Camera cam;
         public World world;
@@ -54,15 +55,21 @@ namespace Valentes
                 yaw += md.x * MouseSensitivity;
                 pitch = Mathf.Clamp(pitch + md.y * MouseSensitivity, -1.35f, 1.35f);
             }
+            // Arrasto na tela (pixels do painel, y para baixo): arrastar para baixo olha para baixo.
+            Vector2 td = TouchControls.ConsumeLook();
+            yaw += td.x * TouchSensitivity;
+            pitch = Mathf.Clamp(pitch - td.y * TouchSensitivity, -1.35f, 1.35f);
             Vector2 al = GameInput.ArrowLook();
             yaw += al.x * 1.8f * dt;
             pitch = Mathf.Clamp(pitch + al.y * 1.2f * dt, -1.35f, 1.35f);
 
             Vector2 mv = GameInput.Move();
+            float mag = Mathf.Min(1f, mv.magnitude);
+            if (mag < 0.12f) mag = 0f;   // zona morta do direcional de toque
             Vector3 wish = Forward * mv.y + Right * mv.x;
-            float speed = GameInput.Sprint() ? 7.2f : 4.6f;
+            float speed = GameInput.Sprint() || mag > 0.92f && TouchControls.Active ? 7.2f : 4.6f;
             if (armor) speed *= 0.58f;
-            if (wish.sqrMagnitude > 0f) wish = wish.normalized * speed;
+            wish = mag > 0f ? wish.normalized * speed * mag : Vector3.zero;
             velocity = Vector3.Lerp(velocity, wish, Mathf.Clamp01(dt * 10f));
             Vector3 p = transform.position + velocity * dt;
             if (clampPosition != null) p = clampPosition(p);

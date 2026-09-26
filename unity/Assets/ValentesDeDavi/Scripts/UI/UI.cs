@@ -19,6 +19,7 @@ namespace Valentes
         public readonly VisualElement root;
         VisualElement crossH, crossV;
         VisualElement hud, cine, overlay, hurt, stonesRow, vidaFill, corFill, statStones, statVida, statCor, statScore, gauge;
+        Label esc, cineHint;
         Label obj, sub, toast, opening, score, cineQuote, cineRef, gaugeText;
         ScrollView overlayScroll;
         Texture2D gaugeTex;
@@ -49,6 +50,7 @@ namespace Valentes
             root.style.color = Parch;
 
             BuildHud();
+            TouchControls.Build(root);
             BuildCine();
             BuildOverlay();
             ShowHud(false);
@@ -167,7 +169,7 @@ namespace Valentes
             gaugeText = Text(gauge, "segure para girar", 13, ParchDim);
             gaugeText.style.unityTextAlign = TextAnchor.MiddleCenter;
 
-            Label esc = Text(hud, "Esc · pausa e menu · H · ajuda de mira · M · música", 14, ParchDim);
+            esc = Text(hud, "Esc · pausa e menu · H · ajuda de mira · M · música", 14, ParchDim);
             Abs(esc, 24, null, null, 20);
 
             hurt = Layer(hud);
@@ -200,6 +202,15 @@ namespace Valentes
         }
 
         public void ShowHud(bool v) { hud.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
+
+        /// <summary>Mostra os controles de toque (só quando o toque está ativo) e ajusta as dicas.</summary>
+        public void ShowTouch(bool playing)
+        {
+            bool t = TouchControls.Active;
+            TouchControls.Show(t && playing);
+            esc.style.display = t ? DisplayStyle.None : DisplayStyle.Flex;
+            cineHint.text = t ? "Toque: avançar · ❚❚: pausa" : "Clique: avançar · Enter: pular · Esc: pausa";
+        }
 
         /// <summary>Mira dourada quando está sobre um alvo que conta.</summary>
         public void SetCrosshair(bool onTarget)
@@ -298,8 +309,8 @@ namespace Valentes
             cineRef = Text(text, "", 15, BronzeHi);
             cineRef.style.letterSpacing = 4f;
             cineRef.style.marginTop = 8f;
-            Label hint = Text(cine, "Clique: avançar · Enter: pular · Esc: pausa", 14, ParchDim);
-            Abs(hint, null, null, 24, 14);
+            cineHint = Text(cine, "Clique: avançar · Enter: pular · Esc: pausa", 14, ParchDim);
+            Abs(cineHint, null, null, 24, 14);
         }
 
         public void ShowCine(bool v) { cine.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }

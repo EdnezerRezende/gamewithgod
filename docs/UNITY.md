@@ -31,6 +31,11 @@ Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualiz
 | M | Ligar ou desligar a música |
 | Clique durante a cena | Avançar o plano |
 
+No celular ou tablet (e no navegador do celular), aparecem controles na tela: direcional à
+esquerda para andar (empurrar até a borda corre), arrastar na metade direita para olhar, botão
+**Funda** (segurar para girar, soltar para atirar) e botão **❚❚** de pausa. Tocar avança a cena
+animada. Eles ficam em `Scripts/UI/TouchControls.cs`.
+
 ## Como o código está organizado
 
 | Pasta | O que tem |

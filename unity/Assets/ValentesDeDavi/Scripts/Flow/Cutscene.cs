@@ -82,7 +82,7 @@ namespace Valentes
         {
             if (shots == null || Game.Paused) return;
             if (GameInput.SkipPressed()) { End(); return; }
-            if (GameInput.FireDown()) { Next(); if (shots == null) return; }
+            if (GameInput.TapPressed()) { Next(); if (shots == null) return; }
             t += Time.deltaTime;
             Shot s = shots[index];
             float p = Mathf.Clamp01(t / s.duration);
