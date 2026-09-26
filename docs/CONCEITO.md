@@ -44,6 +44,7 @@ bíblico de um valente, jogado de forma fiel ao texto.
 | Eleazar | 2 Sm 23:9-10 | Combate de espada contra ondas de inimigos |
 | Benaia | 2 Sm 23:20 | Sobrevivência contra o leão no poço |
 | Os três valentes | 2 Sm 23:13-17 | Romper pelo arraial em grupo e trazer a água de Belém |
+| Abisai | 2 Sm 23:18-19; 21:15-17 | A lança contra trezentos e o socorro a Davi contra o gigante |
 
 ## Regras de conteúdo
 

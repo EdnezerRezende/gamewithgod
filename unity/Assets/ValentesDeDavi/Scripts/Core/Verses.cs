@@ -57,6 +57,14 @@ namespace Valentes
             { "f5vstaff", new Verse("...porém ele desceu a ele com um cajado...", "2 Samuel 23:21") },
             { "f5v22",   new Verse("Estas coisas fez Benaia, filho de Joiada; e teve nome entre os três valentes.", "2 Samuel 23:22") },
             { "f5v23",   new Verse("Dentre os trinta era ele o mais nobre, porém aos três primeiros não chegou; e Davi o pôs sobre a sua guarda.", "2 Samuel 23:23") },
+            { "f6v18a",  new Verse("Também Abisai, irmão de Joabe, filho de Zeruia, era chefe de três;", "2 Samuel 23:18") },
+            { "f6v18b",  new Verse("...e este alçou a sua lança contra trezentos, e os feriu; e tinha nome entre os três.", "2 Samuel 23:18") },
+            { "f6vlanca", new Verse("...e este alçou a sua lança contra trezentos...", "2 Samuel 23:18") },
+            { "f6v2115", new Verse("Tiveram mais os filisteus uma peleja contra Israel; e desceu Davi, e com ele os seus servos; e pelejaram contra os filisteus; e Davi se cansou.", "2 Samuel 21:15") },
+            { "f6v2116", new Verse("E Isbi-Benobe, que era dos filhos do gigante, o peso de cuja lança tinha trezentos siclos de cobre, e que cingia uma espada nova, intentou ferir a Davi.", "2 Samuel 21:16") },
+            { "f6v2117a", new Verse("Porém Abisai, filho de Zeruia, o socorreu, e feriu o filisteu, e o matou;", "2 Samuel 21:17") },
+            { "f6v2117b", new Verse("...então os homens de Davi lhe juraram, dizendo: Nunca mais sairás conosco à peleja, para que não apagues a lâmpada de Israel.", "2 Samuel 21:17") },
+            { "f6v19",   new Verse("Porventura este não era o mais nobre dentre os três? Portanto foi o seu chefe; porém aos primeiros três não chegou.", "2 Samuel 23:19") },
             { "v46", new Verse("...e toda a terra saberá que há Deus em Israel.", "1 Samuel 17:46") },
         };
 

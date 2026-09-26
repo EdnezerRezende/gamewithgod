@@ -29,6 +29,12 @@ namespace Valentes
         public Action<SwingKind> onSwing;
         public Action<string> onPlayerDown;
         public int parries, dodges, combo;
+        /// <summary>Fase 6: o golpe forte da lança vira varredura (todos em volta).</summary>
+        public bool sweepSpear;
+        /// <summary>Janela de aparar de outra fase (&lt;= 0 usa a da fase 5).</summary>
+        public float parryWindowOverride = -1f;
+        public float ParryWindow { get { return parryWindowOverride > 0f ? parryWindowOverride : P.parryWindow; } }
+        public bool Sweeping { get { return weapon == BenaiaWeapon.Spear && sweepSpear && kind == SwingKind.Heavy; } }
         public float comboT;
         public SwingKind kind;
 
@@ -133,8 +139,8 @@ namespace Valentes
             Sfx.Play("whoosh", 0.6f, 0.6f);
         }
 
-        public float Reach { get { return weapon == BenaiaWeapon.Spear ? 3.9f : weapon == BenaiaWeapon.Staff ? 2.7f : kind == SwingKind.Combo ? 3.2f : 2.9f; } }
-        float Arc { get { return weapon == BenaiaWeapon.Spear ? 28f : kind == SwingKind.Combo ? 80f : 55f; } }
+        public float Reach { get { return Sweeping ? 3.5f : weapon == BenaiaWeapon.Spear ? 3.9f : weapon == BenaiaWeapon.Staff ? 2.7f : kind == SwingKind.Combo ? 3.2f : 2.9f; } }
+        float Arc { get { return Sweeping ? 120f : weapon == BenaiaWeapon.Spear ? 28f : kind == SwingKind.Combo ? 80f : 55f; } }
 
         /// <summary>O último golpe alcança este ponto?</summary>
         public bool InReach(Vector3 pos)
@@ -159,11 +165,23 @@ namespace Valentes
             return 1;
         }
 
+        /// <summary>Aparar um golpe que ia para outra pessoa (Davi): perto do atacante, de frente, no instante certo.</summary>
+        public bool TryParryFor(Vector3 attacker, float maxDistance)
+        {
+            Vector3 d = attacker - player.Position; d.y = 0f;
+            if (d.magnitude > maxDistance || Time.time - parryT > ParryWindow || !Facing(attacker, 75f)) return false;
+            Sfx.Play("clang"); Sfx.Play("perfect", 0.7f);
+            parries++;
+            player.courage = Mathf.Clamp(player.courage + 8f, 0f, 100f);
+            critUntil = Time.time + 1.5f;
+            return true;
+        }
+
         public bool ResolveIncoming(Vector3 from, float damage, string message, Incoming o)
         {
             if (o == null) o = new Incoming();
             if (iframe > 0f) { dodges++; ui.Toast("Desviou.", 0.6f); if (o.onDodge != null) o.onDodge(); return false; }
-            if (!o.noParry && Time.time - parryT <= P.parryWindow && Facing(from, 75f))
+            if (!o.noParry && Time.time - parryT <= ParryWindow && Facing(from, 75f))
             {
                 Sfx.Play("clang"); Sfx.Play("perfect", 0.7f);
                 parries++;

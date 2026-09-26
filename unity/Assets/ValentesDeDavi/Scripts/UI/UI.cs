@@ -21,7 +21,7 @@ namespace Valentes
         VisualElement statCampo, campoFill, statArma, holdBar, holdFill;
         Label armaLabel, waveLabel, zoneLabel;
         VisualElement hud, cine, overlay, hurt, stonesRow, vidaFill, corFill, statStones, statVida, statCor, statScore, gauge;
-        VisualElement statFad, fadFill, stuckFx, statAgua, aguaFill, statAlarme, alarmeFill;
+        VisualElement statFad, fadFill, stuckFx, statAgua, aguaFill, statAlarme, alarmeFill, statDavi, daviFill;
         float stuckAlpha;
         bool stuckOn;
         Label esc, cineHint;
@@ -146,7 +146,8 @@ namespace Valentes
             statFad = Stat(tr, "CANSAÇO"); fadFill = Bar(statFad, U.Hex(0xd08a4a));
             statAgua = Stat(tr, "ÁGUA"); aguaFill = Bar(statAgua, U.Hex(0x6aa6cf));
             statAlarme = Stat(tr, "ALARME"); alarmeFill = Bar(statAlarme, Blood);
-            statAgua.style.display = DisplayStyle.None; statAlarme.style.display = DisplayStyle.None;
+            statDavi = Stat(tr, "DAVI"); daviFill = Bar(statDavi, U.Hex(0x3d7ac0));
+            statAgua.style.display = DisplayStyle.None; statAlarme.style.display = DisplayStyle.None; statDavi.style.display = DisplayStyle.None;
             statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None; statFad.style.display = DisplayStyle.None;
 
             VisualElement tc = Box(hud);
@@ -384,6 +385,14 @@ namespace Valentes
             if (boss01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(boss01) * 100f);
             zoneLabel.style.display = DisplayStyle.None;
             stuckOn = false;
+        }
+
+        /// <summary>HUD da fase 6: a da fase 5 mais a vida de Davi (davi01 &lt; 0 esconde).</summary>
+        public void SetFase6Stats(bool mission, int points, float health, float courage, string wave, float boss01, float davi01)
+        {
+            SetFase5Stats(mission, points, health, courage, wave, boss01);
+            statDavi.style.display = davi01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
+            if (davi01 >= 0f) daviFill.style.width = Length.Percent(Mathf.Clamp01(davi01) * 100f);
         }
 
         /// <summary>Indicador simples em anel (espada carregando o golpe forte, oração).</summary>

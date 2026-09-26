@@ -26,6 +26,7 @@ namespace Valentes
             new Phase(3, "Eleazar e a mão pegada à espada", "2 Samuel 23:9-10", "Fase3_Eleazar"),
             new Phase(4, "Os três valentes e a água de Belém", "2 Samuel 23:13-17", "Fase4_Agua"),
             new Phase(5, "Benaia: o leão na cova e o egípcio", "2 Samuel 23:20-23", "Fase5_Benaia"),
+            new Phase(6, "Abisai: a lança contra trezentos", "2 Samuel 23:18-19; 21:15-17", "Fase6_Abisai"),
         };
 
         const string UnlockKey = "valentes.unlockAll";

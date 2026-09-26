@@ -63,6 +63,9 @@ namespace Valentes
         /// <summary>Fase 5: sem troca de arma nem ordens, o botão ⇄ some.</summary>
         public static void ShowSwap(bool v) { if (swapBtn != null) swapBtn.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
 
+        /// <summary>Esconde só o botão Ação (as fases 5 e 6 usam o Desviar sem ações de contexto).</summary>
+        public static void ShowActButton(bool v) { if (actBtn != null) actBtn.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
+
         public static void ShowHorn(bool v) { if (hornBtn != null) hornBtn.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
 
         /// <summary>Liga os botões de combate da fase 2 (Escudo, ⇄ e Orar).</summary>

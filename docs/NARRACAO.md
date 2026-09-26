@@ -78,3 +78,11 @@ edição escolhida **antes** de gravar.
 | `f5vstaff` | 2 Samuel 23:21 | Telas | ...porém ele desceu a ele com um cajado... |
 | `f5v22` | 2 Samuel 23:22 | Cena animada e telas | Estas coisas fez Benaia, filho de Joiada; e teve nome entre os três valentes. |
 | `f5v23` | 2 Samuel 23:23 | Cena animada | Dentre os trinta era ele o mais nobre, porém aos três primeiros não chegou; e Davi o pôs sobre a sua guarda. |
+| `f6v18a` | 2 Samuel 23:18 | Cena animada e telas | Também Abisai, irmão de Joabe, filho de Zeruia, era chefe de três; |
+| `f6v18b` | 2 Samuel 23:18 | Cena animada | ...e este alçou a sua lança contra trezentos, e os feriu; e tinha nome entre os três. |
+| `f6vlanca` | 2 Samuel 23:18 | Telas | ...e este alçou a sua lança contra trezentos... |
+| `f6v2115` | 2 Samuel 21:15 | Cena animada | Tiveram mais os filisteus uma peleja contra Israel; e desceu Davi, e com ele os seus servos; e pelejaram contra os filisteus; e Davi se cansou. |
+| `f6v2116` | 2 Samuel 21:16 | Cena animada | E Isbi-Benobe, que era dos filhos do gigante, o peso de cuja lança tinha trezentos siclos de cobre, e que cingia uma espada nova, intentou ferir a Davi. |
+| `f6v2117a` | 2 Samuel 21:17 | Cena animada e telas | Porém Abisai, filho de Zeruia, o socorreu, e feriu o filisteu, e o matou; |
+| `f6v2117b` | 2 Samuel 21:17 | Cena animada | ...então os homens de Davi lhe juraram, dizendo: Nunca mais sairás conosco à peleja, para que não apagues a lâmpada de Israel. |
+| `f6v19` | 2 Samuel 23:19 | Telas | Porventura este não era o mais nobre dentre os três? Portanto foi o seu chefe; porém aos primeiros três não chegou. |

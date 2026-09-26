@@ -23,6 +23,7 @@ namespace Valentes.EditorTools
         const string Scene3Path = Root + "/Scenes/" + Fase3Game.SceneName + ".unity";
         const string Scene4Path = Root + "/Scenes/" + Fase4Game.SceneName + ".unity";
         const string Scene5Path = Root + "/Scenes/" + Fase5Game.SceneName + ".unity";
+        const string Scene6Path = Root + "/Scenes/" + Fase6Game.SceneName + ".unity";
         const string ThemePath = Root + "/UI/Tema.tss";
         const string SessionKey = "Valentes.SetupChecked";
 
@@ -38,6 +39,7 @@ namespace Valentes.EditorTools
                 if (!File.Exists(Scene3Path)) CreateScene3(false);
                 if (!File.Exists(Scene4Path)) CreateScene4(false);
                 if (!File.Exists(Scene5Path)) CreateScene5(false);
+                if (!File.Exists(Scene6Path)) CreateScene6(false);
                 if (first) CreateScene(true);
             };
         }
@@ -47,6 +49,16 @@ namespace Valentes.EditorTools
 
         [MenuItem("Valentes de Davi/Criar ou atualizar a cena da Fase 2")]
         public static void CreateScene2Menu() { CreateScene2(true); }
+
+        [MenuItem("Valentes de Davi/Criar ou atualizar a cena da Fase 6")]
+        public static void CreateScene6Menu() { CreateScene6(true); }
+
+        [MenuItem("Valentes de Davi/Abrir a cena da Fase 6")]
+        public static void OpenScene6()
+        {
+            if (!File.Exists(Scene6Path)) { CreateScene6(true); return; }
+            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) EditorSceneManager.OpenScene(Scene6Path);
+        }
 
         [MenuItem("Valentes de Davi/Criar ou atualizar a cena da Fase 5")]
         public static void CreateScene5Menu() { CreateScene5(true); }
@@ -152,7 +164,8 @@ namespace Valentes.EditorTools
         static void AddToBuild()
         {
             List<EditorBuildSettingsScene> list = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
-            list.RemoveAll(s => s.path == ScenePath || s.path == Scene2Path || s.path == Scene3Path || s.path == Scene4Path || s.path == Scene5Path);
+            list.RemoveAll(s => s.path == ScenePath || s.path == Scene2Path || s.path == Scene3Path || s.path == Scene4Path || s.path == Scene5Path || s.path == Scene6Path);
+            if (File.Exists(Scene6Path)) list.Insert(0, new EditorBuildSettingsScene(Scene6Path, true));
             if (File.Exists(Scene5Path)) list.Insert(0, new EditorBuildSettingsScene(Scene5Path, true));
             if (File.Exists(Scene4Path)) list.Insert(0, new EditorBuildSettingsScene(Scene4Path, true));
             if (File.Exists(Scene3Path)) list.Insert(0, new EditorBuildSettingsScene(Scene3Path, true));
@@ -175,6 +188,22 @@ namespace Valentes.EditorTools
             AddToBuild();
             if (open) EditorSceneManager.OpenScene(Scene2Path);
             Debug.Log("Valentes de Davi: cena da Fase 2 pronta em " + Scene2Path + ".");
+        }
+
+        static void CreateScene6(bool open)
+        {
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            Material baseMat, sky; PanelSettings panel;
+            Assets(out baseMat, out sky, out panel);
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            GameObject go = new GameObject("Fase 6 - Abisai");
+            Fase6Game game = go.AddComponent<Fase6Game>();
+            game.baseMaterial = baseMat; game.skyMaterial = sky; game.panelSettings = panel;
+            EditorSceneManager.SaveScene(scene, Scene6Path);
+            AssetDatabase.SaveAssets();
+            AddToBuild();
+            if (open) EditorSceneManager.OpenScene(Scene6Path);
+            Debug.Log("Valentes de Davi: cena da Fase 6 pronta em " + Scene6Path + ".");
         }
 
         static void CreateScene5(bool open)

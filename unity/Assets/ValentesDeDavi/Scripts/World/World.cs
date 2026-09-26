@@ -9,9 +9,9 @@ namespace Valentes
     /// </summary>
     public class World
     {
-        public enum Area { Valley, Field, Lentils, PasDamim, Refaim, Benaia }
+        public enum Area { Valley, Field, Lentils, PasDamim, Refaim, Benaia, Abisai }
 
-        public GameObject valley, field, lentils, pasDamim, refaim, benaia;
+        public GameObject valley, field, lentils, pasDamim, refaim, benaia, abisai;
         public Army israel, philistines;
         public Area current = Area.Valley;
         public Light sun;
@@ -22,6 +22,7 @@ namespace Valentes
             if (current == Area.PasDamim) return Valentes.PasDamim.Height(x, z);
             if (current == Area.Refaim) return Valentes.Refaim.Height(x, z);
             if (current == Area.Benaia) return Valentes.Snowland.Height(x, z);
+            if (current == Area.Abisai) return Valentes.Battlefield.Height(x, z);
             return current == Area.Valley ? ValleyHeight(x, z) : FieldHeight(x, z);
         }
 
@@ -114,6 +115,19 @@ namespace Valentes
             BuildTerrain(plain, Valentes.Snowland.PlainHeight, Valentes.Snowland.PlainGround);
             Valentes.Snowland.BuildProps(w.benaia.transform);
             w.current = Area.Benaia;
+            return w;
+        }
+
+        /// <summary>Fase 6: a planície dos trezentos e o campo onde Davi se cansou.</summary>
+        public static World ForAbisai(Transform root, Material skyMaterial)
+        {
+            World w = new World();
+            w.BuildAtmosphere(root, skyMaterial);
+            w.abisai = new GameObject("Campos de batalha");
+            w.abisai.transform.SetParent(root, false);
+            BuildTerrain(w.abisai.transform, Valentes.Battlefield.Height, Valentes.Battlefield.Ground);
+            Valentes.Battlefield.BuildProps(w.abisai.transform);
+            w.current = Area.Abisai;
             return w;
         }
 
