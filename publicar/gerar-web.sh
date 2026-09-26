@@ -22,3 +22,4 @@ gen prototipo/fase3-eleazar.html publicar/web/fase3.html
 gen prototipo/fase4-agua-de-belem.html publicar/web/fase4.html
 gen prototipo/fase5-benaia.html publicar/web/fase5.html
 gen prototipo/fase6-abisai.html publicar/web/fase6.html
+gen prototipo/fase7-josebe.html publicar/web/fase7.html
