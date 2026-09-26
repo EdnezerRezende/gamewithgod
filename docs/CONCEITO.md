@@ -43,7 +43,7 @@ bíblico de um valente, jogado de forma fiel ao texto.
 | Samá | 2 Sm 23:11-12 | Defender a posição no campo |
 | Eleazar | 2 Sm 23:9-10 | Combate de espada contra ondas de inimigos |
 | Benaia | 2 Sm 23:20 | Sobrevivência contra o leão no poço |
-| Os três valentes | 2 Sm 23:13-17 | Infiltração para buscar água em Belém |
+| Os três valentes | 2 Sm 23:13-17 | Romper pelo arraial em grupo e trazer a água de Belém |
 
 ## Regras de conteúdo
 
