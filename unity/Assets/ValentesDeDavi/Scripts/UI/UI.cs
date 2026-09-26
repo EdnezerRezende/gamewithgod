@@ -366,6 +366,26 @@ namespace Valentes
             stuckOn = false;
         }
 
+        /// <summary>HUD da fase 5: vida e coragem (ou pontos no treino), o nome do trecho e a vida do chefão.</summary>
+        public void SetFase5Stats(bool mission, int points, float health, float courage, string wave, float boss01)
+        {
+            statStones.style.display = DisplayStyle.None; statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+            statFad.style.display = DisplayStyle.None; statAgua.style.display = DisplayStyle.None; statAlarme.style.display = DisplayStyle.None;
+            opening.style.display = DisplayStyle.None;
+            statVida.style.display = mission ? DisplayStyle.Flex : DisplayStyle.None;
+            statCor.style.display = mission ? DisplayStyle.Flex : DisplayStyle.None;
+            statScore.style.display = mission ? DisplayStyle.None : DisplayStyle.Flex;
+            score.text = points.ToString();
+            vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
+            corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
+            waveLabel.text = wave;
+            holdBar.style.display = boss01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
+            holdFill.style.backgroundColor = Blood;
+            if (boss01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(boss01) * 100f);
+            zoneLabel.style.display = DisplayStyle.None;
+            stuckOn = false;
+        }
+
         /// <summary>Indicador simples em anel (espada carregando o golpe forte, oração).</summary>
         public void DrawRing(float fill01, Color color, string text)
         {

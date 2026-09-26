@@ -60,6 +60,9 @@ namespace Valentes
             swapButton.text = text; swapButton.style.fontSize = fontSize;
             swapButton.style.width = fontSize < 20f ? 86f : 62f;
         }
+        /// <summary>Fase 5: sem troca de arma nem ordens, o botão ⇄ some.</summary>
+        public static void ShowSwap(bool v) { if (swapBtn != null) swapBtn.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
+
         public static void ShowHorn(bool v) { if (hornBtn != null) hornBtn.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
 
         /// <summary>Liga os botões de combate da fase 2 (Escudo, ⇄ e Orar).</summary>

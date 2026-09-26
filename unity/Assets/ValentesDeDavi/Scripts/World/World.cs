@@ -9,9 +9,9 @@ namespace Valentes
     /// </summary>
     public class World
     {
-        public enum Area { Valley, Field, Lentils, PasDamim, Refaim }
+        public enum Area { Valley, Field, Lentils, PasDamim, Refaim, Benaia }
 
-        public GameObject valley, field, lentils, pasDamim, refaim;
+        public GameObject valley, field, lentils, pasDamim, refaim, benaia;
         public Army israel, philistines;
         public Area current = Area.Valley;
         public Light sun;
@@ -21,6 +21,7 @@ namespace Valentes
             if (current == Area.Lentils) return LentilHeight(x, z);
             if (current == Area.PasDamim) return Valentes.PasDamim.Height(x, z);
             if (current == Area.Refaim) return Valentes.Refaim.Height(x, z);
+            if (current == Area.Benaia) return Valentes.Snowland.Height(x, z);
             return current == Area.Valley ? ValleyHeight(x, z) : FieldHeight(x, z);
         }
 
@@ -97,6 +98,22 @@ namespace Valentes
             BuildTerrain(w.refaim.transform, Valentes.Refaim.Height, Valentes.Refaim.Ground);
             Valentes.Refaim.BuildProps(w.refaim.transform);
             w.current = Area.Refaim;
+            return w;
+        }
+
+        /// <summary>Fase 5: a aldeia na neve com a cova do leão e, longe dali, a planície do egípcio e da guarda.</summary>
+        public static World ForBenaia(Transform root, Material skyMaterial)
+        {
+            World w = new World();
+            w.BuildAtmosphere(root, skyMaterial);
+            w.benaia = new GameObject("Terras de Benaia");
+            w.benaia.transform.SetParent(root, false);
+            Transform village = U.Pivot(w.benaia.transform, "Aldeia na neve", Vector3.zero);
+            BuildTerrain(village, Valentes.Snowland.VillageHeight, Valentes.Snowland.SnowGround);
+            Transform plain = U.Pivot(w.benaia.transform, "Planície", new Vector3(Valentes.Snowland.PlainX, 0f, 0f));
+            BuildTerrain(plain, Valentes.Snowland.PlainHeight, Valentes.Snowland.PlainGround);
+            Valentes.Snowland.BuildProps(w.benaia.transform);
+            w.current = Area.Benaia;
             return w;
         }
 

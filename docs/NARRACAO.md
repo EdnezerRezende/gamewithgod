@@ -70,3 +70,11 @@ edição escolhida **antes** de gravar.
 | `f4v16b` | 2 Samuel 23:16 | Cena animada | ...porém ele não a quis beber, mas derramou-a perante o Senhor. |
 | `f4v17` | 2 Samuel 23:17 | Cena animada e telas | E disse: Guarda-me, ó Senhor, de que tal faça; beberia eu o sangue dos homens que foram a risco da sua vida? De maneira que não a quis beber. |
 | `f4v17b` | 2 Samuel 23:17 | Cena animada | Isto fizeram aqueles três valentes. |
+| `f5v20a` | 2 Samuel 23:20 | Cena animada e telas | Também Benaia, filho de Joiada, filho de um homem valente de Cabzeel, grande em obras; este feriu dois fortes leões de Moabe; |
+| `f5v20b` | 2 Samuel 23:20 | Cena animada e telas | ...e desceu ele, e feriu um leão no meio de uma cova, no tempo da neve. |
+| `f5v21` | 2 Samuel 23:21 | Cena animada e telas | Também este feriu um homem egípcio, homem de grande presença; e o egípcio trazia uma lança na mão, porém ele desceu a ele com um cajado, e arrancou a lança da mão do egípcio, e o matou com a sua própria lança. |
+| `f5vsnow` | 2 Samuel 23:20 | Telas | ...no tempo da neve. |
+| `f5vpit` | 2 Samuel 23:20 | Telas | ...e desceu ele, e feriu um leão no meio de uma cova... |
+| `f5vstaff` | 2 Samuel 23:21 | Telas | ...porém ele desceu a ele com um cajado... |
+| `f5v22` | 2 Samuel 23:22 | Cena animada e telas | Estas coisas fez Benaia, filho de Joiada; e teve nome entre os três valentes. |
+| `f5v23` | 2 Samuel 23:23 | Cena animada | Dentre os trinta era ele o mais nobre, porém aos três primeiros não chegou; e Davi o pôs sobre a sua guarda. |

@@ -49,6 +49,14 @@ namespace Valentes
             { "f4v16b", new Verse("...porém ele não a quis beber, mas derramou-a perante o Senhor.", "2 Samuel 23:16") },
             { "f4v17",  new Verse("E disse: Guarda-me, ó Senhor, de que tal faça; beberia eu o sangue dos homens que foram a risco da sua vida? De maneira que não a quis beber.", "2 Samuel 23:17") },
             { "f4v17b", new Verse("Isto fizeram aqueles três valentes.", "2 Samuel 23:17") },
+            { "f5v20a",  new Verse("Também Benaia, filho de Joiada, filho de um homem valente de Cabzeel, grande em obras; este feriu dois fortes leões de Moabe;", "2 Samuel 23:20") },
+            { "f5v20b",  new Verse("...e desceu ele, e feriu um leão no meio de uma cova, no tempo da neve.", "2 Samuel 23:20") },
+            { "f5v21",   new Verse("Também este feriu um homem egípcio, homem de grande presença; e o egípcio trazia uma lança na mão, porém ele desceu a ele com um cajado, e arrancou a lança da mão do egípcio, e o matou com a sua própria lança.", "2 Samuel 23:21") },
+            { "f5vsnow", new Verse("...no tempo da neve.", "2 Samuel 23:20") },
+            { "f5vpit",  new Verse("...e desceu ele, e feriu um leão no meio de uma cova...", "2 Samuel 23:20") },
+            { "f5vstaff", new Verse("...porém ele desceu a ele com um cajado...", "2 Samuel 23:21") },
+            { "f5v22",   new Verse("Estas coisas fez Benaia, filho de Joiada; e teve nome entre os três valentes.", "2 Samuel 23:22") },
+            { "f5v23",   new Verse("Dentre os trinta era ele o mais nobre, porém aos três primeiros não chegou; e Davi o pôs sobre a sua guarda.", "2 Samuel 23:23") },
             { "v46", new Verse("...e toda a terra saberá que há Deus em Israel.", "1 Samuel 17:46") },
         };
 

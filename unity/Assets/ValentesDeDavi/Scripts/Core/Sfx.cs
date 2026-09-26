@@ -53,6 +53,8 @@ namespace Valentes
             clips["alarm"] = Tone("alarm", 130f, 2f, Wave.Saw, 98f, 0.6f, 0.25f);
             clips["water"] = Noise("water", 0.3f, 700f, 0.03f, r);
             clips["pour"] = Noise("pour", 3f, 500f, 0.4f, r);
+            clips["pull"] = Mix("pull", Noise("a", 0.4f, 400f, 0.05f, r), Tone("b", 160f, 0.3f, Wave.Triangle, 260f, 0.6f));
+            clips["wind"] = Noise("wind", 2.5f, 900f, 0.8f, r);
         }
 
         public static void Play(string name, float volume = 1f, float pitch = 1f)
