@@ -31,6 +31,11 @@ namespace Valentes
             { "v48", new Verse("...Davi se apressou, e correu ao combate, a encontrar-se com o filisteu.", "1 Samuel 17:48") },
             { "v49", new Verse("E Davi pôs a mão no alforje, e tomou dali uma pedra, e com a funda lha atirou, e feriu o filisteu na testa; e caiu sobre o seu rosto em terra.", "1 Samuel 17:49") },
             { "v51", new Verse("...vendo os filisteus que o seu campeão era morto, fugiram.", "1 Samuel 17:51") },
+            { "f2v8",   new Verse("Estes são os nomes dos valentes que Davi teve...", "2 Samuel 23:8") },
+            { "f2v11a", new Verse("E depois dele Samá, filho de Agé, o hararita; e ajuntaram-se os filisteus em tropa, e havia ali um pedaço de campo cheio de lentilhas...", "2 Samuel 23:11") },
+            { "f2v11b", new Verse("...e o povo fugiu de diante dos filisteus.", "2 Samuel 23:11") },
+            { "f2v12a", new Verse("Este, porém, se pôs no meio daquele pedaço de campo, e o defendeu, e feriu os filisteus;", "2 Samuel 23:12") },
+            { "f2v12b", new Verse("...e o Senhor operou um grande livramento.", "2 Samuel 23:12") },
             { "v46", new Verse("...e toda a terra saberá que há Deus em Israel.", "1 Samuel 17:46") },
         };
 

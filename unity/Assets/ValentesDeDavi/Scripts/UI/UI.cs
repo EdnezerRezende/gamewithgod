@@ -18,6 +18,8 @@ namespace Valentes
 
         public readonly VisualElement root;
         VisualElement crossH, crossV;
+        VisualElement statCampo, campoFill, statArma, holdBar, holdFill;
+        Label armaLabel, waveLabel, zoneLabel;
         VisualElement hud, cine, overlay, hurt, stonesRow, vidaFill, corFill, statStones, statVida, statCor, statScore, gauge;
         Label esc, cineHint;
         Label obj, sub, toast, opening, score, cineQuote, cineRef, gaugeText;
@@ -136,6 +138,32 @@ namespace Valentes
             statVida = Stat(tr, "VIDA"); vidaFill = Bar(statVida, Blood);
             statCor = Stat(tr, "CORAGEM"); corFill = Bar(statCor, BronzeHi);
             statScore = Stat(tr, "PONTOS"); score = Text(statScore, "0", 24, Parch, true);
+            statCampo = Stat(tr, "CAMPO"); campoFill = Bar(statCampo, Olive);
+            statArma = Stat(tr, "ARMA"); armaLabel = Text(statArma, "", 16, Parch, true);
+            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+
+            VisualElement tc = Box(hud);
+            Abs(tc, 0, 14, 0, null);
+            tc.style.alignItems = Align.Center;
+            waveLabel = Text(tc, "", 22, Parch);
+            waveLabel.style.letterSpacing = 2f;
+            holdBar = Box(tc);
+            holdBar.style.width = 360f; holdBar.style.height = 12f; holdBar.style.marginTop = 6f;
+            holdBar.style.backgroundColor = new Color(0, 0, 0, 0.45f);
+            Border(holdBar, BronzeHi, 1, 0);
+            holdFill = Box(holdBar);
+            holdFill.style.height = Length.Percent(100);
+            holdFill.style.backgroundColor = BronzeHi;
+            holdBar.style.display = DisplayStyle.None;
+
+            VisualElement zoneWrap = Box(hud);
+            Abs(zoneWrap, 0, null, 0, null);
+            zoneWrap.style.top = Length.Percent(40);
+            zoneWrap.style.alignItems = Align.Center;
+            zoneLabel = Text(zoneWrap, "Samá se pôs no meio do campo. Volte para as lentilhas.", 18, U.Hex(0xf3c7a0), true);
+            zoneLabel.style.backgroundColor = new Color(0.47f, 0.12f, 0.06f, 0.6f);
+            Pad(zoneLabel, 8, 14);
+            zoneLabel.style.display = DisplayStyle.None;
 
             VisualElement cross = Layer(hud);
             cross.style.alignItems = Align.Center;
@@ -230,6 +258,8 @@ namespace Valentes
         {
             statStones.style.display = DisplayStyle.None; statVida.style.display = DisplayStyle.None;
             statCor.style.display = DisplayStyle.None; statScore.style.display = DisplayStyle.Flex;
+            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+            waveLabel.text = ""; holdBar.style.display = DisplayStyle.None; zoneLabel.style.display = DisplayStyle.None;
             score.text = points.ToString();
             opening.style.display = DisplayStyle.None;
         }
@@ -238,12 +268,54 @@ namespace Valentes
         {
             statStones.style.display = DisplayStyle.Flex; statVida.style.display = DisplayStyle.Flex;
             statCor.style.display = DisplayStyle.Flex; statScore.style.display = DisplayStyle.None;
+            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
             for (int i = 0; i < 5; i++)
                 stonesRow[i].style.backgroundColor = i < stonesLeft ? U.Hex(0x9a9a92) : new Color(0, 0, 0, 0);
             vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
             corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
             opening.style.display = showOpening ? DisplayStyle.Flex : DisplayStyle.None;
         }
+
+        /// <summary>HUD da fase 2: vida, coragem, campo, pedras, arma, onda e barra de "Permaneça".</summary>
+        public void SetBattleStats(float health, float courage, float field, int stonesLeft, string weapon, string wave, float hold01, bool zoneWarning)
+        {
+            statStones.style.display = DisplayStyle.Flex; statVida.style.display = DisplayStyle.Flex;
+            statCor.style.display = DisplayStyle.Flex; statScore.style.display = DisplayStyle.None;
+            statCampo.style.display = DisplayStyle.Flex; statArma.style.display = DisplayStyle.Flex;
+            opening.style.display = DisplayStyle.None;
+            for (int i = 0; i < 5; i++)
+                stonesRow[i].style.backgroundColor = i < stonesLeft ? U.Hex(0x9a9a92) : new Color(0, 0, 0, 0);
+            vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
+            corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
+            campoFill.style.width = Length.Percent(Mathf.Clamp(field, 0, 100));
+            armaLabel.text = weapon;
+            waveLabel.text = wave;
+            holdBar.style.display = hold01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
+            if (hold01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(hold01) * 100f);
+            zoneLabel.style.display = zoneWarning ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        /// <summary>Indicador simples em anel (espada carregando o golpe forte, oração).</summary>
+        public void DrawRing(float fill01, Color color, string text)
+        {
+            Color32 track = new Color32(234, 220, 189, 50), clear = new Color32(0, 0, 0, 0), c32 = color;
+            float deg = Mathf.Clamp01(fill01) * 360f;
+            for (int y = 0; y < 140; y++)
+                for (int x = 0; x < 140; x++)
+                {
+                    float dx = x - 69.5f, dy = y - 69.5f, r = Mathf.Sqrt(dx * dx + dy * dy);
+                    float ang = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg; if (ang < 0f) ang += 360f;
+                    Color32 c = clear;
+                    if (r > 41f && r < 47f) c = (fill01 > 0f && ang <= deg) ? c32 : track;
+                    gaugePx[y * 140 + x] = c;
+                }
+            gaugeTex.SetPixels32(gaugePx);
+            gaugeTex.Apply(false);
+            gaugeText.text = text;
+            gaugeText.style.color = ParchDim;
+        }
+
+        public void SetHint(string text) { esc.text = text; }
 
         public void Tick(float unscaledDt)
         {

@@ -17,6 +17,8 @@ enquanto a arte definitiva não existe.
 
 Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualizar a cena da Fase 1**.
 
+A **Fase 2** (Samá e o campo de lentilhas) tem cena própria, criada junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`. O menu de cada fase tem um botão para ir à outra; as duas ficam nas Build Settings.
+
 ## Controles
 
 | Tecla | Ação |
@@ -48,7 +50,8 @@ animada. Eles ficam em `Scripts/UI/TouchControls.cs`.
 | `Scripts/Duel` | Golias, escudeiro, dardo e as regras do duelo |
 | `Scripts/Flow` | Fluxo da fase (`Game`) e cenas animadas (`Cutscene`) |
 | `Scripts/UI` | Interface feita com UI Toolkit: HUD, telas e desenho das pedras |
-| `Editor` | Cria a cena e os materiais automaticamente |
+| `Scripts/Fase2` | Fase 2: campo de lentilhas e fogo, espada e escudo, filisteus, flechas, treino, batalha e o fluxo da fase |
+| `Editor` | Cria as cenas das duas fases e os materiais automaticamente |
 
 Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, velocidades) ficam em
 `Scripts/Core/Difficulty.cs`, espelhando a tabela de dificuldade de `docs/fases/01-davi-golias.md`.

@@ -15,6 +15,12 @@ namespace Valentes
         public Camera cam;
         public World world;
         public bool controlling;
+        /// <summary>Multiplicador de velocidade (escudo erguido, oração).</summary>
+        public float speedMultiplier = 1f;
+        /// <summary>Altura dos olhos (baixa quando Samá se ajoelha para orar).</summary>
+        public float eyeHeight = EyeHeight;
+        /// <summary>Quanto o balanço da mira pesa (a espada treme menos que a funda).</summary>
+        public float swayScale = 1f;
 
         public float yaw, pitch;
         public Vector3 velocity;
@@ -69,6 +75,7 @@ namespace Valentes
             Vector3 wish = Forward * mv.y + Right * mv.x;
             float speed = GameInput.Sprint() || mag > 0.92f && TouchControls.Active ? 7.2f : 4.6f;
             if (armor) speed *= 0.58f;
+            speed *= speedMultiplier;
             wish = mag > 0f ? wish.normalized * speed * mag : Vector3.zero;
             velocity = Vector3.Lerp(velocity, wish, Mathf.Clamp01(dt * 10f));
             Vector3 p = transform.position + velocity * dt;
@@ -82,7 +89,7 @@ namespace Valentes
             float a = Difficulty.Current.swayMultiplier * (0.25f + 2.1f * (1f - courage / 100f));
             if (armor) a += 0.8f;
             a += extraSwayDegrees;
-            return a * Mathf.Deg2Rad;
+            return a * swayScale * Mathf.Deg2Rad;
         }
 
         void LateUpdate()
@@ -93,7 +100,7 @@ namespace Valentes
             float sy = A * (Mathf.Sin(t * 1.1f) * 0.7f + Mathf.Sin(t * 2.3f + 1f) * 0.3f);
             float sp = A * (Mathf.Sin(t * 1.7f + 2f) * 0.6f + Mathf.Sin(t * 0.9f) * 0.4f);
             float jx = (UnityEngine.Random.value - 0.5f) * shake * 0.04f, jy = (UnityEngine.Random.value - 0.5f) * shake * 0.04f;
-            cam.transform.position = transform.position + Vector3.up * (EyeHeight + bob);
+            cam.transform.position = transform.position + Vector3.up * (eyeHeight + bob);
             cam.transform.rotation = Quaternion.Euler(-(pitch + sp + jx) * Mathf.Rad2Deg, (yaw + sy + jy) * Mathf.Rad2Deg, 0f);
         }
 

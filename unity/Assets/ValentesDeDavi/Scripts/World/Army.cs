@@ -21,12 +21,20 @@ namespace Valentes
         public bool afraid;
         /// <summary>Deslocamento do exército inteiro (fuga dos filisteus, avanço de Israel).</summary>
         public Vector3 offset;
+        /// <summary>Relevo usado para apoiar os soldados no chão (o vale, por padrão).</summary>
+        public System.Func<float, float, float> height = World.ValleyHeight;
 
         public static Army Build(Transform parent, string name, int count, float zMin, float zMax, Color[] robes)
+        {
+            return Build(parent, name, count, zMin, zMax, robes, World.ValleyHeight);
+        }
+
+        public static Army Build(Transform parent, string name, int count, float zMin, float zMax, Color[] robes, System.Func<float, float, float> heightFn)
         {
             GameObject g = new GameObject("Exército " + name);
             g.transform.SetParent(parent, false);
             Army a = g.AddComponent<Army>();
+            a.height = heightFn;
             a.Init(count, zMin, zMax, robes);
             return a;
         }
@@ -55,7 +63,7 @@ namespace Valentes
             {
                 float x = Random.Range(-45f, 45f), z = Random.Range(zMin, zMax);
                 int v = i % robes.Length;
-                soldiers[i] = new Soldier { pos = new Vector3(x, World.ValleyHeight(x, z), z), phase = Random.Range(0f, 6f), variant = v };
+                soldiers[i] = new Soldier { pos = new Vector3(x, height(x, z), z), phase = Random.Range(0f, 6f), variant = v };
                 variantCounts[v]++;
             }
             bodyBatches = new Matrix4x4[robes.Length][];
@@ -74,7 +82,7 @@ namespace Valentes
                 Soldier s = soldiers[i];
                 float bob = Mathf.Abs(Mathf.Sin(t * 2f + s.phase)) * 0.05f + (afraid ? Mathf.Sin(t * 25f + s.phase) * 0.03f : 0f);
                 Vector3 p = s.pos + offset + transform.position;
-                p.y = World.ValleyHeight(p.x, p.z) + bob;
+                p.y = height(p.x, p.z) + bob;
                 bodyBatches[s.variant][fill[s.variant]++] = Matrix4x4.TRS(p + Vector3.up * 0.62f, Quaternion.identity, bodyScale);
                 heads[i] = Matrix4x4.TRS(p + Vector3.up * 1.4f, Quaternion.identity, headScale);
                 spears[i] = Matrix4x4.TRS(p + new Vector3(0.3f, 1.3f, 0f), Quaternion.identity, spearScale);

@@ -9,15 +9,16 @@ namespace Valentes
     /// </summary>
     public class World
     {
-        public enum Area { Valley, Field }
+        public enum Area { Valley, Field, Lentils }
 
-        public GameObject valley, field;
+        public GameObject valley, field, lentils;
         public Army israel, philistines;
         public Area current = Area.Valley;
         public Light sun;
 
         public float Height(float x, float z)
         {
+            if (current == Area.Lentils) return LentilHeight(x, z);
             return current == Area.Valley ? ValleyHeight(x, z) : FieldHeight(x, z);
         }
 
@@ -38,6 +39,39 @@ namespace Valentes
             return (2.2f * Mathf.Sin(x * 0.03f) * Mathf.Cos(z * 0.04f) + 0.6f * Mathf.Sin(x * 0.11f + z * 0.07f)
                     + 5f * U.SStep(45f, 140f, r)) * U.SStep(5f, 32f, r);
         }
+
+        /// <summary>Fase 2: o campo de lentilhas no centro, colinas ao redor e o acampamento ao sul.</summary>
+        public static float LentilHeight(float x, float z)
+        {
+            float r = Mathf.Sqrt(x * x + z * z);
+            float hills = 7f * U.SStep(50f, 140f, r) + 6f * U.SStep(55f, 100f, z) * U.SStep(70f, 10f, Mathf.Abs(x));
+            float n = (0.6f * Mathf.Sin(x * 0.07f) * Mathf.Cos(z * 0.05f) + 0.3f * Mathf.Sin(x * 0.19f + z * 0.13f)) * U.SStep(16f, 36f, r);
+            return hills + n;
+        }
+
+        static Color LentilGround(float x, float y, float z)
+        {
+            float r = Mathf.Sqrt(x * x + z * z);
+            Color c = Color.Lerp(U.Hex(0x8f9a4a), U.Hex(0xb5a45e), U.SStep(18f, 60f, r) * 0.8f);
+            c = Color.Lerp(c, U.Hex(0x9a7d52), U.SStep(3f, 9f, y) * 0.6f);
+            if (Mathf.Abs(x + Mathf.Sin(z * 0.08f) * 1.5f) < 1.8f && z < -12f && z > -80f) c = Color.Lerp(c, U.Hex(0x9c8158), 0.75f);
+            if (r < 15f) c = Color.Lerp(c, U.Hex(0x5e6e2c), 0.6f * U.SStep(15f, 12f, r));
+            return c;
+        }
+
+        /// <summary>Cria só o cenário da fase 2 (terreno do campo de lentilhas), sem o vale e os campos de Belém.</summary>
+        public static World ForLentilField(Transform root, Material skyMaterial)
+        {
+            World w = new World();
+            w.BuildAtmosphere(root, skyMaterial);
+            w.lentils = new GameObject("Campo de lentilhas");
+            w.lentils.transform.SetParent(root, false);
+            BuildTerrain(w.lentils.transform, LentilHeight, LentilGround);
+            w.current = Area.Lentils;
+            return w;
+        }
+
+        World() { }
 
         public World(Transform root, Material skyMaterial)
         {
@@ -62,8 +96,9 @@ namespace Valentes
         public void Show(Area a)
         {
             current = a;
-            valley.SetActive(a == Area.Valley);
-            field.SetActive(a == Area.Field);
+            if (valley != null) valley.SetActive(a == Area.Valley);
+            if (field != null) field.SetActive(a == Area.Field);
+            if (lentils != null) lentils.SetActive(a == Area.Lentils);
         }
 
         // ---------------------------------------------------------------- atmosfera

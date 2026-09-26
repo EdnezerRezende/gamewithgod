@@ -15,6 +15,11 @@ namespace Valentes
         /// <summary>Direcional: x para a direita, y para a frente, com módulo de 0 a 1.</summary>
         public static Vector2 Move;
         public static bool FireHeld;
+        public static bool ShieldHeld;
+        public static bool PrayHeld;
+        static bool swapPending;
+        static VisualElement shieldBtn, prayBtn, swapBtn;
+        static Label fireLabel;
 
         static Vector2 lookAccum;
         static bool firePending, pausePending;
@@ -27,6 +32,43 @@ namespace Valentes
         public static Vector2 ConsumeLook() { Vector2 v = lookAccum; lookAccum = Vector2.zero; return v; }
         public static bool ConsumeFireDown() { bool v = firePending; firePending = false; return v; }
         public static bool ConsumePause() { bool v = pausePending; pausePending = false; return v; }
+        public static bool ConsumeSwap() { bool v = swapPending; swapPending = false; return v; }
+
+        /// <summary>Liga os botões de combate da fase 2 (Escudo, ⇄ e Orar).</summary>
+        public static void SetCombatButtons(bool on)
+        {
+            if (shieldBtn == null) return;
+            DisplayStyle d = on ? DisplayStyle.Flex : DisplayStyle.None;
+            shieldBtn.style.display = d; prayBtn.style.display = d; swapBtn.style.display = d;
+        }
+
+        public static void SetFireLabel(string text) { if (fireLabel != null) fireLabel.text = text; }
+
+        /// <summary>Botão que fica "segurado" enquanto o dedo está nele.</summary>
+        static VisualElement HoldButton(string text, float right, float bottom, float size, System.Action<bool> set)
+        {
+            VisualElement b = new VisualElement();
+            UI.Abs(b, null, null, right, bottom);
+            b.style.width = size; b.style.height = size;
+            b.style.alignItems = Align.Center; b.style.justifyContent = Justify.Center;
+            b.style.backgroundColor = new Color(0.43f, 0.35f, 0.24f, 0.55f);
+            UI.Border(b, new Color(0.92f, 0.86f, 0.74f, 0.6f), 2, size / 2f);
+            Label l = UI.Text(b, text, 15, UI.Parch, true);
+            l.pickingMode = PickingMode.Ignore;
+            int pid = -1;
+            b.RegisterCallback<PointerDownEvent>(e =>
+            {
+                pid = e.pointerId; b.CapturePointer(e.pointerId); set(true);
+                b.style.backgroundColor = new Color(0.58f, 0.64f, 0.35f, 0.9f); e.StopPropagation();
+            });
+            b.RegisterCallback<PointerUpEvent>(e =>
+            {
+                if (e.pointerId != pid) return;
+                b.ReleasePointer(e.pointerId); pid = -1; set(false);
+                b.style.backgroundColor = new Color(0.43f, 0.35f, 0.24f, 0.55f);
+            });
+            return b;
+        }
 
         public static void Show(bool v)
         {
@@ -39,7 +81,7 @@ namespace Valentes
         {
             stickPointer = lookPointer = firePointer = -1;
             Move = Vector2.zero;
-            FireHeld = false;
+            FireHeld = false; ShieldHeld = false; PrayHeld = false;
             if (knob != null) PlaceKnob(Vector2.zero);
             if (fire != null) fire.style.backgroundColor = new Color(0.78f, 0.56f, 0.25f, 0.55f);
         }
@@ -103,7 +145,7 @@ namespace Valentes
             fire.style.width = 120; fire.style.height = 120;
             fire.style.alignItems = Align.Center; fire.style.justifyContent = Justify.Center;
             UI.Border(fire, UI.BronzeHi, 2, 60);
-            Label fl = UI.Text(fire, "Funda", 20, U.Hex(0x1b120a), true);
+            Label fl = fireLabel = UI.Text(fire, "Funda", 20, U.Hex(0x1b120a), true);
             fl.pickingMode = PickingMode.Ignore;
             layer.Add(fire);
             fire.RegisterCallback<PointerDownEvent>(e =>
@@ -132,6 +174,20 @@ namespace Valentes
             pause.style.backgroundColor = new Color(0.08f, 0.06f, 0.04f, 0.6f);
             UI.Border(pause, new Color(0.92f, 0.86f, 0.74f, 0.3f), 1, 3);
             layer.Add(pause);
+
+            shieldBtn = HoldButton("Escudo", 168, 34, 92, v => ShieldHeld = v);
+            prayBtn = HoldButton("Orar", 176, 140, 70, v => PrayHeld = v);
+            layer.Add(shieldBtn); layer.Add(prayBtn);
+            Button swap = new Button(() => swapPending = true);
+            swap.text = "⇄";
+            UI.Abs(swap, null, null, 50, 168);
+            swap.style.width = 62; swap.style.height = 50; swap.style.fontSize = 22;
+            swap.style.color = UI.Parch;
+            swap.style.backgroundColor = new Color(0.08f, 0.06f, 0.04f, 0.6f);
+            UI.Border(swap, new Color(0.92f, 0.86f, 0.74f, 0.4f), 1, 3);
+            layer.Add(swap);
+            swapBtn = swap;
+            SetCombatButtons(false);
 
             ResetAll();
             layer.style.display = DisplayStyle.None;

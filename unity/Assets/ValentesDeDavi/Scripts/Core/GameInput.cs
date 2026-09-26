@@ -36,6 +36,15 @@ namespace Valentes
         /// <summary>O mouse foi usado de verdade neste quadro (movimento ou clique).</summary>
         public static bool MouseUsed() { return RawMouseDelta().sqrMagnitude > 9f || RawFireDown(); }
 
+        /// <summary>Escudo erguido: botão direito ou botão Escudo na tela.</summary>
+        public static bool ShieldHeld() { return TouchControls.Active ? TouchControls.ShieldHeld : RawRightHeld(); }
+        /// <summary>Trocar de arma: Q ou botão ⇄.</summary>
+        public static bool SwapPressed() { return TouchControls.ConsumeSwap() || RawKeyDown("q"); }
+        public static bool Weapon1Pressed() { return RawKeyDown("1"); }
+        public static bool Weapon2Pressed() { return RawKeyDown("2"); }
+        /// <summary>Orar: segurar F ou o botão Orar.</summary>
+        public static bool PrayHeld() { return TouchControls.PrayHeld || RawKeyHeld("f"); }
+
         /// <summary>Toque ou clique em qualquer lugar (avançar a cena animada).</summary>
         public static bool TapPressed() { return RawTap(); }
 
@@ -69,6 +78,15 @@ namespace Valentes
             return ts != null && ts.primaryTouch.press.wasPressedThisFrame;
         }
         public static bool SkipPressed() { return K != null && (K.enterKey.wasPressedThisFrame || K.numpadEnterKey.wasPressedThisFrame); }
+        static bool RawRightHeld() { return M != null && M.rightButton.isPressed; }
+        static UnityEngine.InputSystem.Controls.KeyControl KeyFor(string k)
+        {
+            if (K == null) return null;
+            switch (k) { case "q": return K.qKey; case "f": return K.fKey; case "1": return K.digit1Key; case "2": return K.digit2Key; }
+            return null;
+        }
+        static bool RawKeyDown(string k) { var c = KeyFor(k); return c != null && c.wasPressedThisFrame; }
+        static bool RawKeyHeld(string k) { var c = KeyFor(k); return c != null && c.isPressed; }
         public static bool AimHelpPressed() { return K != null && K.hKey.wasPressedThisFrame; }
         public static bool MusicPressed() { return K != null && K.mKey.wasPressedThisFrame; }
 #else
@@ -96,6 +114,14 @@ namespace Valentes
             return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
         }
         public static bool SkipPressed() { return Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter); }
+        static bool RawRightHeld() { return Input.GetMouseButton(1); }
+        static KeyCode CodeFor(string k)
+        {
+            switch (k) { case "q": return KeyCode.Q; case "f": return KeyCode.F; case "1": return KeyCode.Alpha1; case "2": return KeyCode.Alpha2; }
+            return KeyCode.None;
+        }
+        static bool RawKeyDown(string k) { return Input.GetKeyDown(CodeFor(k)); }
+        static bool RawKeyHeld(string k) { return Input.GetKey(CodeFor(k)); }
         public static bool AimHelpPressed() { return Input.GetKeyDown(KeyCode.H); }
         public static bool MusicPressed() { return Input.GetKeyDown(KeyCode.M); }
 #endif

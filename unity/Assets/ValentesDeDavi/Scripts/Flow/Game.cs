@@ -214,6 +214,12 @@ namespace Valentes
                         "Olhar sem mouse", "Pausa: continuar, recomeçar ou voltar ao menu", "Pular a cena animada",
                         "Ajuda de mira: trajetória e marcador de onde a pedra vai cair", "Ligar ou desligar a música" });
             c.Note("Modelos e sons provisórios. Os versículos são provisórios (Almeida, domínio público).");
+            Card.Btn(c.Row(), "Fase 2: Samá e o campo de lentilhas →", false, () =>
+            {
+                Paused = false;
+                Time.timeScale = 1f;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(Fase2Game.SceneName);
+            });
         }
 
         /// <summary>Botões de música e ajuda de mira; ao trocar, redesenha a tela atual.</summary>
