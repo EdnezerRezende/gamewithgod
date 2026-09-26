@@ -1246,6 +1246,7 @@ function showMenu(){
       <dt>H</dt><dd>Ajuda de mira: trajetória e marcador de onde a pedra vai cair</dd>
       <dt>M</dt><dd>Ligar ou desligar a música</dd>
     </dl>
+    ${/netlify\.app$|^localhost$|^127\./.test(location.hostname) || location.protocol === 'file:' ? '<p class="note"><a style="color:var(--bronze-hi)" href="fase2.html">Fase 2: Samá e o campo de lentilhas →</a></p>' : ''}
     <p class="note">No computador: teclado e mouse. No celular: direcional à esquerda para andar, arraste à direita para olhar e segure o botão Funda (melhor na horizontal). Este protótipo em navegador serve para testar as mecânicas; o jogo final será feito na Unity. Os versículos são provisórios.</p>`;
   const acts = {
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },

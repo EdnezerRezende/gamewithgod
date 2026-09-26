@@ -194,6 +194,15 @@ Estrelas e extras seguem o padrão da fase 1.
 | Cenas animadas e versículos | Integridade do campo e fogo que se espalha |
 | Música por clima | Botões de toque para espada, escudo, troca de arma e oração |
 
+## Ajustes feitos no protótipo
+
+- **Posição:** a regra de "ficar no meio do campo" vale para todo o pedaço de campo de lentilhas
+  (raio de 14 m). O círculo central (6 m) dá mais Coragem, mas sair dele para apagar fogo nas
+  bordas não conta como abandonar a posição. Assim apagar o fogo e permanecer não se contradizem.
+- **Treino:** ficou com 3 etapas (bonecos, flechas e tochas). A etapa do círculo com instrutores
+  empurrando ficou para depois.
+- **Intervalo entre ondas:** 12 s em vez de 20 s.
+
 ## Pontos em aberto
 
 - **Relato paralelo:** 1 Crônicas 11:12-14 descreve uma batalha parecida num campo de
