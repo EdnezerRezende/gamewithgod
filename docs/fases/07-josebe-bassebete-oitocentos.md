@@ -24,7 +24,7 @@ Texto provisório (Almeida em domínio público), a revisar contra a edição es
 | "e os feriu de uma vez" | Uma só batalha, sem intervalo. Cair deixa levantar e continuar (o contador fica), mas perde o item "De uma vez". |
 | "se opôs" | Uma pedra marca a posição do capitão. Recuar para trás dela tira Coragem e perde o item "Não recuou". |
 | "brandindo a sua lança" (1 Cr) | A espada (Q) funciona, mas usá-la perde o item "Brandindo a sua lança". |
-| "trinta e sete ao todo" | Encerramento: a lista dos valentes e a galeria com o resultado de todas as fases. |
+| "trinta e sete ao todo" | Encerramento: Davi no trono como rei, com os valentes ao lado dele, e a galeria com o resultado de todas as fases. |
 
 ## Fluxo da fase
 
@@ -33,7 +33,7 @@ Texto provisório (Almeida em domínio público), a revisar contra a edição es
 | 1 | "Estes são os nomes dos valentes que Davi teve" | Cena animada | 23:8a |
 | 2 | Treino: a prova do capitão | Treino | — |
 | 3 | Os oitocentos | Combate contra multidão no desfiladeiro | 23:8b |
-| 4 | Os valentes de Davi | Cena animada + resultado + galeria | 23:8; 23:39 |
+| 4 | Davi, o rei, e os seus valentes | Cena animada + resultado + galeria | 23:8; 5:12; 23:39 |
 
 ---
 
@@ -62,11 +62,16 @@ Texto provisório (Almeida em domínio público), a revisar contra a edição es
 - Sem intervalo e sem vida voltando: orar (F) recupera Coragem, e a vida só volta um pouco a cada 100
   feridos.
 
-## 4. Os valentes de Davi (cena final)
+## 4. Davi, o rei, e os seus valentes (cena final)
 
-- O exército passa pelo desfiladeiro vazio. A câmera mostra, um a um, os valentes das fases: Davi,
-  Samá, Eleazar, os três da água de Belém, Benaia, Abisai e Josebe-Bassebete.
-- Texto: *"Estes são os nomes dos valentes que Davi teve..."* e *"...trinta e sete ao todo."*
+- No fim do desfiladeiro, **Davi como rei**: coroa, cetro e manto, sentado no trono. Os valentes das
+  fases ficam de pé **ao lado dele**, dos dois lados (Josebe-Bassebete, o principal dos capitães, à direita
+  do rei), e o exército de Israel se forma diante do trono.
+- Primeiro, o plano geral: *"Estes são os nomes dos valentes que Davi teve..."* (23:8).
+- A câmera mostra, um a um, os valentes: Samá, Eleazar, um dos três da água de Belém, Benaia, Abisai e
+  Josebe-Bassebete, cada um com o versículo da sua fase.
+- Depois, o rei: *"E entendeu Davi que o Senhor o confirmara rei sobre Israel..."* (2 Sm 5:12).
+- Fecha com a câmera subindo sobre o trono e o exército: *"...trinta e sete ao todo."* (23:39)
 - Depois do resultado da fase, a **galeria**: todas as fases, com estrelas e recorde, e o total de estrelas.
 
 ---
@@ -96,3 +101,5 @@ Texto provisório (Almeida em domínio público), a revisar contra a edição es
 - **Fase final:** o capítulo começa com Josebe-Bassebete, mas ele fica por último para a fase fechar a
   campanha com a lista dos valentes.
 - **Os trinta:** os demais nomes da lista (23:24-39) aparecem só no encerramento, sem jogabilidade.
+- **Davi como rei no final:** o capítulo 23 é a lista dos valentes "que Davi teve", já rei. O versículo do
+  rei é 2 Samuel 5:12; na cena, Davi aparece com a coroa, o que o texto não descreve nesse momento.

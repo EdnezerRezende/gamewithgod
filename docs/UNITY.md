@@ -120,7 +120,7 @@ No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, 
 | `Scripts/Fase4` | Fase 4: vale de Refaim à noite, as mãos do valente (espada, escudo, cântaro), filisteus do arraial com sentinelas e alarme, companheiros com ordens, treino, missão e o fluxo da fase |
 | `Scripts/Fase5` | Fase 5: aldeia na neve e planície, neve caindo, as armas de Benaia (espada e escudo, cajado, lança), o leão da cova, o egípcio, treino e o fluxo da fase |
 | `Scripts/Fase6` | Fase 6: os campos de batalha, a multidão dos trezentos, Isbi-Benobe, Davi cansado, a regra de alcance da lança, treino e o fluxo da fase (as mãos de Abisai reaproveitam as de Benaia) |
-| `Scripts/Fase7` | Fase 7 (final): o desfiladeiro com a pedra do capitão, as fileiras com escudeiros, os arqueiros nas encostas, o treino, a lista dos valentes e a galeria de todas as fases (as mãos do capitão reaproveitam as de Benaia) |
+| `Scripts/Fase7` | Fase 7 (final): o desfiladeiro com a pedra do capitão, as fileiras com escudeiros, os arqueiros nas encostas, o treino, a cena final com Davi no trono e os valentes ao lado dele, e a galeria de todas as fases (as mãos do capitão reaproveitam as de Benaia) |
 | `Editor` | Cria as cenas das fases e os materiais automaticamente |
 
 Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, velocidades) ficam em

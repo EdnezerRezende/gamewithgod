@@ -89,7 +89,8 @@ edição escolhida **antes** de gravar.
 | `f7v8a` | 2 Samuel 23:8 | Cena animada e telas | Estes são os nomes dos valentes que Davi teve: Josebe-Bassebete, o taquemonita, o principal dos capitães; |
 | `f7v8b` | 2 Samuel 23:8 | Cena animada e telas | ...este era Adino, o eznita, que se opôs a oitocentos, e os feriu de uma vez. |
 | `f7v1cr` | 1 Crônicas 11:11 | Telas | ...o qual, brandindo a sua lança contra trezentos, os feriu de uma vez. |
-| `f7rc1` | 1 Samuel 17:49 | Cena animada | E Davi pôs a mão no alforje, e tomou dali uma pedra, e com a funda lha atirou, e feriu o filisteu na testa. |
+| `f7rc0` | 2 Samuel 23:8 | Cena animada | Estes são os nomes dos valentes que Davi teve... |
+| `f7rc1` | 2 Samuel 5:12 | Cena animada | E entendeu Davi que o Senhor o confirmara rei sobre Israel, e que exaltara o seu reino por amor do seu povo. |
 | `f7rc2` | 2 Samuel 23:12 | Cena animada | Este, porém, se pôs no meio daquele pedaço de campo, e o defendeu, e feriu os filisteus. |
 | `f7rc3` | 2 Samuel 23:10 | Cena animada | Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada. |
 | `f7rc4` | 2 Samuel 23:17 | Cena animada | Isto fizeram aqueles três valentes. |

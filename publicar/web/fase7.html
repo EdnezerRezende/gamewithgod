@@ -375,7 +375,8 @@ const VS = {
   v8a:  ['Estes são os nomes dos valentes que Davi teve: Josebe-Bassebete, o taquemonita, o principal dos capitães;', '2 Samuel 23:8'],
   v8b:  ['...este era Adino, o eznita, que se opôs a oitocentos, e os feriu de uma vez.', '2 Samuel 23:8'],
   v1cr: ['...o qual, brandindo a sua lança contra trezentos, os feriu de uma vez.', '1 Crônicas 11:11'],
-  rc1:  ['E Davi pôs a mão no alforje, e tomou dali uma pedra, e com a funda lha atirou, e feriu o filisteu na testa.', '1 Samuel 17:49'],
+  rc0:  ['Estes são os nomes dos valentes que Davi teve...', '2 Samuel 23:8'],
+  rc1:  ['E entendeu Davi que o Senhor o confirmara rei sobre Israel, e que exaltara o seu reino por amor do seu povo.', '2 Samuel 5:12'],
   rc2:  ['Este, porém, se pôs no meio daquele pedaço de campo, e o defendeu, e feriu os filisteus.', '2 Samuel 23:12'],
   rc3:  ['Este se levantou, e feriu os filisteus, até que a sua mão se cansou e ficou pegada à espada.', '2 Samuel 23:10'],
   rc4:  ['Isto fizeram aqueles três valentes.', '2 Samuel 23:17'],
@@ -454,10 +455,14 @@ function walkLegs(m, spd){ m.legs.forEach((l,i) => l.rotation.x = Math.sin(gt*Ma
 // O exército de Israel, parado atrás, na entrada do desfiladeiro
 const israel = [];
 for (let i=0;i<24;i++){ const m = buildMan({robe:[0x6f6a3c,0x7d5f3a,0x8a7a52,0x5e5638][i%4]}); addSpear(m); const x = -5 + (i%8)*1.4 + rand(-.3,.3), z = -24 - Math.floor(i/8)*1.8;
-  m.root.position.set(x, landH(x,z), z); scene.add(m.root); israel.push(m); }
+  m.root.position.set(x, landH(x,z), z); scene.add(m.root); israel.push(m); m.home = m.root.position.clone(); }
+function israelHome(){ israel.forEach(m => { m.root.position.copy(m.home); m.root.rotation.set(0,0,0); }); }
 // A fila dos valentes (cena final)
 const heroes = [
-  {robe:0x8a7a52, add: m => { const s = cyl(.02,.02,.5,0x5a3a22,4); s.position.set(0,-.6,.1); m.armR.add(s); }},   // Davi com a funda
+  {robe:0x5a2f66, add: m => { const gold = mat(0xd9a93a,{metalness:.8,roughness:.35});
+      const c = cyl(.15,.14,.1,0,8,gold); c.position.y = 1.78; m.root.add(c);
+      for (let i=0;i<6;i++){ const a = i/6*PI*2, t = box(.04,.08,.02,0,gold); t.position.set(Math.sin(a)*.14, 1.86, Math.cos(a)*.14); t.rotation.y = a; m.root.add(t); }
+      const s = cyl(.02,.02,.9,0,5,gold); s.position.set(0,-.55,.2); s.rotation.x = .9; m.armR.add(s); }},   // Davi, o rei, com a coroa e o cetro
   {robe:0x6f6a3c, add: m => { addSword(m); addRoundShield(m); }},                                                    // Samá
   {robe:0x7d5f3a, add: m => addSword(m)},                                                                             // Eleazar
   {robe:0x6f6a3c, add: m => { const j = sph(.18,0xb5603a); j.position.set(0,-.7,.15); m.armL.add(j); }},              // um dos três, com o cântaro
@@ -465,7 +470,28 @@ const heroes = [
   {robe:0x8a7a52, add: m => addSpear(m)},                                                                             // Abisai
   {robe:0x5e5638, add: m => addSpear(m)},                                                                             // Josebe-Bassebete
 ].map((h,i) => { const m = buildMan({robe:h.robe}); h.add(m); m.root.visible = false; scene.add(m.root); return m; });
-function placeHeroes(){ heroes.forEach((m,i) => { const x = -4.5 + i*1.5, z = 30; m.root.position.set(x, landH(x,z), z); m.root.rotation.y = PI; m.root.visible = true; }); }
+// O trono do rei, no fim do desfiladeiro (só aparece na cena final)
+const THRONE_Z = 33, throne = new THREE.Group();
+{ const wood = 0x6b4a2a, gold = mat(0xd9a93a,{metalness:.8,roughness:.35});
+  const dais = box(3.4,.5,2.4,0x9a8a70); dais.position.y = .25; throne.add(dais);
+  const seat = box(1,.5,.8,wood); seat.position.set(0,.75,-.1); throne.add(seat);
+  const back = box(1,1.6,.15,wood); back.position.set(0,1.3,.45); throne.add(back);
+  for (const sx of [-1,1]){ const k = sph(.09,0,gold); k.position.set(sx*.45,2.1,.45); throne.add(k); }
+  const rug = box(1.2,.02,5,0x7a2a2a); rug.position.set(0,.01,-3.6); throne.add(rug);
+  throne.position.set(0, landH(0, THRONE_Z), THRONE_Z); throne.visible = false; scene.add(throne); }
+// Davi sentado no centro; os valentes de pé, dos dois lados (Josebe-Bassebete à direita do rei).
+const HERO_X = [0, -2.1, 3.4, -3.4, 4.7, -4.7, 2.1];
+function placeHeroes(){
+  throne.visible = true;
+  heroes.forEach((m,i) => {
+    m.root.rotation.set(0, PI, 0); m.root.visible = true;
+    if (i === 0){ const y = landH(0, THRONE_Z); m.root.position.set(0, y + .22, THRONE_Z - .1); m.legs.forEach(l => l.rotation.x = -1.25); }
+    else { const x = HERO_X[i], z = THRONE_Z - .4; m.root.position.set(x, landH(x,z), z); }
+  });
+  // O exército de Israel diante do rei, em dois blocos, com um corredor no meio.
+  israel.forEach((m,i) => { const side = i % 2 ? 1 : -1, j = Math.floor(i/2), x = side*(2.2 + (j%3)*1.3), z = 22 - Math.floor(j/3)*1.6;
+    m.root.position.set(x, landH(x,z), z); m.root.rotation.set(0,0,0); });
+}
 
 // Mãos do capitão: a lança (e a espada da cintura)
 const VM = new THREE.Group(); camera.add(VM);
@@ -1037,9 +1063,11 @@ function rollCall(){
   placeHeroes();
   const shot = (i, v) => ({v, dur:5, cam: p => { const h = heroes[i].root.position; camLook(tmp1.set(h.x + .6 - p*1.2, h.y + 1.7, h.z - 3.2), tmp2.set(h.x, h.y + 1.3, h.z)); }});
   runCine([
-    shot(0,'rc1'), shot(1,'rc2'), shot(2,'rc3'), shot(3,'rc4'), shot(4,'rc5'), shot(5,'rc6'), shot(6,'rc7'),
-    {v:'v39', dur:7, cam: p => camLook(tmp1.set(0, 2.5 + p*3, 30 - 9 - p*6), tmp2.set(0, 1.3, 30))},
-  ], () => { heroes.forEach(m => m.root.visible = false); showResults(); });
+    {v:'rc0', dur:6, cam: p => camLook(tmp1.set(0, 2.2 + p*.6, THRONE_Z - 10 + p*2), tmp2.set(0, 1.6, THRONE_Z))},
+    shot(1,'rc2'), shot(2,'rc3'), shot(3,'rc4'), shot(4,'rc5'), shot(5,'rc6'), shot(6,'rc7'),
+    {v:'rc1', dur:7, cam: p => { const h = heroes[0].root.position; camLook(tmp1.set(.8 - p*1.6, h.y + 1.6 + p*.3, h.z - 3.6 + p*.8), tmp2.set(h.x, h.y + 1.5, h.z)); }},
+    {v:'v39', dur:8, cam: p => camLook(tmp1.set(0, 3 + p*4, THRONE_Z - 7 - p*12), tmp2.set(0, 1.4, THRONE_Z))},
+  ], () => { heroes.forEach(m => m.root.visible = false); throne.visible = false; israelHome(); showResults(); });
 }
 
 // ================= Telas =================

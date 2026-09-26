@@ -30,7 +30,12 @@ namespace Valentes
         Cutscene cutscene;
         UI ui;
         Figure captain;
-        readonly List<Figure> heroes = new List<Figure>();
+        readonly List<Figure> heroes = new List<Figure>(), israel = new List<Figure>();
+        readonly List<Vector3> israelHome = new List<Vector3>();
+        Transform throne;
+        const float ThroneZ = 33f;
+        /// <summary>Davi no centro; os valentes dos dois lados (Josebe-Bassebete à direita do rei).</summary>
+        static readonly float[] HeroX = { 0f, -2.1f, 3.4f, -3.4f, 4.7f, -4.7f, 2.1f };
 
         Mode mode = Mode.Menu;
         Kind kind = Kind.Full;
@@ -79,6 +84,7 @@ namespace Valentes
 
             BuildIsrael();
             BuildHeroes();
+            BuildThrone();
             captain = Figure.Man(transform, "O capitão", U.Hex(0x5e5638), false);
             captain.Spear();
             captain.root.gameObject.SetActive(false);
@@ -115,20 +121,51 @@ namespace Valentes
                 m.Spear();
                 float x = -5f + (i % 8) * 1.4f + ((float)r.NextDouble() - 0.5f) * 0.6f, z = -24f - (i / 8) * 1.8f;
                 m.root.position = new Vector3(x, Gorge.Height(x, z), z);
+                israel.Add(m); israelHome.Add(m.root.position);
             }
+        }
+
+        void IsraelHome()
+        {
+            for (int i = 0; i < israel.Count; i++) { israel[i].root.position = israelHome[i]; israel[i].root.rotation = Quaternion.identity; }
+        }
+
+        /// <summary>O trono do rei no fim do desfiladeiro (só aparece na cena final).</summary>
+        void BuildThrone()
+        {
+            throne = U.Pivot(transform, "Trono de Davi", new Vector3(0f, Gorge.Height(0f, ThroneZ), ThroneZ));
+            Color wood = U.Hex(0x6b4a2a), gold = U.Hex(0xd9a93a);
+            U.Box(throne, new Vector3(0f, 0.25f, 0f), new Vector3(3.4f, 0.5f, 2.4f), U.Hex(0x9a8a70));
+            U.Box(throne, new Vector3(0f, 0.75f, -0.1f), new Vector3(1f, 0.5f, 0.8f), wood);
+            U.Box(throne, new Vector3(0f, 1.3f, 0.45f), new Vector3(1f, 1.6f, 0.15f), wood);
+            for (int s = -1; s <= 1; s += 2) U.Sph(throne, new Vector3(s * 0.45f, 2.1f, 0.45f), 0.09f, gold, 0.8f, 0.65f);
+            U.Box(throne, new Vector3(0f, 0.01f, -3.6f), new Vector3(1.2f, 0.02f, 5f), U.Hex(0x7a2a2a));
+            throne.gameObject.SetActive(false);
         }
 
         /// <summary>A fila dos valentes das sete fases, para a cena final.</summary>
         void BuildHeroes()
         {
-            string[] names = { "Davi", "Samá", "Eleazar", "Um dos três", "Benaia", "Abisai", "Josebe-Bassebete" };
-            int[] robes = { 0x8a7a52, 0x6f6a3c, 0x7d5f3a, 0x6f6a3c, 0x7a6a48, 0x8a7a52, 0x5e5638 };
+            string[] names = { "Davi, o rei", "Samá", "Eleazar", "Um dos três", "Benaia", "Abisai", "Josebe-Bassebete" };
+            int[] robes = { 0x5a2f66, 0x6f6a3c, 0x7d5f3a, 0x6f6a3c, 0x7a6a48, 0x8a7a52, 0x5e5638 };
             for (int i = 0; i < names.Length; i++)
             {
                 Figure m = Figure.Man(transform, names[i], U.Hex(robes[i]), false);
                 switch (i)
                 {
-                    case 0: U.Cyl(m.armR, new Vector3(0f, -0.62f, 0.1f), 0.02f, 0.5f, U.Hex(0x5a3a22)); break;   // a funda
+                    case 0:                                                                                         // a coroa e o cetro
+                    {
+                        Color gold = U.Hex(0xd9a93a);
+                        U.Cyl(m.root, new Vector3(0f, 1.78f, 0f), 0.15f, 0.1f, gold, 0.8f, 0.65f);
+                        for (int t = 0; t < 6; t++)
+                        {
+                            float a = t / 6f * Mathf.PI * 2f;
+                            U.Box(m.root, new Vector3(Mathf.Sin(a) * 0.14f, 1.86f, Mathf.Cos(a) * 0.14f), new Vector3(0.04f, 0.08f, 0.02f), gold, 0.8f, 0.65f)
+                                .transform.localRotation = Quaternion.Euler(0f, a * Mathf.Rad2Deg, 0f);
+                        }
+                        U.Cyl(m.armR, new Vector3(0f, -0.55f, 0.2f), 0.02f, 0.9f, gold, 0.8f, 0.65f).transform.localRotation = Quaternion.Euler(52f, 0f, 0f);
+                        break;
+                    }
                     case 1: m.Sword(); m.RoundShield(); break;
                     case 2: m.Sword(); break;
                     case 3: Figure.Jar(m.armL).localPosition = new Vector3(0f, -0.7f, 0.15f); break;            // o cântaro
@@ -297,6 +334,8 @@ namespace Valentes
         {
             captain.root.gameObject.SetActive(false);
             foreach (Figure h in heroes) h.root.gameObject.SetActive(false);
+            throne.gameObject.SetActive(false);
+            IsraelHome();
         }
 
         // ------------------------------------------------------------------ telas
@@ -565,24 +604,58 @@ namespace Valentes
             });
         }
 
-        /// <summary>A lista dos valentes: os heróis das sete fases, um a um, e "trinta e sete ao todo".</summary>
+        /// <summary>
+        /// A lista dos valentes: Davi, o rei, no trono; os valentes das fases ao lado dele, um a um; o exército
+        /// de Israel diante do rei; e "trinta e sete ao todo".
+        /// </summary>
         void RollCall()
         {
             Music.Set("victory");
             mode = Mode.Cine;
             arms.Cancel();
             ClearFoes();
+            throne.gameObject.SetActive(true);
             for (int i = 0; i < heroes.Count; i++)
             {
-                float x = -4.5f + i * 1.5f, z = 30f;
-                heroes[i].root.gameObject.SetActive(true);
-                heroes[i].root.position = new Vector3(x, Gorge.Height(x, z), z);
-                heroes[i].root.rotation = Quaternion.Euler(0f, 180f, 0f);
+                Figure h = heroes[i];
+                h.root.gameObject.SetActive(true);
+                h.root.rotation = Quaternion.Euler(0f, 180f, 0f);
+                if (i == 0)
+                {
+                    // Sentado no trono.
+                    h.root.position = new Vector3(0f, Gorge.Height(0f, ThroneZ) + 0.22f, ThroneZ - 0.1f);
+                    foreach (Transform l in h.legs) l.localRotation = Quaternion.Euler(-72f, 0f, 0f);
+                }
+                else
+                {
+                    float x = HeroX[i], z = ThroneZ - 0.4f;
+                    h.root.position = new Vector3(x, Gorge.Height(x, z), z);
+                }
             }
+            // O exército diante do rei, em dois blocos, com um corredor no meio.
+            for (int i = 0; i < israel.Count; i++)
+            {
+                float side = i % 2 == 1 ? 1f : -1f; int j = i / 2;
+                float x = side * (2.2f + (j % 3) * 1.3f), z = 22f - (j / 3) * 1.6f;
+                israel[i].root.position = new Vector3(x, Gorge.Height(x, z), z);
+                israel[i].root.rotation = Quaternion.identity;
+            }
+            Figure king = heroes[0];
             List<Shot> shots = new List<Shot>();
-            for (int i = 0; i < heroes.Count; i++) shots.Add(HeroShot(i, "f7rc" + (i + 1)));
-            shots.Add(new Shot("f7v39", 7f, (c, p) => Look(c, new Vector3(0f, 2.5f + p * 3f, 21f - p * 6f), new Vector3(0f, 1.3f, 30f))));
-            cutscene.Play(shots, () => { HideFigures(); ShowResults(); });
+            shots.Add(new Shot("f7rc0", 6f, (c, p) => Look(c, new Vector3(0f, 2.2f + p * 0.6f, ThroneZ - 10f + p * 2f), new Vector3(0f, 1.6f, ThroneZ))));
+            for (int i = 1; i < heroes.Count; i++) shots.Add(HeroShot(i, "f7rc" + (i + 1)));
+            shots.Add(new Shot("f7rc1", 7f, (c, p) =>
+            {
+                Vector3 h = king.root.position;
+                Look(c, new Vector3(0.8f - p * 1.6f, h.y + 1.6f + p * 0.3f, h.z - 3.6f + p * 0.8f), new Vector3(h.x, h.y + 1.5f, h.z));
+            }));
+            shots.Add(new Shot("f7v39", 8f, (c, p) => Look(c, new Vector3(0f, 3f + p * 4f, ThroneZ - 7f - p * 12f), new Vector3(0f, 1.4f, ThroneZ))));
+            cutscene.Play(shots, () =>
+            {
+                foreach (Transform l in king.legs) l.localRotation = Quaternion.identity;
+                HideFigures();
+                ShowResults();
+            });
         }
 
         void ShowResults()
