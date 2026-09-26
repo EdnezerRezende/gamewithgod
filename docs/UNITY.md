@@ -27,6 +27,8 @@ Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualiz
 | Setas | Olhar sem mouse |
 | Esc ou P | Pausa (continuar, recomeçar, voltar ao menu) |
 | Enter | Pular a cena animada |
+| H | Ajuda de mira: trajetória, marcador de impacto e mira dourada sobre alvos |
+| M | Ligar ou desligar a música |
 | Clique durante a cena | Avançar o plano |
 
 ## Como o código está organizado
@@ -53,7 +55,7 @@ Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, veloc
   precisará ter, para a troca ser direta.
 - **Cenas animadas:** planos de câmera por código (`Cutscene.cs`). Serão refeitas com Timeline e
   Cinemachine.
-- **Sons:** sintetizados em tempo real (`Sfx.cs`), até termos áudio gravado e narração.
+- **Sons e música:** sintetizados ao iniciar o jogo (`Sfx.cs` e `Music.cs`), até termos áudio gravado, trilha e narração.
 - **Versículos:** texto provisório, a revisar contra a edição da Almeida escolhida.
 
 ## Próximos passos sugeridos

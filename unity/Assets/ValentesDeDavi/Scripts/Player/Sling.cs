@@ -6,11 +6,13 @@ namespace Valentes
     /// <summary>
     /// A funda de Davi. Segurar o botão gira a funda (a força cresce com o tempo); soltar com a
     /// pedra passando pela faixa dourada do giro produz o tiro perfeito.
+    /// A pedra é lançada no ângulo que a leva exatamente ao ponto sob a mira (se a força alcançar).
     /// </summary>
     public class Sling : MonoBehaviour
     {
         public const float SpinRate = 1.2f;       // voltas por segundo
         const float SweetCenterDeg = 270f;        // ponto do giro em que a pedra está à frente
+        const int PreviewPoints = 80;
 
         public PlayerController player;
         public World world;
@@ -24,8 +26,13 @@ namespace Valentes
         public bool charging;
         public float chargeTime;
         public bool inZone;
+        /// <summary>false quando o ponto da mira está longe demais para a força atual.</summary>
+        public bool reach = true;
+        /// <summary>A mira está sobre um alvo que conta (jarro, leão, testa de Golias na abertura).</summary>
+        public bool aimOnTarget;
 
-        Transform viewModel, hand, pouch;
+        Transform viewModel, hand, pouch, marker;
+        Material markerMat;
         LineRenderer cord, preview;
         int lastRev;
         float whip;
@@ -33,6 +40,8 @@ namespace Valentes
         public float Phase { get { return (chargeTime * SpinRate) % 1f; } }
         public float Power { get { return Mathf.Min(1f, 0.15f + chargeTime / 1.15f); } }
         public float Speed { get { return 16f + 26f * Power; } }
+
+        bool ShowAimHelp { get { return Settings.AimHelp || Difficulty.Current.trajectoryPreview; } }
 
         public float SweetArcDegrees()
         {
@@ -59,8 +68,22 @@ namespace Valentes
             cord = NewLine("Corda", U.Hex(0x3a2616), 0.008f, 3);
             cord.transform.SetParent(viewModel, false);
             cord.useWorldSpace = false;
-            preview = NewLine("Trajetória", U.Hex(0xf3d27a), 0.03f, 40);
+            preview = NewLine("Trajetória", U.Hex(0xf3d27a), 0.03f, PreviewPoints);
             preview.enabled = false;
+
+            // Marcador de impacto: um disco com um ponto no meio, sempre virado para a câmera.
+            marker = new GameObject("Marcador de impacto").transform;
+            markerMat = Mats.New(Color.white);
+            GameObject disc = U.Cyl(marker, Vector3.zero, 0.22f, 0.01f, Color.white);
+            disc.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            GameObject dot = U.Sph(marker, new Vector3(0f, 0f, -0.02f), 0.05f, Color.white);
+            foreach (GameObject g in new[] { disc, dot })
+            {
+                Renderer r = g.GetComponent<Renderer>();
+                r.sharedMaterial = markerMat;
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            }
+            marker.gameObject.SetActive(false);
         }
 
         static LineRenderer NewLine(string name, Color c, float width, int points)
@@ -68,7 +91,7 @@ namespace Valentes
             LineRenderer l = new GameObject(name).AddComponent<LineRenderer>();
             l.positionCount = points;
             l.widthMultiplier = width;
-            l.sharedMaterial = Mats.Get(c);
+            l.sharedMaterial = Mats.New(c);
             l.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             return l;
         }
@@ -76,14 +99,20 @@ namespace Valentes
         public void SetVisible(bool v)
         {
             if (viewModel != null) viewModel.gameObject.SetActive(v);
-            if (!v) { charging = false; if (preview != null) preview.enabled = false; }
+            if (!v) { charging = false; HideAim(); aimOnTarget = false; }
         }
 
         public void Cancel()
         {
             charging = false;
             player.extraSwayDegrees = 0f;
+            HideAim();
+        }
+
+        void HideAim()
+        {
             if (preview != null) preview.enabled = false;
+            if (marker != null) marker.gameObject.SetActive(false);
         }
 
         void Update()
@@ -91,9 +120,17 @@ namespace Valentes
             float dt = Time.deltaTime;
             if (player == null || !player.controlling || dt <= 0f) { AnimatePouch(); return; }
 
+            if (Settings.AimHelp)
+            {
+                bool good;
+                AimPoint(out good);
+                aimOnTarget = good;
+            }
+            else aimOnTarget = false;
+
             if (GameInput.FireDown())
             {
-                if (canThrow != null && canThrow()) { charging = true; chargeTime = 0f; lastRev = -1; inZone = false; }
+                if (canThrow != null && canThrow()) { charging = true; chargeTime = 0f; lastRev = -1; inZone = false; reach = true; }
                 else ui.Toast("Sem pedras no alforje.");
             }
             if (charging)
@@ -105,29 +142,124 @@ namespace Valentes
                 if (z && !inZone && !Difficulty.Current.sweetArcVisible) Sfx.Play("tick", 0.6f);
                 inZone = z;
                 player.extraSwayDegrees = chargeTime > 3f ? (chargeTime - 3f) * 1.2f : 0f;
-                UpdatePreview();
+                if (ShowAimHelp) UpdatePreview(); else HideAim();
                 if (!GameInput.FireHeld()) Release();
             }
             else whip = Mathf.Max(0f, whip - dt);
             AnimatePouch();
         }
 
+        static bool Counts(HitZone hz) { return hz != null && hz.counts != null && hz.counts(); }
+
+        /// <summary>Ponto sob a mira: o primeiro alvo ou o chão atravessado pelo raio do centro da tela.</summary>
+        public Vector3 AimPoint(out bool good)
+        {
+            Transform c = player.cam.transform;
+            Vector3 o = c.position, d = c.forward;
+            const float MaxDist = 150f;
+            Physics.SyncTransforms();
+            RaycastHit rh;
+            float hitDist = MaxDist;
+            HitZone hz = null;
+            if (Physics.Raycast(o, d, out rh, MaxDist, ~0, QueryTriggerInteraction.Collide))
+            {
+                hz = rh.collider.GetComponent<HitZone>();
+                if (hz != null) hitDist = rh.distance;
+            }
+            // Chão: avança em passos e refina por bisseção.
+            float prev = 0.3f;
+            for (float s = 0.3f; s < hitDist; s += 0.5f)
+            {
+                Vector3 p = o + d * s;
+                if (p.y < world.Height(p.x, p.z))
+                {
+                    float a = prev, b = s;
+                    for (int i = 0; i < 12; i++)
+                    {
+                        float m = (a + b) * 0.5f;
+                        Vector3 q = o + d * m;
+                        if (q.y < world.Height(q.x, q.z)) b = m; else a = m;
+                    }
+                    good = false;
+                    Vector3 g = o + d * b;
+                    g.y = world.Height(g.x, g.z);
+                    return g;
+                }
+                prev = s;
+            }
+            good = hz != null && hitDist < MaxDist && Counts(hz);
+            return o + d * hitDist;
+        }
+
+        /// <summary>Direção de lançamento (arco baixo) que leva a pedra, com a velocidade dada, até o alvo.</summary>
+        public static Vector3 SolveDirection(Vector3 start, Vector3 target, float speed, Vector3 fallback, out bool reachable)
+        {
+            Vector3 flat = new Vector3(target.x - start.x, 0f, target.z - start.z);
+            float h = flat.magnitude, dy = target.y - start.y, v2 = speed * speed, g = Stone.Gravity;
+            reachable = true;
+            if (h < 0.01f) return fallback;
+            float disc = v2 * v2 - g * (g * h * h + 2f * dy * v2);
+            float th;
+            if (disc >= 0f) th = Mathf.Atan((v2 - Mathf.Sqrt(disc)) / (g * h));
+            else { th = Mathf.PI / 4f; reachable = false; }
+            Vector3 f = flat / h;
+            return new Vector3(f.x * Mathf.Cos(th), Mathf.Sin(th), f.z * Mathf.Cos(th));
+        }
+
         void UpdatePreview()
         {
-            if (!Difficulty.Current.trajectoryPreview) { preview.enabled = false; return; }
-            Vector3 dir = player.cam.transform.forward, p = LaunchPoint(dir), v = dir * Speed;
-            int last = 0;
-            for (int i = 0; i < 40; i++)
+            bool aimGood;
+            Vector3 aim = AimPoint(out aimGood);
+            Vector3 p = LaunchPoint(player.cam.transform.forward);
+            Vector3 dir = SolveDirection(p, aim, Speed, player.cam.transform.forward, out reach);
+            Vector3 v = dir * Speed;
+
+            const float h = 0.01f;
+            int n = 0;
+            bool hit = false, good = false;
+            preview.SetPosition(n++, p);
+            Physics.SyncTransforms();
+            for (int i = 0; i < PreviewPoints - 1 && !hit; i++)
             {
-                preview.SetPosition(i, p);
-                last = i;
-                if (p.y < world.Height(p.x, p.z)) break;
-                v.y -= Stone.Gravity * 0.06f;
-                p += v * 0.06f;
+                for (int k = 0; k < 3 && !hit; k++)
+                {
+                    v.y -= Stone.Gravity * h;
+                    Vector3 step = v * h, next = p + step;
+                    RaycastHit rh;
+                    float len = step.magnitude;
+                    if (len > 0f && Physics.SphereCast(p, 0.05f, step / len, out rh, len, ~0, QueryTriggerInteraction.Collide)
+                        && rh.collider.GetComponent<HitZone>() != null)
+                    {
+                        next = rh.point;
+                        hit = true;
+                        good = Counts(rh.collider.GetComponent<HitZone>());
+                    }
+                    else if (next.y < world.Height(next.x, next.z))
+                    {
+                        next.y = world.Height(next.x, next.z);
+                        hit = true;
+                    }
+                    p = next;
+                }
+                preview.SetPosition(n++, p);
             }
-            Vector3 end = preview.GetPosition(last);
-            for (int i = last + 1; i < 40; i++) preview.SetPosition(i, end);
+            for (int i = n; i < PreviewPoints; i++) preview.SetPosition(i, p);
+
+            Color c = !reach ? U.Hex(0xc0533a) : good ? U.Hex(0xffd166) : U.Hex(0xf3d27a);
+            Mats.SetColor(preview.sharedMaterial, c);
             preview.enabled = true;
+            if (hit)
+            {
+                marker.gameObject.SetActive(true);
+                marker.position = p;
+                Transform cam = player.cam.transform;
+                marker.rotation = Quaternion.LookRotation(marker.position - cam.position);
+                marker.localScale = Vector3.one * Mathf.Max(1f, Vector3.Distance(p, cam.position) / 12f);
+                Color mc = !reach ? U.Hex(0xc0533a) : good ? U.Hex(0xffd166) : U.Hex(0xeadcbd);
+                Mats.SetColor(markerMat, mc);
+                Mats.SetEmission(markerMat, mc * 0.8f);
+            }
+            else marker.gameObject.SetActive(false);
         }
 
         Vector3 LaunchPoint(Vector3 dir)
@@ -139,7 +271,7 @@ namespace Valentes
         void Release()
         {
             charging = false;
-            preview.enabled = false;
+            HideAim();
             player.extraSwayDegrees = 0f;
             if (canThrow == null || !canThrow()) return;
 
@@ -152,9 +284,13 @@ namespace Valentes
             err += (1f - smooth) * 2.4f;
 
             Transform c = player.cam.transform;
+            Vector3 start = LaunchPoint(c.forward);
+            bool good, ok;
+            Vector3 aim = AimPoint(out good);
+            Vector3 dir = SolveDirection(start, aim, Speed, c.forward, out ok);
             float th = UnityEngine.Random.Range(0f, Mathf.PI * 2f), e = err * Mathf.Sqrt(UnityEngine.Random.value);
-            Vector3 dir = Quaternion.AngleAxis(Mathf.Cos(th) * e, c.up) * Quaternion.AngleAxis(Mathf.Sin(th) * e, c.right) * c.forward;
-            Stone s = Stone.Launch(world, LaunchPoint(dir), dir.normalized * Speed, smooth);
+            dir = Quaternion.AngleAxis(Mathf.Cos(th) * e, c.up) * Quaternion.AngleAxis(Mathf.Sin(th) * e, c.right) * dir;
+            Stone s = Stone.Launch(world, start, dir.normalized * Speed, smooth);
             Sfx.Play("throw");
             whip = 0.25f;
             if (perfect)
@@ -171,9 +307,9 @@ namespace Valentes
             Vector3 hp = hand.localPosition, pp;
             if (charging)
             {
-                // No espaço da câmera, +Z é para a frente: na fase 0,75 (centro da faixa dourada) a pedra está à frente.
+                // A bolsa gira acima da mão, à direita, sem cobrir a mira.
                 float a = (Phase - 0.75f) * Mathf.PI * 2f;
-                pp = hp + new Vector3(Mathf.Sin(a) * 0.3f, 0.22f, Mathf.Cos(a) * 0.3f - 0.05f);
+                pp = hp + new Vector3(0.1f + Mathf.Sin(a) * 0.15f, 0.16f, Mathf.Cos(a) * 0.15f - 0.05f);
             }
             else pp = hp + new Vector3(whip * 0.6f, -0.26f + whip * 0.8f, whip * 0.8f);
             pouch.localPosition = pp;

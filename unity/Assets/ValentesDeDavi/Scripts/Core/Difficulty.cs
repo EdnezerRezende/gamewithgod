@@ -29,7 +29,7 @@ namespace Valentes
             level = DifficultyLevel.Pastor, name = "Pastor",
             description = "Abertura longa, tiro perfeito fácil de ver e linha da trajetória.",
             openingSeconds = 5f, sweetArcDegrees = 140f, trajectoryPreview = true, sweetArcVisible = true,
-            swayMultiplier = 0.5f, roarCourageLoss = 8f, javelinDamage = 15f, spearDamage = 20f, lionSpeed = 4.2f,
+            swayMultiplier = 0.35f, roarCourageLoss = 8f, javelinDamage = 15f, spearDamage = 20f, lionSpeed = 4.2f,
             foreheadRadius = 0.30f, restartAtBrook = false, scoreMultiplier = 1f, goliathSpeed = 0.8f
         };
 
@@ -38,7 +38,7 @@ namespace Valentes
             level = DifficultyLevel.Guerreiro, name = "Guerreiro",
             description = "O equilíbrio pensado para a maioria dos jogadores.",
             openingSeconds = 3.5f, sweetArcDegrees = 100f, trajectoryPreview = false, sweetArcVisible = true,
-            swayMultiplier = 1f, roarCourageLoss = 15f, javelinDamage = 25f, spearDamage = 35f, lionSpeed = 6f,
+            swayMultiplier = 0.75f, roarCourageLoss = 15f, javelinDamage = 25f, spearDamage = 35f, lionSpeed = 6f,
             foreheadRadius = 0.22f, restartAtBrook = false, scoreMultiplier = 1.5f, goliathSpeed = 0.95f
         };
 
@@ -47,7 +47,7 @@ namespace Valentes
             level = DifficultyLevel.Valente, name = "Valente",
             description = "Abertura curta, sem indicador visual: só o som do giro certo.",
             openingSeconds = 2f, sweetArcDegrees = 60f, trajectoryPreview = false, sweetArcVisible = false,
-            swayMultiplier = 1.6f, roarCourageLoss = 22f, javelinDamage = 35f, spearDamage = 50f, lionSpeed = 7.5f,
+            swayMultiplier = 1.3f, roarCourageLoss = 22f, javelinDamage = 35f, spearDamage = 50f, lionSpeed = 7.5f,
             foreheadRadius = 0.17f, restartAtBrook = true, scoreMultiplier = 2f, goliathSpeed = 1.1f
         };
 

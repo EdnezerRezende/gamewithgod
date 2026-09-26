@@ -134,7 +134,7 @@ namespace Valentes
         {
             Jar j = new Jar { t = t, alive = true, pivot = pivot };
             jars.Add(j);
-            HitZone.Sphere(t, "jarro", Vector3.zero, 0.3f, (s, p) =>
+            HitZone jz = HitZone.Sphere(t, "jarro", Vector3.zero, 0.3f, (s, p) =>
             {
                 if (!j.alive) return;
                 j.alive = false;
@@ -145,6 +145,7 @@ namespace Valentes
                 score += points;
                 hits++;
             });
+            jz.counts = () => j.alive;
             return j;
         }
 
@@ -160,8 +161,8 @@ namespace Valentes
             lions.Add(L);
             Sfx.Play("growl");
             ui.Toast("Um leão vem para o rebanho!", 1.6f);
-            HitZone.Sphere(rig.head, "cabeça do leão", Vector3.zero, 0.36f / 0.5f, (s, hp) => HitLion(L, true));
-            HitZone.Box(rig.root, "corpo do leão", new Vector3(0f, 0.78f, 0f), new Vector3(0.6f, 0.6f, 1.3f), (s, hp) => HitLion(L, false));
+            HitZone.Sphere(rig.head, "cabeça do leão", Vector3.zero, 0.36f / 0.5f, (s, hp) => HitLion(L, true)).counts = () => L.state != "dead";
+            HitZone.Box(rig.root, "corpo do leão", new Vector3(0f, 0.78f, 0f), new Vector3(0.6f, 0.6f, 1.3f), (s, hp) => HitLion(L, false)).counts = () => L.state != "dead";
         }
 
         void HitLion(Lion L, bool head)

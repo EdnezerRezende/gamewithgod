@@ -10,6 +10,8 @@ namespace Valentes
     public class HitZone : MonoBehaviour
     {
         public Action<Stone, Vector3> onHit;
+        /// <summary>Se o alvo conta para a mira dourada (jarro inteiro, leão vivo, testa na abertura).</summary>
+        public Func<bool> counts;
 
         public static HitZone Sphere(Transform parent, string name, Vector3 localPos, float radius, Action<Stone, Vector3> onHit)
         {

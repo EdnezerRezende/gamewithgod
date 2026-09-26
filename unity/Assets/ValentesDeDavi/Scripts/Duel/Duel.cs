@@ -37,6 +37,7 @@ namespace Valentes
                 if (goliath.IsOpen) Win(p);
                 else Armor("Golias abaixou a cabeça: o capacete cobriu a testa.", p);
             });
+            forehead.counts = () => goliath.IsOpen && !Over;
             HitZone.Sphere(g.head, "capacete", new Vector3(0f, 0.22f, 0f), 0.34f, (s, p) => Armor("O capacete de bronze protegeu a cabeça.", p));
             HitZone.Box(b.shield, "escudo", Vector3.zero, new Vector3(1.16f, 1.76f, 0.3f), (s, p) =>
             {

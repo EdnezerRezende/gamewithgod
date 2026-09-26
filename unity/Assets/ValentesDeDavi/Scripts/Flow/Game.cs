@@ -51,6 +51,7 @@ namespace Valentes
             Time.timeScale = 1f;
             Mats.Init(baseMaterial);
             Sfx.Create(transform);
+            Music.Create(transform);
             world = new World(transform, skyMaterial);
             Fx.SetWorld(world);
 
@@ -120,7 +121,18 @@ namespace Valentes
             player.controlling = lockCursor;
             sling.SetVisible(playing && !Paused);
             ui.ShowHud(playing && !ui.OverlayOpen);
-            if (playing) ui.DrawGauge(sling);
+            if (playing) { ui.DrawGauge(sling); ui.SetCrosshair(sling.aimOnTarget); }
+
+            if (GameInput.MusicPressed())
+            {
+                Settings.Music = !Settings.Music;
+                ui.Toast(Settings.Music ? "Música ligada" : "Música desligada", 1.2f);
+            }
+            if (GameInput.AimHelpPressed())
+            {
+                Settings.AimHelp = !Settings.AimHelp;
+                ui.Toast(Settings.AimHelp ? "Ajuda de mira ligada" : "Ajuda de mira desligada", 1.2f);
+            }
 
             if (Paused) return;
             if (mode == Mode.Menu)
@@ -172,6 +184,7 @@ namespace Valentes
             PlaceDuel();
             goliath.state = Goliath.State.Idle;
             mode = Mode.Menu;
+            Music.Set("menu");
 
             Card c = ui.OpenCard();
             c.Eyebrow("Fase 1 · Davi × Golias");
@@ -187,11 +200,21 @@ namespace Valentes
             Card.Btn(row, "Jogar a fase completa", true, StartFull);
             Card.Btn(row, "Só o treino", false, () => { kind = Kind.TrainingOnly; ui.CloseOverlay(); StartTraining(); });
             Card.Btn(row, "Só o duelo", false, StartDuelOnly);
+            SettingsRow(c, ShowMenu);
             Card.Controls(c,
-                new[] { "Mouse", "Segurar botão esquerdo", "W A S D", "Setas", "Esc", "Enter" },
+                new[] { "Mouse", "Segurar botão esquerdo", "W A S D", "Setas", "Esc", "Enter", "H", "M" },
                 new[] { "Olhar e mirar", "Girar a funda; soltar na faixa dourada é o tiro perfeito", "Andar · Shift para correr",
-                        "Olhar sem mouse", "Pausa: continuar, recomeçar ou voltar ao menu", "Pular a cena animada" });
+                        "Olhar sem mouse", "Pausa: continuar, recomeçar ou voltar ao menu", "Pular a cena animada",
+                        "Ajuda de mira: trajetória e marcador de onde a pedra vai cair", "Ligar ou desligar a música" });
             c.Note("Modelos e sons provisórios. Os versículos são provisórios (Almeida, domínio público).");
+        }
+
+        /// <summary>Botões de música e ajuda de mira; ao trocar, redesenha a tela atual.</summary>
+        void SettingsRow(Card c, Action redraw)
+        {
+            VisualElement row = c.Row();
+            Card.Btn(row, "Música: " + (Settings.Music ? "ligada" : "desligada"), false, () => { Settings.Music = !Settings.Music; redraw(); });
+            Card.Btn(row, "Ajuda de mira: " + (Settings.AimHelp ? "ligada" : "desligada"), false, () => { Settings.AimHelp = !Settings.AimHelp; redraw(); });
         }
 
         void ShowPause()
@@ -200,6 +223,11 @@ namespace Valentes
             savedTimeScale = Time.timeScale;
             Time.timeScale = 0f;
             sling.Cancel();
+            RenderPause();
+        }
+
+        void RenderPause()
+        {
             bool inCine = cutscene.Playing;
             Card c = ui.OpenCard();
             c.Eyebrow("Pausa · " + (inCine ? "Cena animada" : mode == Mode.Training ? "Treino" : "Duelo") + " · " + Difficulty.Current.name);
@@ -214,6 +242,7 @@ namespace Valentes
                 else { ClearProjectiles(); PlaceDuel(); BeginDuel(); }
             });
             Card.Btn(row, "Voltar ao menu", false, ShowMenu);
+            SettingsRow(c, RenderPause);
             c.Note("No duelo, recomeçar mantém a armadura e as pedras escolhidas.");
         }
 
@@ -244,6 +273,7 @@ namespace Valentes
 
         void StartTraining()
         {
+            Music.Set("training");
             ClearProjectiles();
             if (cineFlock != null) Destroy(cineFlock.gameObject);
             world.Show(World.Area.Field);
@@ -361,6 +391,7 @@ namespace Valentes
 
         void BeginDuel()
         {
+            Music.Set("duel");
             ClearProjectiles();
             player.clampPosition = duel.ClampPlayer;
             duel.Begin(chosenStones, courageStart, armor);
@@ -369,6 +400,7 @@ namespace Valentes
 
         void OnDuelWon()
         {
+            Music.Set("victory");
             Time.timeScale = 0.35f;
             slowUntil = Time.unscaledTime + 1.6f;
             Transform g = goliath.rig.root;
@@ -382,6 +414,7 @@ namespace Valentes
 
         void OnDuelLost(string reason)
         {
+            Music.Set("quiet");
             mode = Mode.Result;
             StartCoroutine(ShowDefeat(reason));
         }
@@ -447,6 +480,7 @@ namespace Valentes
 
         void IntroCine(Action then)
         {
+            Music.Set("cine");
             mode = Mode.Cine;
             PlaceDuel();
             Transform g = goliath.rig.root;
@@ -468,6 +502,7 @@ namespace Valentes
 
         void FlashbackCine(Action then)
         {
+            Music.Set("cine");
             mode = Mode.Cine;
             world.Show(World.Area.Field);
             SetFlashbackLook(true);
@@ -491,6 +526,7 @@ namespace Valentes
 
         void DuelCine(Action then)
         {
+            Music.Set("cine");
             mode = Mode.Cine;
             PlaceDuel();
             Transform g = goliath.rig.root;

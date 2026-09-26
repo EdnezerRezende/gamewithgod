@@ -47,6 +47,7 @@ namespace Valentes
             clips["bleat"] = Tone("bleat", 620f, 0.35f, Wave.Saw, 480f, 0.3f);
             clips["cheer"] = Noise("cheer", 3f, 900f, 0.6f, r);
             clips["dart"] = Noise("dart", 0.4f, 700f, 0.02f, r);
+            clips["shofar"] = Tone("shofar", 147f, 1.6f, Wave.Saw, 222f, 0.7f, 0.15f);
         }
 
         public static void Play(string name, float volume = 1f, float pitch = 1f)

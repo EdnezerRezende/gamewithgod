@@ -37,6 +37,8 @@ namespace Valentes
         public static bool FireUp() { return M != null && M.leftButton.wasReleasedThisFrame; }
         public static bool PausePressed() { return K != null && (K.escapeKey.wasPressedThisFrame || K.pKey.wasPressedThisFrame); }
         public static bool SkipPressed() { return K != null && (K.enterKey.wasPressedThisFrame || K.numpadEnterKey.wasPressedThisFrame); }
+        public static bool AimHelpPressed() { return K != null && K.hKey.wasPressedThisFrame; }
+        public static bool MusicPressed() { return K != null && K.mKey.wasPressedThisFrame; }
 #else
         public static Vector2 Move()
         {
@@ -58,6 +60,8 @@ namespace Valentes
         public static bool FireUp() { return Input.GetMouseButtonUp(0); }
         public static bool PausePressed() { return Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P); }
         public static bool SkipPressed() { return Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter); }
+        public static bool AimHelpPressed() { return Input.GetKeyDown(KeyCode.H); }
+        public static bool MusicPressed() { return Input.GetKeyDown(KeyCode.M); }
 #endif
     }
 }

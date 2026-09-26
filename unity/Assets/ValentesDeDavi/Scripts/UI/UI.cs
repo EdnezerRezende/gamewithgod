@@ -17,6 +17,7 @@ namespace Valentes
         static readonly Color Line = new Color(0.917f, 0.862f, 0.741f, 0.16f);
 
         public readonly VisualElement root;
+        VisualElement crossH, crossV;
         VisualElement hud, cine, overlay, hurt, stonesRow, vidaFill, corFill, statStones, statVida, statCor, statScore, gauge;
         Label obj, sub, toast, opening, score, cineQuote, cineRef, gaugeText;
         ScrollView overlayScroll;
@@ -139,8 +140,8 @@ namespace Valentes
             cross.style.justifyContent = Justify.Center;
             VisualElement ch = Box(cross);
             ch.style.width = 20f; ch.style.height = 20f;
-            VisualElement h1 = Box(ch); Abs(h1, 9, 0, null, null); h1.style.width = 2f; h1.style.height = 20f; h1.style.backgroundColor = new Color(0.92f, 0.86f, 0.74f, 0.85f);
-            VisualElement h2 = Box(ch); Abs(h2, 0, 9, null, null); h2.style.width = 20f; h2.style.height = 2f; h2.style.backgroundColor = new Color(0.92f, 0.86f, 0.74f, 0.85f);
+            VisualElement h1 = crossV = Box(ch); Abs(h1, 9, 0, null, null); h1.style.width = 2f; h1.style.height = 20f; h1.style.backgroundColor = new Color(0.92f, 0.86f, 0.74f, 0.85f);
+            VisualElement h2 = crossH = Box(ch); Abs(h2, 0, 9, null, null); h2.style.width = 20f; h2.style.height = 2f; h2.style.backgroundColor = new Color(0.92f, 0.86f, 0.74f, 0.85f);
 
             VisualElement centerTop = Box(hud);
             Abs(centerTop, 0, null, 0, null);
@@ -166,7 +167,7 @@ namespace Valentes
             gaugeText = Text(gauge, "segure para girar", 13, ParchDim);
             gaugeText.style.unityTextAlign = TextAnchor.MiddleCenter;
 
-            Label esc = Text(hud, "Esc · pausa e menu", 14, ParchDim);
+            Label esc = Text(hud, "Esc · pausa e menu · H · ajuda de mira · M · música", 14, ParchDim);
             Abs(esc, 24, null, null, 20);
 
             hurt = Layer(hud);
@@ -199,6 +200,14 @@ namespace Valentes
         }
 
         public void ShowHud(bool v) { hud.style.display = v ? DisplayStyle.Flex : DisplayStyle.None; }
+
+        /// <summary>Mira dourada quando está sobre um alvo que conta.</summary>
+        public void SetCrosshair(bool onTarget)
+        {
+            Color c = onTarget ? U.Hex(0xffd166) : new Color(0.92f, 0.86f, 0.74f, 0.85f);
+            crossH.style.backgroundColor = c;
+            crossV.style.backgroundColor = c;
+        }
 
         public void SetObjective(string title, string detail) { obj.text = title; sub.text = detail; }
 
@@ -268,7 +277,8 @@ namespace Valentes
             }
             gaugeTex.SetPixels32(gaugePx);
             gaugeTex.Apply(false);
-            gaugeText.text = s.charging ? (arcVisible ? "" : "ouça o giro") : "segure para girar";
+            gaugeText.text = s.charging ? (!s.reach ? "longe: gire mais" : arcVisible ? "" : "ouça o giro") : "segure para girar";
+            gaugeText.style.color = s.charging && !s.reach ? U.Hex(0xe07a5f) : ParchDim;
         }
 
         // ------------------------------------------------------------------ cenas animadas
