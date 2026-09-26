@@ -97,6 +97,26 @@
   .pause{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:12;background:rgba(20,15,10,.85);border:1px solid var(--line);padding:14px 20px;font-size:17px;pointer-events:none}
   .esc-hint{position:absolute;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--parch-dim);text-shadow:0 1px 3px rgba(0,0,0,.8)}
   #fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:18;transition:opacity .5s}
+  /* ---------- Controles de toque (celular e tablet) ---------- */
+  #touch{position:fixed;inset:0;z-index:11;pointer-events:none;-webkit-user-select:none;user-select:none}
+  #touch > *{pointer-events:auto;touch-action:none}
+  #lookpad{position:absolute;top:0;right:0;bottom:0;width:62%}
+  #stick{position:absolute;left:calc(22px + env(safe-area-inset-left,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));width:132px;height:132px;border-radius:50%;
+    background:rgba(20,15,10,.35);border:1px solid rgba(234,220,189,.3)}
+  #knob{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:rgba(234,220,189,.4);border:1px solid rgba(234,220,189,.6)}
+  #fire{position:absolute;right:calc(26px + env(safe-area-inset-right,0px));bottom:calc(26px + env(safe-area-inset-bottom,0px));width:108px;height:108px;border-radius:50%;
+    background:rgba(200,144,63,.55);border:2px solid var(--bronze-hi);color:#1b120a;font-weight:700;font-size:17px}
+  #fire.on{background:rgba(236,189,106,.95);transform:scale(.96)}
+  #tpause{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:52px;height:40px;border-radius:3px;
+    background:rgba(20,15,10,.55);border:1px solid rgba(234,220,189,.3);color:var(--parch);font-size:16px;letter-spacing:-2px}
+  #rotate{display:none;position:absolute;left:16px;right:16px;top:40%;text-align:center;font-size:18px;background:rgba(20,15,10,.85);border:1px solid var(--line);padding:14px;pointer-events:none}
+  @media (orientation:portrait){#rotate{display:block}}
+  body.touch .esc-hint{display:none}
+  @media (max-width:900px), (max-height:500px){
+    .obj{font-size:16px} .sub{font-size:13px} .hud-tl{max-width:48vw}
+    .bar{width:90px} .lbl{font-size:10px} #toast{font-size:16px} #opening{font-size:22px}
+    #gauge{width:104px;height:104px;bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  }
   @media (prefers-reduced-motion:reduce){#game,#toast,#fade,#cine-q{transition:none}}
 </style>
 
@@ -122,6 +142,13 @@
   <div class="bars top"></div><div class="bars bot"></div>
   <div class="cine-text"><p id="cine-q"></p><span id="cine-ref"></span></div>
   <div class="cine-hint">Clique: avançar · Enter: pular</div>
+</div>
+<div id="touch" hidden>
+  <div id="lookpad"></div>
+  <div id="stick"><div id="knob"></div></div>
+  <button id="fire" type="button" aria-label="Segure para girar a funda, solte para atirar">Funda</button>
+  <button id="tpause" type="button" aria-label="Pausa">❚❚</button>
+  <div id="rotate">Gire o celular para jogar na horizontal</div>
 </div>
 <div id="pause" class="pause" hidden>Clique na tela para jogar · Esc abre a pausa</div>
 <div id="fade"></div>
@@ -500,10 +527,65 @@ const wp = (o, v) => o.getWorldPosition(v);
 // ================= Input =================
 const playing = () => (mode === 'training' || mode === 'duel') && !cine;
 function tryLock(){
+  goFullscreen();
   if (noLock) return;
   try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch(e) { noLock = true; }
 }
 function unlock(){ try { if (document.pointerLockElement) document.exitPointerLock(); } catch(e) {} }
+
+// ---------- Toque: direcional à esquerda, arrastar à direita para olhar, botão da funda ----------
+let touchMode = false;
+const TM = {mx:0, my:0, stickId:null, lookId:null, lx:0, ly:0, fireId:null};
+function enableTouch(){
+  if (touchMode) return;
+  touchMode = true; noLock = true;
+  document.body.classList.add('touch');
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1, 1.5)); resize();
+  const h = document.querySelector('.cine-hint'); if (h) h.textContent = 'Toque: avançar · ❚❚: pausa';
+}
+addEventListener('touchstart', enableTouch, {passive:true, capture:true});
+try { if (matchMedia('(pointer: coarse)').matches && !matchMedia('(pointer: fine)').matches) enableTouch(); } catch(e) {}
+/** No celular, entra em tela cheia e tenta travar na horizontal (precisa de um toque do jogador). */
+function goFullscreen(){
+  if (!touchMode) return;
+  try { const el = document.documentElement, r = el.requestFullscreen ? el.requestFullscreen() : null; if (r && r.catch) r.catch(() => {}); } catch(e) {}
+  try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch(e) {}
+}
+function stickMove(t){
+  const st = $('stick'), r = st.getBoundingClientRect(), max = r.width/2;
+  let dx = t.clientX - (r.left + max), dy = t.clientY - (r.top + max);
+  const d = Math.hypot(dx, dy); if (d > max){ dx *= max/d; dy *= max/d; }
+  $('knob').style.transform = `translate(${dx}px,${dy}px)`;
+  TM.mx = dx/max; TM.my = -dy/max;
+}
+function stickReset(){ TM.stickId = null; TM.mx = TM.my = 0; $('knob').style.transform = ''; }
+$('stick').addEventListener('touchstart', e => { e.preventDefault(); audio(); const t = e.changedTouches[0]; TM.stickId = t.identifier; stickMove(t); }, {passive:false});
+$('lookpad').addEventListener('touchstart', e => { e.preventDefault(); audio(); const t = e.changedTouches[0]; TM.lookId = t.identifier; TM.lx = t.clientX; TM.ly = t.clientY; }, {passive:false});
+$('fire').addEventListener('touchstart', e => {
+  e.preventDefault(); audio();
+  TM.fireId = e.changedTouches[0].identifier; $('fire').classList.add('on');
+  if (playing() && !pauseOn) startCharge();
+}, {passive:false});
+$('fire').addEventListener('contextmenu', e => e.preventDefault());
+$('tpause').addEventListener('click', () => { if ((playing() || cine) && !pauseOn) showPause(); });
+addEventListener('touchmove', e => {
+  for (const t of e.changedTouches){
+    if (t.identifier === TM.stickId) stickMove(t);
+    else if (t.identifier === TM.lookId){
+      const dx = t.clientX - TM.lx, dy = t.clientY - TM.ly; TM.lx = t.clientX; TM.ly = t.clientY;
+      if (playing() && !pauseOn){ P.yaw -= dx*.0048; P.pitch = clamp(P.pitch - dy*.0048, -1.35, 1.35); }
+    }
+  }
+}, {passive:true});
+function touchEnd(e){
+  for (const t of e.changedTouches){
+    if (t.identifier === TM.stickId) stickReset();
+    if (t.identifier === TM.lookId) TM.lookId = null;
+    if (t.identifier === TM.fireId){ TM.fireId = null; $('fire').classList.remove('on'); if (S.charging) releaseCharge(); }
+  }
+}
+addEventListener('touchend', touchEnd, {passive:true});
+addEventListener('touchcancel', touchEnd, {passive:true});
 document.addEventListener('pointerlockchange', () => {
   const was = locked; locked = document.pointerLockElement === canvas;
   if (was && !locked && (playing() || cine) && !pauseOn && $('ov').hidden) showPause();
@@ -523,6 +605,7 @@ canvas.addEventListener('mousedown', e => {
   audio();
   if (cine) { nextCineLine(); return; }
   if (!playing()) return;
+  if (touchMode) return;
   if (!locked && !noLock) { tryLock(); return; }
   if (e.button === 0) startCharge();
 });
@@ -568,6 +651,9 @@ function updateHUD(){
     $('opening').hidden = !(D.state === 'opening' && D_().arcVisible && !D.won);
   } else { $('score').textContent = T.score; $('opening').hidden = true; }
   $('pause').hidden = !(playing() && !locked && !noLock && !pauseOn);
+  const showTouch = touchMode && playing() && !pauseOn && $('ov').hidden;
+  $('touch').hidden = !showTouch;
+  if (!showTouch && TM.stickId !== null) stickReset();
   $('cross').classList.toggle('on', playing() && aimHelp && aimPoint().good);
 }
 
@@ -712,6 +798,10 @@ function updatePlayer(dt){
   let spd = (keys.ShiftLeft || keys.ShiftRight) ? 7.2 : 4.6;
   if (P.armor) spd *= .58; if (S.charging) spd *= .8;
   if (mv.lengthSq() > 0) mv.normalize().multiplyScalar(spd);
+  else if (touchMode && Math.hypot(TM.mx, TM.my) > .12){
+    const mag = Math.min(1, Math.hypot(TM.mx, TM.my)), run = mag > .92 ? 7.2/4.6 : 1;
+    mv.addScaledVector(f, TM.my).addScaledVector(r, TM.mx).normalize().multiplyScalar(spd*mag*run);
+  }
   P.vel.lerp(mv, clamp(dt*10,0,1));
   P.pos.addScaledVector(P.vel, dt);
   if (keys.ArrowLeft) P.yaw += 1.8*dt; if (keys.ArrowRight) P.yaw -= 1.8*dt;
@@ -1148,7 +1238,7 @@ function showMenu(){
       <dt>H</dt><dd>Ajuda de mira: trajetória e marcador de onde a pedra vai cair</dd>
       <dt>M</dt><dd>Ligar ou desligar a música</dd>
     </dl>
-    <p class="note">Precisa de teclado e mouse. Este protótipo em navegador serve para testar as mecânicas; o jogo final será feito na Unity. Os versículos são provisórios.</p>`;
+    <p class="note">No computador: teclado e mouse. No celular: direcional à esquerda para andar, arraste à direita para olhar e segure o botão Funda (melhor na horizontal). Este protótipo em navegador serve para testar as mecânicas; o jogo final será feito na Unity. Os versículos são provisórios.</p>`;
   const acts = {
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
