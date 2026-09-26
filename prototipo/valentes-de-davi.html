@@ -114,7 +114,7 @@
   <canvas id="gauge" width="280" height="280"></canvas>
   <div id="toast"></div>
   <div id="hurt"></div>
-  <div class="esc-hint">Esc · pausa e menu</div>
+  <div class="esc-hint">Esc · pausa e menu · H · ajuda de mira · M · música</div>
 </div>
 
 <div id="cine" hidden>
@@ -160,35 +160,41 @@ const VS = {
 const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]}</cite></blockquote>`;
 
 const DIFF = {
-  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:5,   arc:140, preview:true,  arcVisible:true,  sway:.5, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
-  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:3.5, arc:100, preview:false, arcVisible:true,  sway:1,  roar:15, dardo:25, spear:35, lion:6,   fore:.22, restart:'duel',    mult:1.5, gSpeed:.95},
-  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:2,   arc:60, preview:false, arcVisible:false, sway:1.6,roar:22, dardo:35, spear:50, lion:7.5, fore:.17, restart:'ribeiro', mult:2,   gSpeed:1.1},
+  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:5,   arc:140, preview:true,  arcVisible:true,  sway:.35, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
+  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:3.5, arc:100, preview:false, arcVisible:true,  sway:.75, roar:15, dardo:25, spear:35, lion:6,   fore:.22, restart:'duel',    mult:1.5, gSpeed:.95},
+  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:2,   arc:60, preview:false, arcVisible:false, sway:1.3,roar:22, dardo:35, spear:50, lion:7.5, fore:.17, restart:'ribeiro', mult:2,   gSpeed:1.1},
 };
 let dk = 'guerreiro';
 try { const s = localStorage.getItem('vdd-diff'); if (DIFF[s]) dk = s; } catch(e) {}
 const D_ = () => DIFF[dk];
 
 // ================= Audio =================
-let AC = null, noiseB = null;
+let AC = null, noiseB = null, sfxBus = null, musicBus = null;
+const MUSIC_VOL = .5;
+let musicOn = true, aimHelp = true;
+try { musicOn = localStorage.getItem('vdd-music') !== 'off'; aimHelp = localStorage.getItem('vdd-aim') !== 'off'; } catch(e) {}
 function audio(){
   try {
     if (!AC) { AC = new (window.AudioContext||window.webkitAudioContext)();
       noiseB = AC.createBuffer(1, AC.sampleRate, AC.sampleRate);
-      const d = noiseB.getChannelData(0); for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1; }
+      const d = noiseB.getChannelData(0); for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+      sfxBus = AC.createGain(); sfxBus.connect(AC.destination);
+      musicBus = AC.createGain(); musicBus.gain.value = musicOn ? MUSIC_VOL : 0; musicBus.connect(AC.destination);
+      startDrone(); }
     if (AC.state === 'suspended') AC.resume();
   } catch(e) { AC = null; }
 }
 function env(g, t, a, dur, peak){ g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(peak,t+a); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); }
-function noise({dur=.2,freq=800,q=1,type='bandpass',gain=.2,attack=.005}={}){
-  if(!AC) return; const t=AC.currentTime, s=AC.createBufferSource(); s.buffer=noiseB;
+function noise({dur=.2,freq=800,q=1,type='bandpass',gain=.2,attack=.005,at=0,out=null}={}){
+  if(!AC) return; const t=at||AC.currentTime, s=AC.createBufferSource(); s.buffer=noiseB;
   const f=AC.createBiquadFilter(); f.type=type; f.frequency.value=freq; f.Q.value=q;
-  const g=AC.createGain(); env(g,t,attack,dur,gain); s.connect(f).connect(g).connect(AC.destination); s.start(t); s.stop(t+dur+.05);
+  const g=AC.createGain(); env(g,t,attack,dur,gain); s.connect(f).connect(g).connect(out||sfxBus); s.start(t); s.stop(t+dur+.05);
 }
-function tone({freq=440,dur=.2,type='sine',gain=.15,slide=0,lp=0,attack=.005}={}){
-  if(!AC) return; const t=AC.currentTime, o=AC.createOscillator(); o.type=type; o.frequency.setValueAtTime(freq,t);
+function tone({freq=440,dur=.2,type='sine',gain=.15,slide=0,lp=0,attack=.005,at=0,out=null}={}){
+  if(!AC) return; const t=at||AC.currentTime, o=AC.createOscillator(); o.type=type; o.frequency.setValueAtTime(freq,t);
   if(slide) o.frequency.exponentialRampToValueAtTime(slide,t+dur);
   const g=AC.createGain(); env(g,t,attack,dur,gain); let n=o;
-  if(lp){ const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=lp; n=o.connect(f); } n.connect(g).connect(AC.destination);
+  if(lp){ const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=lp; n=o.connect(f); } n.connect(g).connect(out||sfxBus);
   o.start(t); o.stop(t+dur+.05);
 }
 const sfx = {
@@ -207,6 +213,59 @@ const sfx = {
   cheer:  () => { noise({dur:3,freq:900,q:.4,gain:.22,attack:.6}); noise({dur:2.6,freq:1800,q:.6,gain:.1,attack:.8}); },
   dart:   () => noise({dur:.4,freq:700,q:2,gain:.12,attack:.02}),
 };
+
+// ================= Music (gerada em tempo real: tambor, alaúde e bordão) =================
+// Escala de Ré "hijaz" (sabor do Oriente Médio); a vitória usa Ré maior.
+const HIJAZ = [0,1,4,5,7,8,10], MAJOR = [0,2,4,5,7,9,11];
+const MOODS = {
+  menu:     {bpm:70,  drum:'x.....x.....x...', slap:'....x.......x...', mel:.35, drone:.10},
+  cine:     {bpm:62,  drum:'x...............', slap:'................', mel:.22, drone:.13},
+  training: {bpm:96,  drum:'x..x..x.x..x..x.', slap:'..x.x.....x.x.x.', mel:.5,  drone:.07},
+  duel:     {bpm:120, drum:'x.x...x.x.x..xx.', slap:'.x.xx..x.x.xx.xx', mel:.6,  drone:.13},
+  victory:  {bpm:84,  drum:'x...x...x...x.x.', slap:'..x...x...x...xx', mel:.75, drone:.1, major:true},
+  quiet:    {bpm:60,  drum:'................', slap:'................', mel:.15, drone:.08},
+};
+const M = {mood:null, step:0, next:0, idx:4, drone:null};
+function startDrone(){
+  const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 480;
+  const g = AC.createGain(); g.gain.value = 0;
+  [73.42, 110, 146.83].forEach((f,i) => { const o = AC.createOscillator(); o.type = i ? 'sawtooth' : 'triangle'; o.frequency.value = f; o.detune.value = i*4; const og = AC.createGain(); og.gain.value = i === 2 ? .35 : 1; o.connect(og).connect(lp); o.start(); });
+  const lfo = AC.createOscillator(), lg = AC.createGain(); lfo.frequency.value = .07; lg.gain.value = 180; lfo.connect(lg).connect(lp.frequency); lfo.start();
+  lp.connect(g).connect(musicBus); M.drone = g;
+  if (M.mood) setMood(M.mood, true);
+}
+function shofar(){ if (!AC) return; tone({freq:147, dur:1.6, type:'sawtooth', gain:.22, slide:222, lp:900, attack:.15, out:musicBus}); }
+function setMood(m, force){
+  if (M.mood === m && !force) return;
+  const prev = M.mood; M.mood = m;
+  if (!AC || !M.drone) return;
+  M.drone.gain.setTargetAtTime(MOODS[m].drone, AC.currentTime, .8);
+  if ((m === 'duel' || m === 'victory') && prev !== m) shofar();
+}
+function setMusic(on){
+  musicOn = on; try { localStorage.setItem('vdd-music', on ? 'on' : 'off'); } catch(e) {}
+  if (AC && musicBus) musicBus.gain.setTargetAtTime(on ? MUSIC_VOL : 0, AC.currentTime, .2);
+}
+function setAimHelp(on){ aimHelp = on; try { localStorage.setItem('vdd-aim', on ? 'on' : 'off'); } catch(e) {} }
+function scaleFreq(md, i){ const sc = md.major ? MAJOR : HIJAZ; return 146.83 * Math.pow(2, (sc[i % 7] + 12*Math.floor(i / 7)) / 12); }
+function musicTick(){
+  if (!AC || !musicBus || !M.mood || !musicOn || AC.state !== 'running') return;
+  const md = MOODS[M.mood], sp = 60/md.bpm/4;
+  if (M.next < AC.currentTime) M.next = AC.currentTime + .05;
+  while (M.next < AC.currentTime + .25){
+    const s = M.step, t = M.next;
+    if (md.drum[s] === 'x') tone({freq: s % 8 === 0 ? 105 : 90, dur:.32, gain: s % 8 === 0 ? .55 : .38, slide:42, at:t, out:musicBus});
+    if (md.slap[s] === 'x') noise({dur:.07, freq:1900, q:1.3, gain:.16, at:t, out:musicBus});
+    if (s % 2 === 0 && Math.random() < md.mel * (s % 4 === 0 ? 1 : .55)){
+      M.idx = clamp(M.idx + [-2,-1,-1,0,1,1,2][Math.floor(Math.random()*7)], 2, 12);
+      const f = scaleFreq(md, M.idx);
+      tone({freq:f, dur:.55, type:'triangle', gain:.16, lp:2400, at:t, out:musicBus});
+      tone({freq:f*2, dur:.18, type:'sawtooth', gain:.03, lp:3000, at:t, out:musicBus});
+    }
+    M.step = (s + 1) % 16; M.next += sp;
+  }
+}
+setInterval(musicTick, 40);
 
 // ================= Renderer / scene =================
 const canvas = $('game');
@@ -414,9 +473,16 @@ const staff = cyl(.02,.02,1.4,0x6b4a2a,5); staff.position.set(-.34,-.55,-.7); st
 const pouch = sph(.045,0x5a3a22); VM.add(pouch);
 const cordGeo = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(new Array(9).fill(0),3));
 const cord = new THREE.Line(cordGeo, new THREE.LineBasicMaterial({color:0x3a2616})); VM.add(cord);
-const prevGeo = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(new Array(40*3).fill(0),3));
+const prevGeo = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(new Array(80*3).fill(0),3));
 const preview = new THREE.Line(prevGeo, new THREE.LineDashedMaterial({color:0xf3d27a, dashSize:.35, gapSize:.25, transparent:true, opacity:.8}));
 preview.frustumCulled = false; preview.visible = false; scene.add(preview);
+// Marcador de impacto: mostra onde a pedra vai cair (dourado quando acerta um alvo que conta).
+const marker = new THREE.Group();
+const markerMat = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:.9, depthTest:false, fog:false});
+marker.add(new THREE.Mesh(new THREE.TorusGeometry(.22,.028,6,28), markerMat));
+marker.add(new THREE.Mesh(new THREE.SphereGeometry(.045,8,6), markerMat));
+marker.renderOrder = 10; marker.children.forEach(c => c.renderOrder = 10);
+marker.visible = false; scene.add(marker);
 
 // ================= State =================
 const P = {pos:V(), vel:V(), yaw:0, pitch:0, eye:1.6, vida:100, cor:70, armor:false};
@@ -446,6 +512,8 @@ addEventListener('keydown', e => {
   keys[e.code] = true;
   if ((e.code === 'Escape' || e.code === 'KeyP') && (playing() || cine) && !pauseOn) { showPause(); return; }
   if (cine && !pauseOn && e.code === 'Enter') endCine();
+  if (e.code === 'KeyM' && !e.repeat){ audio(); setMusic(!musicOn); toast(musicOn ? 'Música ligada' : 'Música desligada', 1.2); }
+  if (e.code === 'KeyH' && !e.repeat){ setAimHelp(!aimHelp); toast(aimHelp ? 'Ajuda de mira ligada' : 'Ajuda de mira desligada', 1.2); }
   if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code) && playing()) e.preventDefault();
 });
 addEventListener('keyup', e => { keys[e.code] = false; });
@@ -509,7 +577,7 @@ function zoneDist(){ const pd = phase()*360; return Math.abs(((pd - 270 + 540) %
 function canThrow(){ return mode === 'training' || (mode === 'duel' && D.stonesLeft > 0 && !D.won); }
 function startCharge(){ if (!canThrow()) { if (mode === 'duel') toast('Sem pedras no alforje.'); return; } S.charging = true; S.t = 0; S.rev = -1; S.inZone = false; }
 function releaseCharge(){
-  S.charging = false; preview.visible = false;
+  S.charging = false; preview.visible = false; marker.visible = false;
   if (!canThrow()) return;
   const d = D_(), dz = zoneDist(), half = sweetArc()/2;
   let err = .12, perfect = dz <= half;
@@ -533,6 +601,30 @@ function releaseCharge(){
 }
 const stoneGeo = new THREE.DodecahedronGeometry(.055,0);
 function aimStart(dir){ const right = V(1,0,0).applyQuaternion(camera.quaternion), up = V(0,1,0).applyQuaternion(camera.quaternion); return camera.getWorldPosition(V()).addScaledVector(right,.22).addScaledVector(up,.05).addScaledVector(dir,.4); }
+function simulateShot(){
+  const dir = camera.getWorldDirection(V()), p = aimStart(dir), v = dir.multiplyScalar(16+26*power()), arr = prevGeo.attributes.position.array;
+  const N = 80, h = .01;
+  let n = 0, hit = null, good = false;
+  const push = q => { arr[n*3] = q.x; arr[n*3+1] = q.y; arr[n*3+2] = q.z; n++; };
+  push(p);
+  outer: for (let i=0;i<N-1;i++){
+    for (let k=0;k<3;k++){
+      v.y -= G*h; p.addScaledVector(v, h);
+      for (const t of targets){ if (t.test(p)){ hit = p.clone(); good = typeof t.good === 'function' ? !!t.good() : !!t.good; break; } }
+      if (!hit && p.y < groundH(p.x,p.z)){ p.y = groundH(p.x,p.z); hit = p.clone(); }
+      if (hit){ push(p); break outer; }
+    }
+    push(p);
+  }
+  for (let i=n;i<N;i++){ arr[i*3] = arr[(n-1)*3]; arr[i*3+1] = arr[(n-1)*3+1]; arr[i*3+2] = arr[(n-1)*3+2]; }
+  prevGeo.attributes.position.needsUpdate = true; preview.computeLineDistances();
+  preview.material.color.setHex(good ? 0xffd166 : 0xf3d27a); preview.visible = true;
+  if (hit){
+    marker.visible = true; marker.position.copy(hit); marker.lookAt(camera.position);
+    marker.scale.setScalar(Math.max(1, hit.distanceTo(camera.position)/12));
+    markerMat.color.setHex(good ? 0xffd166 : 0xeadcbd); markerMat.opacity = good ? 1 : .75;
+  } else marker.visible = false;
+}
 function updateSling(dt){
   const hp = hand.position;
   let px, py, pz;
@@ -544,13 +636,7 @@ function updateSling(dt){
     S.inZone = inZ;
     const a = phase()*PI*2 - PI/2;
     px = hp.x + Math.cos(a)*.3; py = hp.y + .22; pz = hp.z + Math.sin(a)*.3 - .05;
-    if (D_().preview){
-      const dir = camera.getWorldDirection(V()), p = aimStart(dir), v = dir.multiplyScalar(16+26*power()), arr = prevGeo.attributes.position.array;
-      let last = 0;
-      for (let i=0;i<40;i++){ arr[i*3]=p.x; arr[i*3+1]=p.y; arr[i*3+2]=p.z; last = i; if (p.y < groundH(p.x,p.z)) break; v.y -= G*.06; p.addScaledVector(v,.06); }
-      for (let i=last+1;i<40;i++){ arr[i*3]=arr[last*3]; arr[i*3+1]=arr[last*3+1]; arr[i*3+2]=arr[last*3+2]; }
-      prevGeo.attributes.position.needsUpdate = true; preview.computeLineDistances(); preview.visible = true;
-    }
+    if (aimHelp || D_().preview) simulateShot(); else { preview.visible = false; marker.visible = false; }
   } else {
     S.whip = Math.max(0, S.whip - dt);
     px = hp.x + S.whip*.6; py = hp.y - .26 + S.whip*.8; pz = hp.z - S.whip*.8;
@@ -590,7 +676,7 @@ function updateStones(dt){
     }
   }
 }
-const sphereT = (getPos, r, hit) => ({test: p => p.distanceTo(getPos()) < r, hit});
+const sphereT = (getPos, r, hit, good=false) => ({test: p => p.distanceTo(getPos()) < r, hit, good});
 
 // ================= Player =================
 function updatePlayer(dt){
@@ -636,7 +722,7 @@ function jarTarget(j, pts){
   return sphereT(() => wp(j.m, tmp1), .3, () => {
     if (!j.alive) return; j.alive = false; j.m.visible = false; if (j.rope) j.rope.visible = false;
     sfx.clay(); burst(wp(j.m,tmp2), 0xb5603a, 14, 3.2); T.score += pts; T.hits++;
-  });
+  }, () => j.alive);
 }
 function setupStage(n){
   clearStage(); T.stage = n; T.endT = -1;
@@ -670,8 +756,8 @@ function spawnLion(i){
   L.g.position.set(x, fieldH(x,z), z); T.grp.add(L.g);
   const lion = Object.assign(L, {state:'run', hp:2, stag:0, active:true, carry:null, deadT:0});
   T.lions.push(lion); sfx.growl(); toast('Um leão vem para o rebanho!', 1.6);
-  targets.push(sphereT(() => wp(lion.head, tmp1), .36, () => lionHit(lion, true)));
-  targets.push(sphereT(() => wp(lion.body, tmp1), .55, () => lionHit(lion, false)));
+  targets.push(sphereT(() => wp(lion.head, tmp1), .36, () => lionHit(lion, true), () => lion.state !== 'dead'));
+  targets.push(sphereT(() => wp(lion.body, tmp1), .55, () => lionHit(lion, false), () => lion.state !== 'dead'));
 }
 function lionHit(L, head){
   if (L.state === 'dead') return;
@@ -718,6 +804,7 @@ function updateTraining(dt){
   if (T.endT > 0){ T.endT -= dt; if (T.endT <= 0){ if (T.stage < 2) setupStage(T.stage+1); else finishTraining(); } }
 }
 function startTraining(after){
+  setMood('training');
   mode = 'training'; T.after = after; field.visible = true; valley.visible = false; groundH = fieldH;
   canvas.style.filter = 'sepia(.5) saturate(.85) contrast(1.05)';
   Object.assign(T, {score:0, shots:0, hits:0, time:0, sheepHit:0});
@@ -774,12 +861,13 @@ function placeDuel(){
   for (const s of stones) scene.remove(s.m); stones.length = 0;
 }
 function beginDuel(){
+  setMood('duel');
   mode = 'duel';
   Object.assign(D, {state:'walk', stT:0, nextAct:2.5, openT:0, stun:0, stonesLeft:5, used:0, won:false, lost:false, approach:0, lastDist: GL.root.position.distanceTo(P.pos), time:0, fallT:0, headTilt:.35, endT:-1, firstRoar:true});
   P.vida = 100; P.cor = flow.corStart; P.armor = flow.armor;
   const d = D_();
   targets = [
-    {test: p => p.distanceTo(wp(GL.forehead,tmp1)) < d.fore, hit: () => {
+    {good: () => D.state === 'opening', test: p => p.distanceTo(wp(GL.forehead,tmp1)) < d.fore, hit: () => {
       if (D.won) return;
       if (D.state === 'opening') return win();
       armorHit('Golias abaixou a cabeça: o capacete cobriu a testa.');
@@ -876,8 +964,9 @@ function updateGolias(dt){
 }
 function openUp(k=1){ D.state = 'opening'; D.openT = D_().window*k; }
 function win(){
+  setMood('victory');
   D.won = true; targets = []; sfx.thud(); sfx.clang(); burst(wp(GL.forehead,V()), 0xd9a44a, 6, 2, .6, .6);
-  timeScale = .35; slowT = 1.6; hideHUD(); S.charging = false; preview.visible = false;
+  timeScale = .35; slowT = 1.6; hideHUD(); S.charging = false; preview.visible = false; marker.visible = false;
   runCine([
     {v:'v49', dur:4.5, cam:(p) => { const g = GL.root.position; camLook(tmp1.set(g.x+4.5-p*1.5, g.y+1.6+p*.5, g.z-2.5), tmp2.set(g.x, g.y+1.4, g.z)); }},
     {v:'v51', dur:4.5, start: () => sfx.cheer(), cam:(p) => camLook(tmp1.set(-14+p*6, 16, 8), tmp2.set(0, 10, 80))},
@@ -885,7 +974,8 @@ function win(){
   ], showResults);
 }
 function lose(reason){
-  if (D.lost || D.won) return; D.lost = true; mode = 'result'; S.charging = false; preview.visible = false;
+  setMood('quiet');
+  if (D.lost || D.won) return; D.lost = true; mode = 'result'; S.charging = false; preview.visible = false; marker.visible = false;
   setTimeout(() => {
     hideHUD();
     const restartRibeiro = D_().restart === 'ribeiro';
@@ -962,6 +1052,7 @@ function introPace(dt){
   ES.root.position.set(g.position.x, valleyH(g.position.x,4.2), 4.2); ES.root.rotation.set(0,PI,0);
 }
 function startIntroCine(then){
+  setMood('cine');
   placeDuel(); GL.root.rotation.x = 0; hideHUD(); mode = 'cine';
   const G_ = () => GL.root.position;
   runCine([
@@ -973,6 +1064,7 @@ function startIntroCine(then){
   ], () => { GL.arms[0].rotation.z = 0; then(); });
 }
 function startFlashbackCine(then){
+  setMood('cine');
   field.visible = true; valley.visible = false; groundH = fieldH; canvas.style.filter = 'sepia(.5) saturate(.85) contrast(1.05)'; mode = 'cine';
   if (T.sheepGrp) field.remove(T.sheepGrp);
   T.sheepGrp = new THREE.Group(); field.add(T.sheepGrp);
@@ -983,6 +1075,7 @@ function startFlashbackCine(then){
   ], then);
 }
 function startDuelCine(then){
+  setMood('cine');
   placeDuel(); hideHUD(); mode = 'cine';
   const g = () => GL.root.position;
   runCine([
@@ -994,7 +1087,7 @@ function startDuelCine(then){
 
 // ================= Screens =================
 function showHUD(){ $('hud').hidden = false; VM.visible = true; }
-function hideHUD(){ $('hud').hidden = true; preview.visible = false; }
+function hideHUD(){ $('hud').hidden = true; preview.visible = false; marker.visible = false; }
 function showOverlay(html, acts){
   unlock(); const ov = $('ov'); $('ov-card').innerHTML = html; ov.hidden = false; ov.scrollTop = 0;
   ov.onclick = e => { const b = e.target.closest('[data-act]'); if (!b || b.disabled) return; audio(); const f = acts[b.dataset.act]; if (f) f(b); };
@@ -1002,7 +1095,7 @@ function showOverlay(html, acts){
 function hideOverlay(){ $('ov').hidden = true; }
 function showMenu(){
   pauseOn = false; timeScale = 1; slowT = 0; S.charging = false;
-  mode = 'menu'; hideHUD(); placeDuel(); GL.root.rotation.x = 0; if (cine) { cine = null; $('cine').hidden = true; }
+  mode = 'menu'; setMood('menu'); hideHUD(); placeDuel(); GL.root.rotation.x = 0; if (cine) { cine = null; $('cine').hidden = true; }
   const html = () => `
     <div class="eyebrow">Protótipo jogável · Fase 1</div>
     <h1>Os Valentes de Davi</h1>
@@ -1015,6 +1108,10 @@ function showMenu(){
       <button class="btn" data-act="train">Só o treino</button>
       <button class="btn" data-act="duel">Só o duelo</button>
     </div>
+    <div class="row">
+      <button class="btn" data-act="music" aria-pressed="${musicOn}">Música: ${musicOn ? 'ligada' : 'desligada'}</button>
+      <button class="btn" data-act="aim" aria-pressed="${aimHelp}">Ajuda de mira: ${aimHelp ? 'ligada' : 'desligada'}</button>
+    </div>
     <dl class="controls">
       <dt>Mouse</dt><dd>Olhar e mirar (clique na tela para travar o cursor)</dd>
       <dt>Segurar botão esquerdo</dt><dd>Girar a funda. Soltar no ponto dourado do giro é o tiro perfeito</dd>
@@ -1022,18 +1119,22 @@ function showMenu(){
       <dt>Setas</dt><dd>Olhar sem mouse</dd>
       <dt>Esc</dt><dd>Pausa: continuar, recomeçar ou voltar ao menu</dd>
       <dt>Enter</dt><dd>Pular a cena animada</dd>
+      <dt>H</dt><dd>Ajuda de mira: trajetória e marcador de onde a pedra vai cair</dd>
+      <dt>M</dt><dd>Ligar ou desligar a música</dd>
     </dl>
     <p class="note">Precisa de teclado e mouse. Este protótipo em navegador serve para testar as mecânicas; o jogo final será feito na Unity. Os versículos são provisórios.</p>`;
   const acts = {
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },
+    music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
+    aim: () => { setAimHelp(!aimHelp); $('ov-card').innerHTML = html(); },
     full: () => startFull(), train: () => { flow.kind = 'train'; hideOverlay(); tryLock(); startTraining(); }, duel: () => startDuelOnly(),
   };
   showOverlay(html(), acts);
 }
 function showPause(){
-  pauseOn = true; S.charging = false; preview.visible = false;
+  pauseOn = true; S.charging = false; preview.visible = false; marker.visible = false;
   const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Duelo';
-  showOverlay(`
+  const html = () => `
     <div class="eyebrow">Pausa · ${where} · ${D_().name}</div>
     <h2>Jogo pausado</h2>
     <div class="row">
@@ -1041,7 +1142,14 @@ function showPause(){
       ${inCine ? '<button class="btn" data-act="skip">Pular a cena</button>' : `<button class="btn" data-act="restart">${mode === 'training' ? 'Recomeçar o treino' : 'Recomeçar o duelo'}</button>`}
       <button class="btn" data-act="menu">Voltar ao menu</button>
     </div>
-    <p class="note">Esc pausa a qualquer momento. No duelo, recomeçar mantém a armadura e as pedras escolhidas.</p>`, {
+    <div class="row">
+      <button class="btn" data-act="music" aria-pressed="${musicOn}">Música: ${musicOn ? 'ligada' : 'desligada'}</button>
+      <button class="btn" data-act="aim" aria-pressed="${aimHelp}">Ajuda de mira: ${aimHelp ? 'ligada' : 'desligada'}</button>
+    </div>
+    <p class="note">Esc pausa a qualquer momento. No duelo, recomeçar mantém a armadura e as pedras escolhidas.</p>`;
+  showOverlay(html(), {
+    music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
+    aim: () => { setAimHelp(!aimHelp); $('ov-card').innerHTML = html(); },
     resume: () => { hideOverlay(); pauseOn = false; tryLock(); },
     skip: () => { hideOverlay(); pauseOn = false; tryLock(); endCine(); },
     restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else { placeDuel(); beginDuel(); } },
