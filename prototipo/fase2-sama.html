@@ -1391,7 +1391,7 @@ function showMenu(){
       <dt>Esc · H · M</dt><dd>Pausa · ajuda de mira · música</dd>
     </dl>
     <p class="note">No celular: direcional à esquerda, arraste à direita para olhar, e os botões Golpe, Escudo, ⇄ (trocar arma) e Orar. Os versículos são provisórios.</p>
-    ${onSite ? '<p class="note"><a class="phase-link" href="index.html">← Fase 1: Davi × Golias</a></p>' : ''}`;
+    ${onSite ? '<p class="note"><a class="phase-link" href="index.html">← Fase 1: Davi × Golias</a> · <a class="phase-link" href="fase3.html">Fase 3: Eleazar →</a></p>' : ''}`;
   showOverlay(html(), {
     diff: b => { dk = b.dataset.k; try { localStorage.setItem('vdd-diff', dk); } catch(e) {} $('ov-card').innerHTML = html(); },
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
