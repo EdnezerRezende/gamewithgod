@@ -94,6 +94,7 @@
   #cine-ref{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze-hi);text-shadow:0 1px 4px #000}
   .cine-hint{position:absolute;right:16px;bottom:calc(11vh - 34px);font-size:13px;color:var(--parch-dim)}
   .pause{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:12;background:rgba(20,15,10,.85);border:1px solid var(--line);padding:14px 20px;font-size:17px;pointer-events:none}
+  .esc-hint{position:absolute;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--parch-dim);text-shadow:0 1px 3px rgba(0,0,0,.8)}
   #fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:18;transition:opacity .5s}
   @media (prefers-reduced-motion:reduce){#game,#toast,#fade,#cine-q{transition:none}}
 </style>
@@ -113,6 +114,7 @@
   <canvas id="gauge" width="280" height="280"></canvas>
   <div id="toast"></div>
   <div id="hurt"></div>
+  <div class="esc-hint">Esc · pausa e menu</div>
 </div>
 
 <div id="cine" hidden>
@@ -120,7 +122,7 @@
   <div class="cine-text"><p id="cine-q"></p><span id="cine-ref"></span></div>
   <div class="cine-hint">Clique: avançar · Enter: pular</div>
 </div>
-<div id="pause" class="pause" hidden>Clique na tela para voltar ao jogo</div>
+<div id="pause" class="pause" hidden>Clique na tela para jogar · Esc abre a pausa</div>
 <div id="fade"></div>
 <div id="ov" class="overlay" hidden><div id="ov-card" class="card"></div></div>
 
@@ -158,9 +160,9 @@ const VS = {
 const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]}</cite></blockquote>`;
 
 const DIFF = {
-  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:3,   arc:80, preview:true,  arcVisible:true,  sway:.5, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
-  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:2,   arc:50, preview:false, arcVisible:true,  sway:1,  roar:15, dardo:25, spear:35, lion:6,   fore:.22, restart:'duel',    mult:1.5, gSpeed:.95},
-  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:1.1, arc:30, preview:false, arcVisible:false, sway:1.6,roar:22, dardo:35, spear:50, lion:7.5, fore:.17, restart:'ribeiro', mult:2,   gSpeed:1.1},
+  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:3,   arc:140, preview:true,  arcVisible:true,  sway:.5, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
+  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:2,   arc:100, preview:false, arcVisible:true,  sway:1,  roar:15, dardo:25, spear:35, lion:6,   fore:.22, restart:'duel',    mult:1.5, gSpeed:.95},
+  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:1.1, arc:60, preview:false, arcVisible:false, sway:1.6,roar:22, dardo:35, spear:50, lion:7.5, fore:.17, restart:'ribeiro', mult:2,   gSpeed:1.1},
 };
 let dk = 'guerreiro';
 try { const s = localStorage.getItem('vdd-diff'); if (DIFF[s]) dk = s; } catch(e) {}
@@ -421,7 +423,7 @@ const P = {pos:V(), vel:V(), yaw:0, pitch:0, eye:1.6, vida:100, cor:70, armor:fa
 const S = {charging:false, t:0, rev:0, inZone:false, whip:0};
 const flow = {kind:'full', medal:null, trainScore:0, corStart:55, armor:false, stones:[], restartAtDuel:true};
 let mode = 'menu', cine = null, gt = 0, timeScale = 1, slowT = 0, shake = 0;
-let locked = false, noLock = false, lockFails = 0;
+let locked = false, noLock = false, lockFails = 0, pauseOn = false;
 const keys = {};
 const stones = [], parts = [], dardos = [];
 let targets = [];
@@ -435,11 +437,15 @@ function tryLock(){
   try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch(e) { noLock = true; }
 }
 function unlock(){ try { if (document.pointerLockElement) document.exitPointerLock(); } catch(e) {} }
-document.addEventListener('pointerlockchange', () => { locked = document.pointerLockElement === canvas; });
+document.addEventListener('pointerlockchange', () => {
+  const was = locked; locked = document.pointerLockElement === canvas;
+  if (was && !locked && (playing() || cine) && !pauseOn && $('ov').hidden) showPause();
+});
 document.addEventListener('pointerlockerror', () => { if (++lockFails >= 3) noLock = true; });
 addEventListener('keydown', e => {
   keys[e.code] = true;
-  if (cine && (e.code === 'Enter' || e.code === 'Escape')) endCine();
+  if ((e.code === 'Escape' || e.code === 'KeyP') && (playing() || cine) && !pauseOn) { showPause(); return; }
+  if (cine && !pauseOn && e.code === 'Enter') endCine();
   if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code) && playing()) e.preventDefault();
 });
 addEventListener('keyup', e => { keys[e.code] = false; });
@@ -491,11 +497,11 @@ function updateHUD(){
     $('vida').style.width = clamp(P.vida,0,100) + '%'; $('cor').style.width = clamp(P.cor,0,100) + '%';
     $('opening').hidden = !(D.state === 'opening' && D_().arcVisible && !D.won);
   } else { $('score').textContent = T.score; $('opening').hidden = true; }
-  $('pause').hidden = !(playing() && !locked && !noLock);
+  $('pause').hidden = !(playing() && !locked && !noLock && !pauseOn);
 }
 
 // ================= Sling =================
-const SPIN = 1.5;
+const SPIN = 1.2;
 const phase = () => (S.t*SPIN) % 1;
 const power = () => Math.min(1, .15 + S.t/1.15);
 function sweetArc(){ return D_().arc * (.7 + .6*P.cor/100); }
@@ -507,7 +513,7 @@ function releaseCharge(){
   if (!canThrow()) return;
   const d = D_(), dz = zoneDist(), half = sweetArc()/2;
   let err = .12, perfect = dz <= half;
-  if (!perfect) err += Math.min(6, (dz-half)/180*9);
+  if (!perfect) err += Math.min(4, (dz-half)/180*6);
   if (S.t > 3) err += (S.t-3)*2;
   let smooth = .85;
   if (mode === 'duel'){ smooth = flow.stones[D.used] ?? .6; D.used++; D.stonesLeft--; }
@@ -995,6 +1001,7 @@ function showOverlay(html, acts){
 }
 function hideOverlay(){ $('ov').hidden = true; }
 function showMenu(){
+  pauseOn = false; timeScale = 1; slowT = 0; S.charging = false;
   mode = 'menu'; hideHUD(); placeDuel(); GL.root.rotation.x = 0; if (cine) { cine = null; $('cine').hidden = true; }
   const html = () => `
     <div class="eyebrow">Protótipo jogável · Fase 1</div>
@@ -1013,7 +1020,8 @@ function showMenu(){
       <dt>Segurar botão esquerdo</dt><dd>Girar a funda. Soltar no ponto dourado do giro é o tiro perfeito</dd>
       <dt>W A S D</dt><dd>Andar · Shift para correr</dd>
       <dt>Setas</dt><dd>Olhar sem mouse</dd>
-      <dt>Esc</dt><dd>Soltar o cursor (pausa)</dd>
+      <dt>Esc</dt><dd>Pausa: continuar, recomeçar ou voltar ao menu</dd>
+      <dt>Enter</dt><dd>Pular a cena animada</dd>
     </dl>
     <p class="note">Precisa de teclado e mouse. Este protótipo em navegador serve para testar as mecânicas; o jogo final será feito na Unity. Os versículos são provisórios.</p>`;
   const acts = {
@@ -1021,6 +1029,24 @@ function showMenu(){
     full: () => startFull(), train: () => { flow.kind = 'train'; hideOverlay(); tryLock(); startTraining(); }, duel: () => startDuelOnly(),
   };
   showOverlay(html(), acts);
+}
+function showPause(){
+  pauseOn = true; S.charging = false; preview.visible = false;
+  const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Duelo';
+  showOverlay(`
+    <div class="eyebrow">Pausa · ${where} · ${D_().name}</div>
+    <h2>Jogo pausado</h2>
+    <div class="row">
+      <button class="btn primary" data-act="resume">Continuar</button>
+      ${inCine ? '<button class="btn" data-act="skip">Pular a cena</button>' : `<button class="btn" data-act="restart">${mode === 'training' ? 'Recomeçar o treino' : 'Recomeçar o duelo'}</button>`}
+      <button class="btn" data-act="menu">Voltar ao menu</button>
+    </div>
+    <p class="note">Esc pausa a qualquer momento. No duelo, recomeçar mantém a armadura e as pedras escolhidas.</p>`, {
+    resume: () => { hideOverlay(); pauseOn = false; tryLock(); },
+    skip: () => { hideOverlay(); pauseOn = false; tryLock(); endCine(); },
+    restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else { placeDuel(); beginDuel(); } },
+    menu: showMenu,
+  });
 }
 function startFull(){
   flow.kind = 'full'; flow.medal = null; hideOverlay(); tryLock();
@@ -1036,7 +1062,9 @@ function goArmor(){
     <div class="choices">
       <button class="choice" data-act="armor"><strong>Vestir a armadura</strong><span>Recebe metade do dano, mas anda devagar e a mira balança mais.</span></button>
       <button class="choice" data-act="noarmor"><strong>Recusar, como Davi</strong><span>Leve e ágil. Conta para a Fidelidade ao relato.</span></button>
-    </div>`, {
+    </div>
+    <div class="row"><button class="btn" data-act="menu">Voltar ao menu</button></div>`, {
+    menu: showMenu,
     armor: () => { flow.armor = true; goStones(); }, noarmor: () => { flow.armor = false; goStones(); },
   });
 }
@@ -1063,7 +1091,8 @@ function goStones(){
     ${verseHTML('v40')}
     <p class="lede">Escolha 5 pedras. As lisas e arredondadas voam mais retas; as ásperas desviam. A ordem da escolha é a ordem de uso.</p>
     <div class="stones">${vals.map((v,i) => `<button class="stone" data-act="pick" data-i="${i}" aria-pressed="false" aria-label="Pedra ${i+1}"><b></b><canvas width="160" height="160"></canvas></button>`).join('')}</div>
-    <div class="row"><button class="btn primary" data-act="ok" id="stones-ok" disabled>Guardar no alforje (0/5)</button></div>`, {
+    <div class="row"><button class="btn primary" data-act="ok" id="stones-ok" disabled>Guardar no alforje (0/5)</button><button class="btn" data-act="back">Voltar à armadura</button><button class="btn" data-act="menu">Menu</button></div>`, {
+    back: goArmor, menu: showMenu,
     pick: b => {
       const i = +b.dataset.i, at = picked.indexOf(i);
       if (at >= 0) picked.splice(at,1); else if (picked.length < 5) picked.push(i);
@@ -1103,7 +1132,7 @@ function update(dt, rdt){
 function loop(now){
   requestAnimationFrame(loop);
   const rdt = Math.min(.05, (now - last)/1000); last = now;
-  const paused = playing() && !locked && !noLock;
+  const paused = pauseOn || (playing() && !locked && !noLock);
   if (!paused) update(rdt*timeScale, rdt);
   else { updateHUD(); drawGauge(); }
   renderer.render(scene, camera);
