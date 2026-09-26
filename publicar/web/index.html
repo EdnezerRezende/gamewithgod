@@ -86,6 +86,7 @@
   #cross{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px}
   #cross::before,#cross::after{content:"";position:absolute;background:rgba(234,220,189,.85);box-shadow:0 0 2px rgba(0,0,0,.8)}
   #cross::before{left:8px;top:0;width:2px;height:18px} #cross::after{top:8px;left:0;height:2px;width:18px}
+  #cross.on::before,#cross.on::after{background:#ffd166}
   #gauge{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:140px;height:140px}
   #toast{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-size:20px;font-weight:500;text-align:center;max-width:90vw;
     text-shadow:0 2px 6px rgba(0,0,0,.9);opacity:0;transition:opacity .25s}
@@ -561,6 +562,7 @@ function drawGauge(){
     c.lineWidth = 4; c.strokeStyle = S.t > 3 ? '#c0533a' : '#93a35a'; c.beginPath(); c.arc(cx,cy,R+11,-PI/2,-PI/2+pw*PI*2); c.stroke();
     if (d.arcVisible){ const a = (phase()-.75)*PI*2 - PI/2; c.fillStyle = S.inZone ? '#fff1c4' : '#eadcbd'; c.beginPath(); c.arc(cx+Math.cos(a)*R, cy+Math.sin(a)*R, S.inZone?8:6, 0, PI*2); c.fill(); }
     else { c.fillStyle = 'rgba(234,220,189,.6)'; c.font = '12px "Alegreya Sans",sans-serif'; c.textAlign = 'center'; c.fillText('ouça o giro', cx, cy+4); }
+    if (S.reach === false){ c.fillStyle = '#e07a5f'; c.font = '600 12px "Alegreya Sans",sans-serif'; c.textAlign = 'center'; c.fillText('longe: gire mais', cx, cy + (d.arcVisible ? 4 : 20)); }
   } else {
     c.fillStyle = 'rgba(234,220,189,.55)'; c.font = '12px "Alegreya Sans",sans-serif'; c.textAlign = 'center'; c.fillText('segure para girar', cx, cy+4);
   }
@@ -574,6 +576,7 @@ function updateHUD(){
     $('opening').hidden = !(D.state === 'opening' && D_().arcVisible && !D.won);
   } else { $('score').textContent = T.score; $('opening').hidden = true; }
   $('pause').hidden = !(playing() && !locked && !noLock && !pauseOn);
+  $('cross').classList.toggle('on', playing() && aimHelp && aimPoint().good);
 }
 
 // ================= Sling =================
@@ -583,7 +586,7 @@ const power = () => Math.min(1, .15 + S.t/1.15);
 function sweetArc(){ return D_().arc * (.7 + .6*P.cor/100); }
 function zoneDist(){ const pd = phase()*360; return Math.abs(((pd - 270 + 540) % 360) - 180); }
 function canThrow(){ return mode === 'training' || (mode === 'duel' && D.stonesLeft > 0 && !D.won); }
-function startCharge(){ if (!canThrow()) { if (mode === 'duel') toast('Sem pedras no alforje.'); return; } S.charging = true; S.t = 0; S.rev = -1; S.inZone = false; }
+function startCharge(){ if (!canThrow()) { if (mode === 'duel') toast('Sem pedras no alforje.'); return; } S.charging = true; S.t = 0; S.rev = -1; S.inZone = false; S.reach = true; }
 function releaseCharge(){
   S.charging = false; preview.visible = false; marker.visible = false;
   if (!canThrow()) return;
@@ -594,13 +597,14 @@ function releaseCharge(){
   let smooth = .85;
   if (mode === 'duel'){ smooth = flow.stones[D.used] ?? .6; D.used++; D.stonesLeft--; }
   err += (1-smooth)*2.4;
-  const dir = camera.getWorldDirection(V());
+  const spd = 16 + 26*power();
+  const start = aimStart(camera.getWorldDirection(V()));
+  const dir = solveDir(start, aimPoint().p, spd).dir;
   const right = V(1,0,0).applyQuaternion(camera.quaternion), up = V(0,1,0).applyQuaternion(camera.quaternion);
   const th = rand(0,PI*2), e = err*PI/180*Math.sqrt(Math.random());
   dir.applyAxisAngle(up, Math.cos(th)*e).applyAxisAngle(right, Math.sin(th)*e).normalize();
-  const spd = 16 + 26*power();
   const m = new THREE.Mesh(stoneGeo, cmat(0x8f8b80));
-  camera.getWorldPosition(m.position); m.position.addScaledVector(right,.22).addScaledVector(up,.05).addScaledVector(dir,.4);
+  m.position.copy(start);
   scene.add(m);
   stones.push({m, vel: dir.multiplyScalar(spd), smooth, minHead:99, hit:false, life:6});
   sfx.throw(); S.whip = .25;
@@ -609,8 +613,29 @@ function releaseCharge(){
 }
 const stoneGeo = new THREE.DodecahedronGeometry(.055,0);
 function aimStart(dir){ const right = V(1,0,0).applyQuaternion(camera.quaternion), up = V(0,1,0).applyQuaternion(camera.quaternion); return camera.getWorldPosition(V()).addScaledVector(right,.22).addScaledVector(up,.05).addScaledVector(dir,.4); }
+// Ponto sob a mira: o primeiro alvo ou o chão atravessado pelo raio que sai do centro da tela.
+function aimPoint(){
+  const o = camera.getWorldPosition(V()), d = camera.getWorldDirection(V()), p = V();
+  for (let s = .4; s < 150; s += (s < 60 ? .1 : .4)){
+    p.copy(o).addScaledVector(d, s);
+    for (const t of targets) if (t.test(p)) return {p: p.clone(), good: typeof t.good === 'function' ? !!t.good() : !!t.good};
+    const gy = groundH(p.x, p.z);
+    if (p.y < gy){ p.y = gy; return {p: p.clone(), good: false}; }
+  }
+  return {p: o.addScaledVector(d, 150), good: false};
+}
+// Ângulo de lançamento (arco baixo) para a pedra, com a velocidade atual, cair exatamente no ponto da mira.
+function solveDir(start, target, speed){
+  const dx = target.x - start.x, dz = target.z - start.z, h = Math.hypot(dx, dz), dy = target.y - start.y, v2 = speed*speed;
+  if (h < .01) return {dir: camera.getWorldDirection(V()), reach: true};
+  const disc = v2*v2 - G*(G*h*h + 2*dy*v2);
+  const reach = disc >= 0, th = reach ? Math.atan((v2 - Math.sqrt(disc)) / (G*h)) : PI/4;
+  return {dir: V(dx/h*Math.cos(th), Math.sin(th), dz/h*Math.cos(th)), reach};
+}
 function simulateShot(){
-  const dir = camera.getWorldDirection(V()), p = aimStart(dir), v = dir.multiplyScalar(16+26*power()), arr = prevGeo.attributes.position.array;
+  const aim = aimPoint(), p = aimStart(camera.getWorldDirection(V())), spd = 16+26*power();
+  const sol = solveDir(p, aim.p, spd); S.reach = sol.reach;
+  const v = sol.dir.multiplyScalar(spd), arr = prevGeo.attributes.position.array;
   const N = 80, h = .01;
   let n = 0, hit = null, good = false;
   const push = q => { arr[n*3] = q.x; arr[n*3+1] = q.y; arr[n*3+2] = q.z; n++; };
@@ -626,11 +651,11 @@ function simulateShot(){
   }
   for (let i=n;i<N;i++){ arr[i*3] = arr[(n-1)*3]; arr[i*3+1] = arr[(n-1)*3+1]; arr[i*3+2] = arr[(n-1)*3+2]; }
   prevGeo.attributes.position.needsUpdate = true; preview.computeLineDistances();
-  preview.material.color.setHex(good ? 0xffd166 : 0xf3d27a); preview.visible = true;
+  preview.material.color.setHex(!S.reach ? 0xc0533a : good ? 0xffd166 : 0xf3d27a); preview.visible = true;
   if (hit){
     marker.visible = true; marker.position.copy(hit); marker.lookAt(camera.position);
     marker.scale.setScalar(Math.max(1, hit.distanceTo(camera.position)/12));
-    markerMat.color.setHex(good ? 0xffd166 : 0xeadcbd); markerMat.opacity = good ? 1 : .75;
+    markerMat.color.setHex(!S.reach ? 0xc0533a : good ? 0xffd166 : 0xeadcbd); markerMat.opacity = good ? 1 : .8;
   } else marker.visible = false;
 }
 function updateSling(dt){
@@ -642,8 +667,9 @@ function updateSling(dt){
     const inZ = zoneDist() <= sweetArc()/2;
     if (inZ && !S.inZone && !D_().arcVisible) sfx.tick();
     S.inZone = inZ;
+    // A bolsa gira acima da mão, à direita, sem cobrir a mira.
     const a = phase()*PI*2 - PI/2;
-    px = hp.x + Math.cos(a)*.3; py = hp.y + .22; pz = hp.z + Math.sin(a)*.3 - .05;
+    px = hp.x + .1 + Math.cos(a)*.15; py = hp.y + .16; pz = hp.z - .05 + Math.sin(a)*.15;
     if (aimHelp || D_().preview) simulateShot(); else { preview.visible = false; marker.visible = false; }
   } else {
     S.whip = Math.max(0, S.whip - dt);
