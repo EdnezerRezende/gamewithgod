@@ -55,6 +55,9 @@ namespace Valentes
         }
 
         /// <summary>yaw em radianos; 0 olha para +Z (em direção a Golias no vale).</summary>
+        /// <summary>Com o zoom de mira, olhar e tremor ficam proporcionalmente menores.</summary>
+        float Zoom { get { return cam != null ? cam.fieldOfView / 72f : 1f; } }
+
         public Vector3 Forward { get { return new Vector3(Mathf.Sin(yaw), 0f, Mathf.Cos(yaw)); } }
         public Vector3 Right { get { return new Vector3(Mathf.Cos(yaw), 0f, -Mathf.Sin(yaw)); } }
 
@@ -67,13 +70,14 @@ namespace Valentes
             Vector2 md = GameInput.MouseDelta();
             if (Mathf.Abs(md.x) < 180f && Mathf.Abs(md.y) < 180f)
             {
-                yaw += md.x * MouseSensitivity;
-                pitch = Mathf.Clamp(pitch + md.y * MouseSensitivity, -1.35f, 1.35f);
+                float k = MouseSensitivity * Zoom;
+                yaw += md.x * k;
+                pitch = Mathf.Clamp(pitch + md.y * k, -1.35f, 1.35f);
             }
             // Arrasto na tela (pixels do painel, y para baixo): arrastar para baixo olha para baixo.
             Vector2 td = TouchControls.ConsumeLook();
-            yaw += td.x * TouchSensitivity;
-            pitch = Mathf.Clamp(pitch - td.y * TouchSensitivity, -1.35f, 1.35f);
+            yaw += td.x * TouchSensitivity * Zoom;
+            pitch = Mathf.Clamp(pitch - td.y * TouchSensitivity * Zoom, -1.35f, 1.35f);
             Vector2 al = GameInput.ArrowLook();
             yaw += al.x * 1.8f * dt;
             pitch = Mathf.Clamp(pitch + al.y * 1.2f * dt, -1.35f, 1.35f);
@@ -99,7 +103,7 @@ namespace Valentes
             float a = Difficulty.Current.swayMultiplier * (0.25f + 2.1f * (1f - courage / 100f));
             if (armor) a += 0.8f;
             a += extraSwayDegrees;
-            return a * swayScale * Mathf.Deg2Rad;
+            return a * swayScale * Zoom * Mathf.Deg2Rad;
         }
 
         void LateUpdate()

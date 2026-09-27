@@ -121,6 +121,17 @@ No ribeiro, o jogador escolhe **5 pedras** (17:40).
 - **Correr em direção a Golias** (17:48) aumenta a Coragem; fugir ou se esconder
   a diminui.
 
+### Mira
+
+- **Golias em escala de jogo:** ele é desenhado cerca de 45% maior que o modelo original (uns 4,8 m) para
+  a testa ser um alvo visível de longe. O capacete fica acima da testa, que aparece inteira como uma área
+  clara entre os olhos e a borda do capacete.
+- **Na abertura** a testa brilha e, no Pastor e no Guerreiro, um anel dourado pulsa em volta dela.
+- **Zoom de mira:** segurar o botão direito aproxima a câmera; girar a funda no duelo também aproxima um
+  pouco (vale no celular). Com o zoom, o olhar e o balanço da mira ficam mais finos.
+- **Ajuda de mira** (tecla H): na abertura, se a mira estiver bem perto da testa, ela "gruda" na testa.
+- Uma pedra que chega à testa por cima não é mais barrada pelo capacete durante a abertura.
+
 ### Tensão
 
 A dificuldade não está em tirar a vida do chefão, e sim em **acertar um único
@@ -190,6 +201,10 @@ margem de erro ao redor delas.
 | Parâmetro | Pastor (fácil) | Guerreiro (normal) | Valente (difícil) |
 |---|---|---|---|
 | Tempo da testa exposta | 5 s | 3,5 s | 2 s |
+| Tamanho do alvo da testa | 0,42 m | 0,32 m | 0,24 m |
+| Anel dourado em volta da testa | Sim | Sim | Não |
+| Ajuda de mira (a mira gruda na testa) | Até 3,5° | Até 2° | Não |
+| Desvio ao soltar fora do tempo | Pequeno | Médio | Grande |
 | Indicador do tiro perfeito | Grande e visível | Visível | Apenas som sutil |
 | Linha de trajetória | Prévia curta | Não | Não |
 | Balanço da mira (Coragem baixa) | Leve | Médio | Forte |

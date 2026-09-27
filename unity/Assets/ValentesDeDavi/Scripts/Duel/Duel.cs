@@ -38,7 +38,14 @@ namespace Valentes
                 else Armor("Golias abaixou a cabeça: o capacete cobriu a testa.", p);
             });
             forehead.counts = () => goliath.IsOpen && !Over;
-            HitZone.Sphere(g.head, "capacete", new Vector3(0f, 0.22f, 0f), 0.34f, (s, p) => Armor("O capacete de bronze protegeu a cabeça.", p));
+            HitZone.Sphere(g.head, "capacete", new Vector3(0f, 0.22f, 0f), 0.34f, (s, p) =>
+            {
+                if (Over) return;
+                // Na abertura, a frente do rosto abaixo da borda do capacete não é capacete: é a testa.
+                Vector3 l = g.head.InverseTransformPoint(p);
+                if (goliath.IsOpen && l.y <= 0.4f && l.z >= 0.05f) Win(p);
+                else Armor("O capacete de bronze protegeu a cabeça.", p);
+            });
             HitZone.Box(b.shield, "escudo", Vector3.zero, new Vector3(1.16f, 1.76f, 0.3f), (s, p) =>
             {
                 Sfx.Play("wood");
@@ -80,6 +87,8 @@ namespace Valentes
             lastDist = Vector3.Distance(U.Flat(player.Position), U.Flat(goliath.rig.root.position));
 
             sling.canThrow = () => stonesLeft > 0 && !Over;
+            sling.zoomWhileCharging = true;
+            sling.assist = () => goliath.IsOpen && !Over ? goliath.rig.forehead.position : (Vector3?)null;
             sling.takeStone = () =>
             {
                 float s = used < stones.Count ? stones[used] : 0.6f;
@@ -147,7 +156,7 @@ namespace Valentes
             if (!won)
             {
                 Vector3 g = goliath.rig.root.position, d = U.Flat(p - g);
-                if (d.magnitude < 1.5f) p = g + (d.sqrMagnitude > 0.0001f ? d.normalized : Vector3.back) * 1.5f;
+                if (d.magnitude < 2.2f) p = g + (d.sqrMagnitude > 0.0001f ? d.normalized : Vector3.back) * 2.2f;
             }
             return p;
         }

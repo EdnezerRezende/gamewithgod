@@ -22,6 +22,12 @@ namespace Valentes
         public Func<bool> canThrow;
         public Func<float> takeStone;
         public Action<Stone> onThrow;
+        /// <summary>Ajuda de mira: ponto para onde a mira "gruda" quando está bem perto (a testa na abertura).</summary>
+        public Func<Vector3?> assist;
+        /// <summary>Girar a funda aproxima um pouco a câmera (no duelo).</summary>
+        public bool zoomWhileCharging;
+        /// <summary>Botão direito segurado = zoom de mira (só na fase 1; na fase 2 ele é o escudo).</summary>
+        public bool rightClickZoom;
 
         public bool charging;
         public float chargeTime;
@@ -118,6 +124,7 @@ namespace Valentes
         void Update()
         {
             float dt = Time.deltaTime;
+            UpdateZoom();
             if (player == null || !player.controlling || dt <= 0f) { AnimatePouch(); return; }
 
             if (Settings.AimHelp)
@@ -149,6 +156,16 @@ namespace Valentes
             AnimatePouch();
         }
 
+        /// <summary>Zoom de mira: botão direito aproxima bem; girar a funda no duelo aproxima um pouco (também no toque).</summary>
+        void UpdateZoom()
+        {
+            if (player == null || player.cam == null) return;
+            bool on = player.controlling;
+            float fov = !on ? 72f : rightClickZoom && GameInput.ShieldHeld() ? 38f : charging && zoomWhileCharging ? 54f : 72f;
+            Camera c = player.cam;
+            c.fieldOfView = on ? Mathf.Lerp(c.fieldOfView, fov, Mathf.Clamp01(Time.unscaledDeltaTime * 8f)) : 72f;
+        }
+
         static bool Counts(HitZone hz) { return hz != null && hz.counts != null && hz.counts(); }
 
         /// <summary>Ponto sob a mira: o primeiro alvo ou o chão atravessado pelo raio do centro da tela.</summary>
@@ -156,6 +173,13 @@ namespace Valentes
         {
             Transform c = player.cam.transform;
             Vector3 o = c.position, d = c.forward;
+            // Ajuda de mira: se a mira estiver bem perto da testa na abertura, ela "gruda" na testa.
+            float assistDeg = Difficulty.Current.aimAssistDegrees;
+            if (Settings.AimHelp && assist != null && assistDeg > 0f)
+            {
+                Vector3? f = assist();
+                if (f.HasValue && Vector3.Angle(d, f.Value - o) < assistDeg * 72f / Mathf.Max(1f, player.cam.fieldOfView)) { good = true; return f.Value; }
+            }
             const float MaxDist = 150f;
             Physics.SyncTransforms();
             RaycastHit rh;
@@ -278,7 +302,8 @@ namespace Valentes
             float dz = ZoneDistanceDeg(), half = SweetArcDegrees() / 2f;
             bool perfect = dz <= half;
             float err = 0.12f;
-            if (!perfect) err += Mathf.Min(4f, (dz - half) / 180f * 6f);
+            // Soltar fora do tempo espalha a pedra; menos no Pastor, mais no Valente.
+            if (!perfect) err += Mathf.Min(2.4f, (dz - half) / 180f * 3.6f) * Difficulty.Current.releaseSpread;
             if (chargeTime > 3f) err += (chargeTime - 3f) * 2f;
             float smooth = takeStone != null ? takeStone() : 0.85f;
             err += (1f - smooth) * 2.4f;

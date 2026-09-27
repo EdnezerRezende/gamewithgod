@@ -79,6 +79,7 @@ namespace Valentes
             sling.world = world;
             sling.ui = ui;
             sling.Build();
+            sling.rightClickZoom = true;
             sling.SetVisible(false);
 
             goliath = Goliath.Build(world.valley.transform);
@@ -106,6 +107,7 @@ namespace Valentes
             cutscene.cam = cam;
             cutscene.ui = ui;
 
+            ui.SetHint("Esc · pausa e menu · botão direito · zoom da mira · H · ajuda de mira · M · música");
             ShowMenu();
         }
 
@@ -304,6 +306,8 @@ namespace Valentes
             player.health = 100f;
             sling.canThrow = () => true;
             sling.takeStone = null;
+            sling.zoomWhileCharging = false;
+            sling.assist = null;
             sling.onThrow = s => training.shots++;
             training.Begin();
             mode = Mode.Training;
@@ -420,7 +424,7 @@ namespace Valentes
             Transform g = goliath.rig.root;
             cutscene.Play(new List<Shot>
             {
-                new Shot("v49", 4.5f, (c, p) => Look(c, g.position + new Vector3(4.5f - p * 1.5f, 1.6f + p * 0.5f, -2.5f), g.position + Vector3.up * 1.4f)),
+                new Shot("v49", 4.5f, (c, p) => Look(c, g.position + new Vector3(6.5f - p * 1.5f, 2.6f + p * 0.6f, -1.5f), g.position + new Vector3(0f, 0.6f, -1.8f * Models.GoliathScale))),
                 new Shot("v51", 4.5f, (c, p) => Look(c, new Vector3(-14f + p * 6f, 16f, 8f), new Vector3(0f, 10f, 80f))) { start = () => Sfx.Play("cheer") },
                 new Shot("v47", 4f, (c, p) => Look(c, new Vector3(0f, 4f + p * 18f, -38f - p * 12f), new Vector3(0f, 2f, 22f))),
             }, ShowResults);
@@ -505,10 +509,10 @@ namespace Valentes
             Shot s2 = new Shot("v4", 6f, (c, p) =>
             {
                 float a = Mathf.Lerp(-0.9f, 0.7f, p);
-                Look(c, g.position + new Vector3(Mathf.Sin(a) * 8f, 0.9f, -Mathf.Cos(a) * 8f), g.position + Vector3.up * 2.3f);
+                Look(c, g.position + new Vector3(Mathf.Sin(a) * 9.5f, 0.9f * Models.GoliathScale, -Mathf.Cos(a) * 9.5f), g.position + Vector3.up * 2.3f * Models.GoliathScale);
             });
             s2.update = p => goliath.Pace(Time.time);
-            Shot s3 = new Shot("v10", 5.5f, (c, p) => Look(c, g.position + new Vector3(0.8f, 2.3f, -3.4f + p * 0.6f), g.position + Vector3.up * 2.9f));
+            Shot s3 = new Shot("v10", 5.5f, (c, p) => Look(c, g.position + new Vector3(0.8f, 2.3f * Models.GoliathScale, -3.4f * Models.GoliathScale + p * 0.6f), g.position + Vector3.up * 2.9f * Models.GoliathScale));
             s3.start = () => { Sfx.Play("roar"); };
             s3.update = p => { goliath.Pace(Time.time); goliath.RoarPose(Mathf.Min(1f, p * 4f)); };
             Shot s4 = new Shot("v11", 5.5f, (c, p) => Look(c, new Vector3(10f - p * 4f, World.ValleyHeight(10f, -86f) + 2.6f, -90f), new Vector3(0f, 3f, 6f)));
@@ -547,12 +551,12 @@ namespace Valentes
             PlaceDuel();
             Transform g = goliath.rig.root;
             Vector3 dp = player.Position;
-            Shot s1 = new Shot("v43", 5f, (c, p) => Look(c, g.position + new Vector3(1.6f, 2.4f, -3.6f + p * 0.4f), g.position + Vector3.up * 2.9f));
+            Shot s1 = new Shot("v43", 5f, (c, p) => Look(c, g.position + new Vector3(1.6f, 2.4f * Models.GoliathScale, -3.6f * Models.GoliathScale + p * 0.4f), g.position + Vector3.up * 2.9f * Models.GoliathScale));
             s1.update = p => goliath.rig.head.localRotation = Quaternion.Euler(-8f, 0f, 0f);
             cutscene.Play(new List<Shot>
             {
                 s1,
-                new Shot("v45", 7f, (c, p) => Look(c, dp + new Vector3(0.7f, 1.85f, -1.3f + p * 1.2f), g.position + Vector3.up * 2.2f)),
+                new Shot("v45", 7f, (c, p) => Look(c, dp + new Vector3(0.7f, 1.85f, -1.3f + p * 1.2f), g.position + Vector3.up * 2.2f * Models.GoliathScale)),
                 new Shot("v48", 4.5f, (c, p) => Look(c, new Vector3(24f - p * 6f, 5f, -2f), new Vector3(0f, 2f, 0f))),
             }, then);
         }

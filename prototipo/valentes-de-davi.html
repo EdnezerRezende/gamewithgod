@@ -152,7 +152,7 @@
   <canvas id="gauge" width="280" height="280"></canvas>
   <div id="toast"></div>
   <div id="hurt"></div>
-  <div class="esc-hint">Esc · pausa e menu · H · ajuda de mira · M · música · N · narração</div>
+  <div class="esc-hint">Esc · pausa e menu · botão direito · zoom da mira · H · ajuda de mira · M · música · N · narração</div>
 </div>
 
 <div id="cine" hidden>
@@ -205,9 +205,9 @@ const VS = {
 const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]} <button class="listen" data-act="speak" data-k="${k}" aria-label="Ouvir o versículo">▶ Ouvir</button></cite></blockquote>`;
 
 const DIFF = {
-  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:5,   arc:140, preview:true,  arcVisible:true,  sway:.35, roar:8,  dardo:15, spear:20, lion:4.2, fore:.30, restart:'duel',    mult:1,   gSpeed:.8},
-  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:3.5, arc:100, preview:false, arcVisible:true,  sway:.75, roar:15, dardo:25, spear:35, lion:6,   fore:.22, restart:'duel',    mult:1.5, gSpeed:.95},
-  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:2,   arc:60, preview:false, arcVisible:false, sway:1.3,roar:22, dardo:35, spear:50, lion:7.5, fore:.17, restart:'ribeiro', mult:2,   gSpeed:1.1},
+  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:5,   arc:140, preview:true,  arcVisible:true,  sway:.35, roar:8,  dardo:15, spear:20, lion:4.2, fore:.42, restart:'duel',    mult:1,   gSpeed:.8, assist:3.5, spread:.55},
+  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:3.5, arc:100, preview:false, arcVisible:true,  sway:.75, roar:15, dardo:25, spear:35, lion:6,   fore:.32, restart:'duel',    mult:1.5, gSpeed:.95, assist:2, spread:.8},
+  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:2,   arc:60, preview:false, arcVisible:false, sway:1.3,roar:22, dardo:35, spear:50, lion:7.5, fore:.24, restart:'ribeiro', mult:2,   gSpeed:1.1, assist:0, spread:1},
 };
 let dk = 'guerreiro';
 try { const s = localStorage.getItem('vdd-diff'); if (DIFF[s]) dk = s; } catch(e) {}
@@ -419,15 +419,19 @@ function buildGolias(){
   const head = new THREE.Group(); head.position.set(0,2.78,0); root.add(head);
   const neck = cyl(.14,.16,.22,skin); neck.position.y = .02; head.add(neck);
   const skull = sph(.27,skin); skull.position.y = .22; head.add(skull);
-  const helm = new THREE.Mesh(new THREE.SphereGeometry(.305,12,8,0,PI*2,0,PI/2), bronze); helm.position.y = .3; head.add(helm);
-  const crest = box(.06,.2,.5,0,bronze); crest.position.y = .62; head.add(crest);
+  const helm = new THREE.Mesh(new THREE.SphereGeometry(.305,12,8,0,PI*2,0,PI/2), bronze); helm.position.y = .38; head.add(helm);
+  const crest = box(.06,.2,.5,0,bronze); crest.position.y = .7; head.add(crest);
   for (const sx of [-1,1]){ const ch = box(.05,.26,.2,0,bronze); ch.position.set(.27*sx,.14,.04); head.add(ch); }
   const beard = box(.3,.24,.12,dark); beard.position.set(0,.03,.2); head.add(beard);
-  for (const sx of [-1,1]){ const e = sph(.03,0x160d08); e.position.set(.09*sx,.2,.245); head.add(e); }
+  for (const sx of [-1,1]){ const e = sph(.03,0x160d08); e.position.set(.09*sx,.17,.245); head.add(e); }
   const foreMat = mat(skin, {emissive:0xffc15a, emissiveIntensity:0});
-  const forehead = new THREE.Mesh(new THREE.SphereGeometry(.085,10,8), foreMat); forehead.position.set(0,.285,.225); head.add(forehead);
+  // A testa: uma área clara e larga entre os olhos e a borda do capacete (1 Sm 17:49).
+  const forehead = new THREE.Mesh(new THREE.SphereGeometry(.12,12,8), foreMat); forehead.scale.set(1.25,.85,.55); forehead.position.set(0,.29,.2); head.add(forehead);
+  // Anel de mira em volta da testa, que aparece e pulsa só na abertura.
+  const foreRing = new THREE.Mesh(new THREE.RingGeometry(.2,.25,28), new THREE.MeshBasicMaterial({color:0xffd166, transparent:true, opacity:0, depthTest:false, side:THREE.DoubleSide}));
+  foreRing.position.set(0,.29,.29); foreRing.renderOrder = 10; head.add(foreRing);
   const dardo = cyl(.035,.035,2.2,0x6a4a2a); dardo.rotation.z = .6; dardo.position.set(-.2,2.2,-.55); root.add(dardo);
-  return {root, legs, arms, head, skull, forehead, foreMat, torso, hips, spear};
+  return {root, legs, arms, head, skull, forehead, foreMat, foreRing, torso, hips, spear};
 }
 function buildHuman({h=1.75, robe=0x6b5a3c, skin=0x9a6b48}={}){
   const root = new THREE.Group(); root.rotation.order = 'YXZ'; const k = h/1.75;
@@ -437,7 +441,9 @@ function buildHuman({h=1.75, robe=0x6b5a3c, skin=0x9a6b48}={}){
   const head = sph(.14*k,skin); head.position.y = 1.66*k; root.add(head);
   return {root, legs, body, head};
 }
-const GL = buildGolias(); valley.add(GL.root);
+// Golias em escala de jogo: maior que o tamanho real para a testa ser um alvo visível de longe.
+const GS = 1.45;
+const GL = buildGolias(); GL.root.scale.setScalar(GS); valley.add(GL.root);
 const ES = buildHuman({h:1.7, robe:0x7b3322});
 {
   const shield = new THREE.Group();
@@ -533,7 +539,7 @@ marker.visible = false; scene.add(marker);
 const P = {pos:V(), vel:V(), yaw:0, pitch:0, eye:1.6, vida:100, cor:70, armor:false};
 const S = {charging:false, t:0, rev:0, inZone:false, whip:0};
 const flow = {kind:'full', medal:null, trainScore:0, corStart:55, armor:false, stones:[], restartAtDuel:true};
-let mode = 'menu', cine = null, gt = 0, timeScale = 1, slowT = 0, shake = 0;
+let mode = 'menu', cine = null, gt = 0, gdt = .016, timeScale = 1, slowT = 0, shake = 0;
 let locked = false, noLock = false, lockFails = 0, pauseOn = false;
 const keys = {};
 const stones = [], parts = [], dardos = [];
@@ -590,7 +596,7 @@ addEventListener('touchmove', e => {
     if (t.identifier === TM.stickId) stickMove(t);
     else if (t.identifier === TM.lookId){
       const dx = t.clientX - TM.lx, dy = t.clientY - TM.ly; TM.lx = t.clientX; TM.ly = t.clientY;
-      if (playing() && !pauseOn){ P.yaw -= dx*.0048; P.pitch = clamp(P.pitch - dy*.0048, -1.35, 1.35); }
+      if (playing() && !pauseOn){ const k = .0048 * camera.fov/72; P.yaw -= dx*k; P.pitch = clamp(P.pitch - dy*k, -1.35, 1.35); }
     }
   }
 }, {passive:true});
@@ -625,13 +631,15 @@ canvas.addEventListener('mousedown', e => {
   if (touchMode) return;
   if (!locked && !noLock) { tryLock(); return; }
   if (e.button === 0) startCharge();
+  if (e.button === 2) aimZoom = true;
 });
-addEventListener('mouseup', e => { if (e.button === 0 && S.charging) releaseCharge(); });
+addEventListener('mouseup', e => { if (e.button === 0 && S.charging) releaseCharge(); if (e.button === 2) aimZoom = false; });
+let aimZoom = false;
 addEventListener('mousemove', e => {
   if (!playing()) return;
   if (Math.abs(e.movementX) > 180 || Math.abs(e.movementY) > 180) return; // ignora saltos do travamento do cursor
   if (locked || (noLock && e.buttons)) {
-    P.yaw -= e.movementX * .0022; P.pitch = clamp(P.pitch - e.movementY * .0022, -1.35, 1.35);
+    const k = .0022 * camera.fov/72; P.yaw -= e.movementX * k; P.pitch = clamp(P.pitch - e.movementY * k, -1.35, 1.35);
   }
 });
 canvas.addEventListener('contextmenu', e => e.preventDefault());
@@ -687,7 +695,8 @@ function releaseCharge(){
   if (!canThrow()) return;
   const d = D_(), dz = zoneDist(), half = sweetArc()/2;
   let err = .12, perfect = dz <= half;
-  if (!perfect) err += Math.min(4, (dz-half)/180*6);
+  // Soltar fora do tempo espalha a pedra; menos no Pastor, mais no Valente.
+  if (!perfect) err += Math.min(2.4, (dz-half)/180*3.6) * d.spread;
   if (S.t > 3) err += (S.t-3)*2;
   let smooth = .85;
   if (mode === 'duel'){ smooth = flow.stones[D.used] ?? .6; D.used++; D.stonesLeft--; }
@@ -711,6 +720,11 @@ function aimStart(dir){ const right = V(1,0,0).applyQuaternion(camera.quaternion
 // Ponto sob a mira: o primeiro alvo ou o chão atravessado pelo raio que sai do centro da tela.
 function aimPoint(){
   const o = camera.getWorldPosition(V()), d = camera.getWorldDirection(V()), p = V();
+  // Ajuda de mira: na abertura, se a mira estiver bem perto da testa, ela "gruda" na testa.
+  if (aimHelp && mode === 'duel' && D.state === 'opening' && !D.won && D_().assist > 0){
+    const f = wp(GL.forehead, V()), to = f.clone().sub(o);
+    if (d.angleTo(to) < D_().assist*PI/180 * (72/camera.fov)) return {p: f, good: true, snap: true};
+  }
   for (let s = .4; s < 150; s += (s < 60 ? .1 : .4)){
     p.copy(o).addScaledVector(d, s);
     for (const t of targets) if (t.test(p)) return {p: p.clone(), good: typeof t.good === 'function' ? !!t.good() : !!t.good};
@@ -835,7 +849,10 @@ function swayAmp(){
   return a*PI/180;
 }
 function fpCamera(){
-  const A = swayAmp(), moving = P.vel.length();
+  // Zoom de mira: botão direito aproxima bem; girar a funda no duelo aproxima um pouco (também no celular).
+  const fov = !playing() ? 72 : aimZoom ? 38 : (S.charging && mode === 'duel') ? 54 : 72;
+  if (Math.abs(camera.fov - fov) > .05){ camera.fov += (fov - camera.fov)*Math.min(1, gdt*8); camera.updateProjectionMatrix(); }
+  const A = swayAmp()*(camera.fov/72), moving = P.vel.length();
   const bob = Math.sin(gt*9)*.03*Math.min(1, moving/4);
   const sy = A*(Math.sin(gt*1.1)*.7 + Math.sin(gt*2.3+1)*.3), sp = A*(Math.sin(gt*1.7+2)*.6 + Math.sin(gt*.9)*.4);
   camera.position.set(P.pos.x, P.pos.y + P.eye + bob, P.pos.z);
@@ -1005,10 +1022,12 @@ function beginDuel(){
       if (D.state === 'opening') return win();
       armorHit('Golias abaixou a cabeça: o capacete cobriu a testa.');
     }},
-    {test: p => p.distanceTo(wp(GL.skull,tmp1)) < .4, hit: () => armorHit('O capacete de bronze protegeu a cabeça.')},
+    {test: p => { if (p.distanceTo(wp(GL.skull,tmp1)) >= .4*GS) return false; if (D.state !== 'opening') return true;
+       // Na abertura, a frente do rosto abaixo da borda do capacete não é capacete: é a testa.
+       const l = GL.head.worldToLocal(tmp2.copy(p)); return l.y > .4 || l.z < .05; }, hit: () => armorHit('O capacete de bronze protegeu a cabeça.')},
     {test: p => { ES.shield.updateWorldMatrix(true,false); const l = ES.shield.worldToLocal(tmp2.copy(p)); return Math.abs(l.x) < .58 && Math.abs(l.y) < .88 && Math.abs(l.z) < .16; },
      hit: s => { sfx.wood(); burst(s.m.position, 0x6d4a2b, 6, 2); toast('O escudeiro bloqueou com o escudo.'); }},
-    {test: p => p.distanceTo(wp(GL.torso,tmp1)) < .72 || p.distanceTo(wp(GL.hips,tmp1)) < .62 || (p.y - GL.root.position.y < 1.35 && p.y > GL.root.position.y && Math.hypot(p.x-GL.root.position.x, p.z-GL.root.position.z) < .5),
+    {test: p => p.distanceTo(wp(GL.torso,tmp1)) < .72*GS || p.distanceTo(wp(GL.hips,tmp1)) < .62*GS || (p.y - GL.root.position.y < 1.35*GS && p.y > GL.root.position.y && Math.hypot(p.x-GL.root.position.x, p.z-GL.root.position.z) < .5*GS),
      hit: () => armorHit('A couraça de escamas protegeu o corpo.')},
     {test: p => p.distanceTo(wp(ES.body,tmp1)) < .42 || p.distanceTo(wp(ES.head,tmp1)) < .2, hit: () => { sfx.thud(); toast('Acertou o escudeiro, não o gigante.'); }},
   ];
@@ -1082,7 +1101,10 @@ function updateGolias(dt){
     else if (dd < 0 && dd > -1 && D.state !== 'attack'){ P.cor = clamp(P.cor + dd*1.4, 0, 100); }
     D.headTilt = lerp(D.headTilt, tilt, clamp(dt*6,0,1));
     GL.head.rotation.x = D.headTilt;
-    GL.foreMat.emissiveIntensity = D.state === 'opening' ? ({pastor:1.2, guerreiro:.6, valente:.12})[dk] : 0;
+    const open = D.state === 'opening';
+    GL.foreMat.emissiveIntensity = open ? ({pastor:1.4, guerreiro:1, valente:.3})[dk] : 0;
+    GL.foreRing.material.opacity = open && D_().arcVisible ? .55 + .35*Math.sin(gt*8) : 0;
+    if (open && D_().arcVisible){ GL.foreRing.lookAt(camera.position); }
     // shield bearer
     const nx = dx/(dist||1), nz = dz/(dist||1), side = D.state === 'opening' ? 1.9 : 0;
     const tx = g.position.x + nx*1.9 + nz*side, tz = g.position.z + nz*1.9 - nx*side;
@@ -1101,7 +1123,7 @@ function win(){
   D.won = true; targets = []; sfx.thud(); sfx.clang(); burst(wp(GL.forehead,V()), 0xd9a44a, 6, 2, .6, .6);
   timeScale = .35; slowT = 1.6; hideHUD(); S.charging = false; preview.visible = false; marker.visible = false;
   runCine([
-    {v:'v49', dur:4.5, cam:(p) => { const g = GL.root.position; camLook(tmp1.set(g.x+4.5-p*1.5, g.y+1.6+p*.5, g.z-2.5), tmp2.set(g.x, g.y+1.4, g.z)); }},
+    {v:'v49', dur:4.5, cam:(p) => { const g = GL.root.position; camLook(tmp1.set(g.x+6.5-p*1.5, g.y+2.6+p*.6, g.z-1.5), tmp2.set(g.x, g.y+.6, g.z-1.8*GS)); }},
     {v:'v51', dur:4.5, start: () => sfx.cheer(), cam:(p) => camLook(tmp1.set(-14+p*6, 16, 8), tmp2.set(0, 10, 80))},
     {v:'v47', dur:4, cam:(p) => camLook(tmp1.set(0, 4+p*18, -38-p*12), tmp2.set(0, 2, 22))},
   ], showResults);
@@ -1194,9 +1216,9 @@ function startIntroCine(then){
   const G_ = () => GL.root.position;
   runCine([
     {v:'v3', dur:6, update:introPace, cam:p => camLook(tmp1.set(lerp(-75,-15,p), lerp(34,24,p), lerp(-40,-62,p)), tmp2.set(0,4,8))},
-    {v:'v4', dur:6, update:introPace, cam:p => { const a = lerp(-.9,.7,p), g = G_(); camLook(tmp1.set(g.x+Math.sin(a)*8, g.y+.9, g.z-Math.cos(a)*8), tmp2.set(g.x, g.y+2.3, g.z)); }},
+    {v:'v4', dur:6, update:introPace, cam:p => { const a = lerp(-.9,.7,p), g = G_(); camLook(tmp1.set(g.x+Math.sin(a)*9.5, g.y+.9*GS, g.z-Math.cos(a)*9.5), tmp2.set(g.x, g.y+2.3*GS, g.z)); }},
     {v:'v10', dur:5.5, start:() => { sfx.roar(); shake = 1; }, update:(dt,p) => { introPace(dt); GL.head.rotation.x = -.25; GL.arms[0].rotation.z = -.5*Math.min(1,p*4); },
-      cam:p => { const g = G_(); camLook(tmp1.set(g.x+.8, g.y+2.3, g.z-3.4+p*.6), tmp2.set(g.x, g.y+2.9, g.z)); }},
+      cam:p => { const g = G_(); camLook(tmp1.set(g.x+.8, g.y+2.3*GS, g.z-3.4*GS+p*.6), tmp2.set(g.x, g.y+2.9*GS, g.z)); }},
     {v:'v11', dur:5.5, update:(dt) => { introPace(dt); GL.arms[0].rotation.z = 0; GL.head.rotation.x = .35; animArmy(israel, gt, true); }, cam:p => camLook(tmp1.set(10-p*4, valleyH(10,-86)+2.6, -90), tmp2.set(0,3,6))},
   ], () => { GL.arms[0].rotation.z = 0; then(); });
 }
@@ -1216,8 +1238,8 @@ function startDuelCine(then){
   placeDuel(); hideHUD(); mode = 'cine';
   const g = () => GL.root.position;
   runCine([
-    {v:'v43', dur:5, update:() => { GL.head.rotation.x = -.15; }, cam:p => camLook(tmp1.set(g().x+1.6, g().y+2.4, g().z-3.6+p*.4), tmp2.set(g().x, g().y+2.9, g().z))},
-    {v:'v45', dur:7, cam:p => camLook(tmp1.set(P.pos.x+.7, P.pos.y+1.85, P.pos.z-1.3+p*1.2), tmp2.set(g().x, g().y+2.2, g().z))},
+    {v:'v43', dur:5, update:() => { GL.head.rotation.x = -.15; }, cam:p => camLook(tmp1.set(g().x+1.6, g().y+2.4*GS, g().z-3.6*GS+p*.4), tmp2.set(g().x, g().y+2.9*GS, g().z))},
+    {v:'v45', dur:7, cam:p => camLook(tmp1.set(P.pos.x+.7, P.pos.y+1.85, P.pos.z-1.3+p*1.2), tmp2.set(g().x, g().y+2.2*GS, g().z))},
     {v:'v48', dur:4.5, cam:p => camLook(tmp1.set(24-p*6, 5, -2), tmp2.set(0, 2, 0))},
   ], () => { GL.head.rotation.x = .35; beginDuel(); });
 }
@@ -1486,7 +1508,8 @@ function goStones(){
 // ================= Main loop =================
 let last = performance.now();
 function update(dt, rdt){
-  gt += dt;
+  gt += dt; gdt = rdt;
+  if (!playing() && camera.fov !== 72){ camera.fov = 72; camera.updateProjectionMatrix(); aimZoom = false; }
   if (slowT > 0){ slowT -= rdt; if (slowT <= 0) timeScale = 1; }
   shake = Math.max(0, shake - rdt*1.6);
   if (toastT > 0){ toastT -= rdt; if (toastT <= 0) $('toast').classList.remove('on'); }

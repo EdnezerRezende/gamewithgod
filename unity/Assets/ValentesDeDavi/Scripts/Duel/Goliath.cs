@@ -50,6 +50,7 @@ namespace Valentes
             rig.head.localRotation = Quaternion.Euler(headTilt, 0f, 0f);
             foreach (Transform a in rig.arms) a.localRotation = Quaternion.identity;
             rig.foreheadMat.SetColor("_EmissionColor", Color.black);
+            rig.foreRing.enabled = false;
         }
 
         public void BeginFight()
@@ -171,8 +172,12 @@ namespace Valentes
             g.position = new Vector3(g.position.x, World.ValleyHeight(g.position.x, g.position.z), g.position.z);
             headTilt = Mathf.Lerp(headTilt, tilt, Mathf.Clamp01(dt * 6f));
             if (state != State.Roar) rig.head.localRotation = Quaternion.Euler(headTilt, 0f, 0f);
-            float glow = state == State.Opening ? (d.level == DifficultyLevel.Pastor ? 1.2f : d.level == DifficultyLevel.Guerreiro ? 0.6f : 0.12f) : 0f;
+            float glow = state == State.Opening ? (d.level == DifficultyLevel.Pastor ? 1.4f : d.level == DifficultyLevel.Guerreiro ? 1f : 0.3f) : 0f;
             Mats.SetEmission(rig.foreheadMat, U.Hex(0xffc15a) * glow);
+            // Anel de mira em volta da testa: só na abertura e onde a faixa dourada aparece.
+            bool ring = state == State.Opening && d.sweetArcVisible;
+            rig.foreRing.enabled = ring;
+            if (ring) rig.foreRing.widthMultiplier = 0.04f + 0.02f * Mathf.Sin(Time.time * 8f);
 
             // O escudeiro fica entre Golias e Davi; durante a abertura ele dá um passo para o lado.
             Vector3 n = to / Mathf.Max(dist, 0.01f), side = new Vector3(n.z, 0f, -n.x) * (state == State.Opening ? 1.9f : 0f);
@@ -199,6 +204,7 @@ namespace Valentes
             Vector3 e = rig.root.eulerAngles;
             rig.root.rotation = Quaternion.Euler(a, e.y, 0f);
             Mats.SetEmission(rig.foreheadMat, Color.black);
+            rig.foreRing.enabled = false;
             // O escudeiro foge.
             Vector3 away = U.Flat(bearer.root.position - player.Position).normalized;
             Vector3 bp = bearer.root.position + away * 3f * dt;

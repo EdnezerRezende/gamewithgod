@@ -8,6 +8,8 @@ namespace Valentes
         public Transform root, head, skull, forehead, torso, hips, body, shield, spear;
         public Transform[] legs, arms;
         public Material foreheadMat;
+        /// <summary>Anel de mira em volta da testa de Golias (aparece na abertura).</summary>
+        public LineRenderer foreRing;
     }
 
     /// <summary>
@@ -16,6 +18,9 @@ namespace Valentes
     /// </summary>
     public static class Models
     {
+        /// <summary>Golias em escala de jogo: maior que o tamanho real para a testa ser um alvo visível de longe.</summary>
+        public const float GoliathScale = 1.45f;
+
         static readonly Color Skin = U.Hex(0x93633f), Dark = U.Hex(0x3a2618), Cloth = U.Hex(0x6e2a1c),
             Bronze = U.Hex(0xb07a32), Wood = U.Hex(0x5a3f27);
 
@@ -55,19 +60,36 @@ namespace Valentes
             r.head = U.Pivot(r.root, "Cabeça", new Vector3(0f, 2.78f, 0f));
             U.Cyl(r.head, new Vector3(0f, 0.02f, 0f), 0.15f, 0.22f, Skin);
             r.skull = U.Sph(r.head, new Vector3(0f, 0.22f, 0f), 0.27f, Skin).transform;
-            U.Prim(PrimitiveType.Sphere, r.head, new Vector3(0f, 0.36f, -0.02f), new Vector3(0.6f, 0.48f, 0.62f), Bronze, 0.6f, 0.55f);
-            U.Box(r.head, new Vector3(0f, 0.62f, 0f), new Vector3(0.06f, 0.2f, 0.5f), Bronze, 0.6f, 0.55f);
+            // Capacete mais alto: a borda fica acima da testa, que aparece inteira.
+            U.Prim(PrimitiveType.Sphere, r.head, new Vector3(0f, 0.52f, -0.02f), new Vector3(0.6f, 0.36f, 0.62f), Bronze, 0.6f, 0.55f);
+            U.Box(r.head, new Vector3(0f, 0.76f, 0f), new Vector3(0.06f, 0.2f, 0.5f), Bronze, 0.6f, 0.55f);
             for (int i = 0; i < 2; i++)
                 U.Box(r.head, new Vector3(0.27f * (i == 0 ? -1f : 1f), 0.14f, 0.04f), new Vector3(0.05f, 0.26f, 0.2f), Bronze, 0.6f, 0.55f);
             U.Box(r.head, new Vector3(0f, 0.03f, 0.2f), new Vector3(0.3f, 0.24f, 0.12f), Dark);
             for (int i = 0; i < 2; i++)
-                U.Sph(r.head, new Vector3(0.09f * (i == 0 ? -1f : 1f), 0.2f, 0.245f), 0.03f, U.Hex(0x160d08));
-            GameObject fh = U.Sph(r.head, new Vector3(0f, 0.285f, 0.225f), 0.085f, Skin);
+                U.Sph(r.head, new Vector3(0.09f * (i == 0 ? -1f : 1f), 0.17f, 0.245f), 0.03f, U.Hex(0x160d08));
+            // A testa: uma área clara e larga entre os olhos e a borda do capacete (1 Sm 17:49).
+            GameObject fh = U.Sph(r.head, new Vector3(0f, 0.29f, 0.2f), 0.12f, Skin);
+            fh.transform.localScale = new Vector3(0.3f, 0.2f, 0.13f);
             r.foreheadMat = Mats.New(Skin);
             fh.GetComponent<Renderer>().sharedMaterial = r.foreheadMat;
             r.forehead = fh.transform;
+            LineRenderer ring = new GameObject("Anel da testa").AddComponent<LineRenderer>();
+            ring.transform.SetParent(r.head, false);
+            ring.transform.localPosition = new Vector3(0f, 0.29f, 0.29f);
+            ring.useWorldSpace = false;
+            ring.loop = true;
+            ring.positionCount = 28;
+            for (int i = 0; i < 28; i++) { float a = i / 28f * Mathf.PI * 2f; ring.SetPosition(i, new Vector3(Mathf.Cos(a) * 0.225f, Mathf.Sin(a) * 0.225f, 0f)); }
+            ring.widthMultiplier = 0.05f;
+            ring.sharedMaterial = Mats.New(U.Hex(0xffd166));
+            Mats.SetEmission(ring.sharedMaterial, U.Hex(0xffd166));
+            ring.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            ring.enabled = false;
+            r.foreRing = ring;
             GameObject dardo = U.Cyl(r.root, new Vector3(-0.2f, 2.2f, -0.55f), 0.035f, 2.2f, U.Hex(0x6a4a2a));
             dardo.transform.localRotation = Quaternion.Euler(0f, 0f, 35f);
+            r.root.localScale = Vector3.one * GoliathScale;
             return r;
         }
 
