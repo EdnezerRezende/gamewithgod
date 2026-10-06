@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -35,6 +36,7 @@ namespace Valentes.EditorTools
             EditorApplication.delayCall += () =>
             {
                 if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+                EnsureUrp();
                 bool first = !File.Exists(ScenePath);
                 if (!File.Exists(Scene2Path)) CreateScene2(false);
                 if (!File.Exists(Scene3Path)) CreateScene3(false);
@@ -137,6 +139,25 @@ namespace Valentes.EditorTools
             string parent = Path.GetDirectoryName(path).Replace('\\', '/');
             EnsureFolder(parent);
             AssetDatabase.CreateFolder(parent, Path.GetFileName(path));
+        }
+
+        /// <summary>
+        /// Garante o URP ativo: cria o renderer e o pipeline asset em Generated/ e os põe nas Graphics
+        /// Settings, se o projeto ainda não tiver pipeline. Assim o projeto abre pronto a partir do
+        /// repositório, sem passar pelo modelo "Universal 3D" do Hub.
+        /// </summary>
+        [MenuItem("Valentes de Davi/Configurar o URP")]
+        public static void EnsureUrp()
+        {
+            if (GraphicsSettings.defaultRenderPipeline != null) return;
+            EnsureFolder(Generated);
+            UniversalRendererData renderer = LoadOrCreate(Generated + "/UrpRenderer.asset",
+                () => ScriptableObject.CreateInstance<UniversalRendererData>());
+            UniversalRenderPipelineAsset pipeline = LoadOrCreate(Generated + "/UrpPipeline.asset",
+                () => UniversalRenderPipelineAsset.Create(renderer));
+            GraphicsSettings.defaultRenderPipeline = pipeline;
+            AssetDatabase.SaveAssets();
+            Debug.Log("Valentes de Davi: URP configurado (Generated/UrpPipeline.asset).");
         }
 
         static T LoadOrCreate<T>(string path, System.Func<T> create) where T : Object

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 28
+  productName: Valentes de Davi
+  companyName: GameWithGod
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
+  defaultScreenWidth: 1280
+  defaultScreenHeight: 720
+  runInBackground: 1
+  activeInputHandler: 2
+  applicationIdentifier:
+    Standalone: com.gamewithgod.valentesdedavi
+  bundleVersion: 0.1

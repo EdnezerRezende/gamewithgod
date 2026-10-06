@@ -1,23 +1,52 @@
 # Projeto Unity: como abrir e jogar
 
-O código do jogo fica em `unity/Assets/ValentesDeDavi/`. Ele monta a Fase 1 (Davi × Golias)
+O projeto Unity fica em `unity/` e o código do jogo em `unity/Assets/ValentesDeDavi/`. Ele monta a Fase 1 (Davi × Golias)
 inteira por código, com modelos provisórios feitos de formas simples, para testar a jogabilidade
 enquanto a arte definitiva não existe.
 
 ## Primeira vez
 
-1. Instale o **Unity Hub** e o **Unity 6** (versão LTS mais recente).
-2. No Unity Hub, clique em **New project** e escolha o modelo **Universal 3D** (URP).
-   Dê o nome `ValentesDeDavi` e crie.
-3. Feche a Unity. Copie a pasta `unity/Assets/ValentesDeDavi` deste repositório para dentro da
-   pasta `Assets` do projeto criado.
-4. Abra o projeto de novo. Na primeira importação, o menu **Valentes de Davi** cria a cena
-   `Assets/ValentesDeDavi/Scenes/Fase1_DaviGolias.unity` e a abre sozinho.
-5. Aperte **Play**. Clique na janela Game para o mouse ser capturado.
+A pasta `unity/` **é o projeto Unity completo** (`Assets`, `Packages/manifest.json` e
+`ProjectSettings`). Não precisa criar projeto no Hub nem copiar pastas: basta abrir.
+
+### Com o conector do Unity (CLI `unity`)
+
+```bash
+unity --version || curl -fsSL https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.sh | UNITY_CLI_CHANNEL=beta bash
+unity auth status && unity license status      # se faltar: unity auth login / unity license activate
+unity install lts --yes --accept-eula          # Unity 6 LTS (uma vez; demora alguns minutos)
+sh unity/abrir.sh                              # abre o projeto com o editor LTS instalado
+```
+
+Com o editor aberto, o conector controla a cena ao vivo:
+
+```bash
+(cd unity && unity pipeline install)          # uma vez: pacote com.unity.pipeline
+unity status                                   # estado "ready" = editor conectado
+unity command                                  # comandos que o editor expõe
+unity command editor_play                      # entra em Play
+```
+
+### Pelo Unity Hub
+
+**Add → Add project from disk** e escolha a pasta `unity/` do repositório. Se o Hub pedir uma
+versão que não está instalada, troque pelo Unity 6 instalado: o projeto não depende de uma
+versão exata.
+
+### O que acontece ao abrir
+
+1. O Package Manager baixa o URP e o Input System (`Packages/manifest.json`).
+2. O menu **Valentes de Davi** configura o URP sozinho (`Generated/UrpPipeline.asset`), cria as
+   cenas das sete fases em `Assets/ValentesDeDavi/Scenes/` e abre a Fase 1.
+3. Aperte **Play**. Clique na janela Game para o mouse ser capturado.
 
 Se a cena não abrir sozinha, use o menu **Valentes de Davi → Criar ou atualizar a cena da Fase 1**.
+Se os materiais ficarem rosa, use **Valentes de Davi → Configurar o URP**.
 
-A **Fase 2** (Samá e o campo de lentilhas), a **Fase 3** (Eleazar e a mão pegada à espada) a **Fase 4** (os três valentes e a água de Belém) a **Fase 5** (Benaia: o leão na cova e o egípcio) a **Fase 6** (Abisai: a lança contra trezentos) e a **Fase 7**, a final (Josebe-Bassebete: oitocentos de uma vez), têm cenas próprias, criadas junto: `Assets/ValentesDeDavi/Scenes/Fase2_Sama.unity`, `Fase3_Eleazar.unity`, `Fase4_Agua.unity`, `Fase5_Benaia.unity`, `Fase6_Abisai.unity` e `Fase7_Josebe.unity`. Todas ficam nas Build Settings, em ordem. As fases 4 (noite) e 5 (neve) mudam o céu e usam materiais próprios (`Generated/CeuNoite.mat` e `Generated/CeuNeve.mat`).
+Na primeira abertura a Unity gera os arquivos `.meta`; faça um commit com eles junto dos
+arquivos a que pertencem. `Library/`, `Temp/`, `Logs/` e afins já estão no `.gitignore`.
+
+A **Fase 2** (Samá e o campo de lentilhas), a **Fase 3** (Eleazar e a mão pegada à espada) a **Fase 4** (os três valentes e a água de Belém) a **Fase 5** (Benaia: o leão na cova e o egípcio) a **Fase 6** (Abisai: a lança contra trezentos) e a **Fase 7**, a final (Josebe-Bassebete: oitocentos de uma vez), têm cenas próprias: `Fase2_Sama.unity`, `Fase3_Eleazar.unity`, `Fase4_Agua.unity`, `Fase5_Benaia.unity`, `Fase6_Abisai.unity` e `Fase7_Josebe.unity`. Todas ficam nas Build Settings, em ordem. As fases 4 (noite) e 5 (neve) mudam o céu e usam materiais próprios (`Generated/CeuNoite.mat` e `Generated/CeuNeve.mat`).
 
 ### Mapa das fases e trava
 
@@ -122,7 +151,7 @@ No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, 
 | `Scripts/Fase5` | Fase 5: aldeia na neve e planície, neve caindo, as armas de Benaia (espada e escudo, cajado, lança), o leão da cova, o egípcio, treino e o fluxo da fase |
 | `Scripts/Fase6` | Fase 6: os campos de batalha, a multidão dos trezentos, Isbi-Benobe, Davi cansado, a regra de alcance da lança, treino e o fluxo da fase (as mãos de Abisai reaproveitam as de Benaia) |
 | `Scripts/Fase7` | Fase 7 (final): o desfiladeiro com a pedra do capitão, as fileiras com escudeiros, os arqueiros nas encostas, o treino, a cena final com Davi no trono e os valentes ao lado dele, e a galeria de todas as fases (as mãos do capitão reaproveitam as de Benaia) |
-| `Editor` | Cria as cenas das fases e os materiais automaticamente |
+| `Editor` | Configura o URP e cria as cenas das fases e os materiais automaticamente |
 
 Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, velocidades) ficam em
 `Scripts/Core/Difficulty.cs`, espelhando a tabela de dificuldade de `docs/fases/01-davi-golias.md`.
