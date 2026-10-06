@@ -463,6 +463,41 @@ function sph(r, color, m){ return new THREE.Mesh(new THREE.SphereGeometry(r,10,8
 function box(x,y,z,color,m){ return new THREE.Mesh(new THREE.BoxGeometry(x,y,z), m || cmat(color)); }
 const bronzeM = mat(0xb07a32, {metalness:.6, roughness:.4});
 const flameM = new THREE.MeshBasicMaterial({color:0xffa53a}), flameM2 = new THREE.MeshBasicMaterial({color:0xfff0b0});
+// Detalhes que deixam os bonecos mais humanos: pescoço, ombros, cotovelos, mãos, joelhos, sandálias,
+// cinto e barra da túnica, nariz, olhos, sobrancelhas, cabelo e (na maioria) barba. Pele com sombreado suave.
+const smatCache = {};
+function smat(color){ return smatCache[color] || (smatCache[color] = mat(color, {flatShading:false, roughness:.85})); }
+function shade(color, f){ return new THREE.Color(color).multiplyScalar(f).getHex(); }
+let manSeed = 0;
+function detailMan(m, {skin=0x9a6b48, robe=0x7b3322, beard=null}={}){
+  const {root, legs, head, armR, armL, k} = m, Sk = smat(skin), dark = 0x2a1a10, cs = cmat(skin);
+  manSeed++;
+  if (beard === null) beard = manSeed % 3 !== 0;
+  for (const g of [...legs, armR, armL]) for (const c of g.children) if (c.material === cs) c.material = Sk;
+  if (head.material === cs) head.material = Sk;
+  const add = (parent, mesh, x, y, z) => { mesh.position.set(x*k, y*k, z*k); parent.add(mesh); return mesh; };
+  add(root, new THREE.Mesh(new THREE.CylinderGeometry(.06*k,.075*k,.14*k,10), Sk), 0, 1.5, 0);
+  for (const a of [armR, armL]){
+    add(a, new THREE.Mesh(new THREE.SphereGeometry(.08*k,10,8), smat(robe)), 0, .02, 0);
+    add(a, new THREE.Mesh(new THREE.SphereGeometry(.055*k,8,6), Sk), 0, -.33, 0);
+    add(a, new THREE.Mesh(new THREE.SphereGeometry(.05*k,8,6), Sk), 0, -.66, .01).scale.set(.9,.75,1.2);
+  }
+  for (const l of legs){
+    add(l, new THREE.Mesh(new THREE.SphereGeometry(.075*k,8,6), Sk), 0, -.4, .01);
+    add(l, new THREE.Mesh(new THREE.BoxGeometry(.12*k,.05*k,.24*k), cmat(0x4a3220)), 0, -.8, .05);
+    add(l, new THREE.Mesh(new THREE.BoxGeometry(.13*k,.02*k,.04*k), cmat(0x3a2616)), 0, -.76, .08);
+  }
+  add(root, new THREE.Mesh(new THREE.CylinderGeometry(.31*k,.31*k,.06*k,10), cmat(shade(robe,.45))), 0, .98, 0);
+  add(root, new THREE.Mesh(new THREE.CylinderGeometry(.33*k,.35*k,.07*k,10), cmat(shade(robe,.7))), 0, .78, 0);
+  add(head, new THREE.Mesh(new THREE.BoxGeometry(.035*k,.06*k,.045*k), Sk), 0, -.01, .135);
+  for (const sx of [-1,1]){
+    add(head, new THREE.Mesh(new THREE.SphereGeometry(.018*k,6,5), cmat(0x160d08)), sx*.05, .03, .125);
+    add(head, new THREE.Mesh(new THREE.BoxGeometry(.045*k,.012*k,.012*k), cmat(dark)), sx*.05, .062, .128);
+  }
+  add(head, new THREE.Mesh(new THREE.SphereGeometry(.146*k,10,6,0,PI*2,0,PI/2.1), cmat(dark)), 0, .01, -.01);
+  if (beard) add(head, new THREE.Mesh(new THREE.BoxGeometry(.13*k,.09*k,.07*k), cmat(dark)), 0, -.1, .09);
+  return m;
+}
 function buildMan({robe=0x7b3322, skin=0x9a6b48, h=1.75, plume=false}={}){
   const root = new THREE.Group(), k = h/1.75, legs = [];
   for (const sx of [-1,1]){ const hip = new THREE.Group(); hip.position.set(.12*sx*k, .8*k, 0); const l = cyl(.08*k,.07*k,.8*k,skin); l.position.y = -.4*k; hip.add(l); root.add(hip); legs.push(hip); }
@@ -472,7 +507,7 @@ function buildMan({robe=0x7b3322, skin=0x9a6b48, h=1.75, plume=false}={}){
     const band = cyl(.15*k,.15*k,.05*k,0xa03a24); band.position.y = 1.74*k; root.add(band); }
   const armR = new THREE.Group(); armR.position.set(.3*k, 1.45*k, 0); const ar = cyl(.06*k,.05*k,.62*k,skin); ar.position.y = -.3*k; armR.add(ar); root.add(armR);
   const armL = new THREE.Group(); armL.position.set(-.3*k, 1.45*k, 0); const al = cyl(.06*k,.05*k,.62*k,skin); al.position.y = -.3*k; armL.add(al); root.add(armL);
-  return {root, legs, body, head, armR, armL, k};
+  return detailMan({root, legs, body, head, armR, armL, k}, {skin, robe});
 }
 function addSpear(m){ const s = new THREE.Group(); s.add(cyl(.03,.03,2.4,0x5a3d22,5)); const tip = new THREE.Mesh(new THREE.ConeGeometry(.06,.3,5), cmat(0x8b8e92)); tip.position.y = 1.35; s.add(tip); s.position.set(0,-.6*m.k,.12); s.rotation.x = .25; m.armR.add(s); return s; }
 function addTowerShield(m){ const s = box(.8,1.25,.08,0x6d4a2b); s.position.set(.1,-.35*m.k,.32); m.armL.add(s); return s; }

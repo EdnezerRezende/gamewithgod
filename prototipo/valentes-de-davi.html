@@ -205,9 +205,9 @@ const VS = {
 const verseHTML = k => `<blockquote class="verse">${VS[k][0]}<cite>${VS[k][1]} <button class="listen" data-act="speak" data-k="${k}" aria-label="Ouvir o versículo">▶ Ouvir</button></cite></blockquote>`;
 
 const DIFF = {
-  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:5,   arc:140, preview:true,  arcVisible:true,  sway:.35, roar:8,  dardo:15, spear:20, lion:4.2, fore:.42, restart:'duel',    mult:1,   gSpeed:.8, assist:3.5, spread:.55},
-  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:3.5, arc:100, preview:false, arcVisible:true,  sway:.75, roar:15, dardo:25, spear:35, lion:6,   fore:.32, restart:'duel',    mult:1.5, gSpeed:.95, assist:2, spread:.8},
-  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:2,   arc:60, preview:false, arcVisible:false, sway:1.3,roar:22, dardo:35, spear:50, lion:7.5, fore:.24, restart:'ribeiro', mult:2,   gSpeed:1.1, assist:0, spread:1},
+  pastor:    {name:'Pastor',    desc:'Abertura longa, tiro perfeito fácil de ver e linha da trajetória.', window:7,   arc:140, preview:true,  arcVisible:true,  sway:.35, roar:8,  dardo:15, spear:20, lion:4.2, fore:.42, restart:'duel',    mult:1,   gSpeed:.8, assist:3.5, spread:.55},
+  guerreiro: {name:'Guerreiro', desc:'O equilíbrio pensado para a maioria dos jogadores.',              window:5, arc:100, preview:false, arcVisible:true,  sway:.75, roar:15, dardo:25, spear:35, lion:6,   fore:.32, restart:'duel',    mult:1.5, gSpeed:.95, assist:2, spread:.8},
+  valente:   {name:'Valente',   desc:'Abertura curta, sem indicador visual: só o som do giro certo.',   window:3,   arc:60, preview:false, arcVisible:false, sway:1.3,roar:22, dardo:35, spear:50, lion:7.5, fore:.24, restart:'ribeiro', mult:2,   gSpeed:1.1, assist:0, spread:1},
 };
 let dk = 'guerreiro';
 try { const s = localStorage.getItem('vdd-diff'); if (DIFF[s]) dk = s; } catch(e) {}
@@ -430,16 +430,66 @@ function buildGolias(){
   // Anel de mira em volta da testa, que aparece e pulsa só na abertura.
   const foreRing = new THREE.Mesh(new THREE.RingGeometry(.2,.25,28), new THREE.MeshBasicMaterial({color:0xffd166, transparent:true, opacity:0, depthTest:false, side:THREE.DoubleSide}));
   foreRing.position.set(0,.29,.29); foreRing.renderOrder = 10; head.add(foreRing);
+  // Detalhes: pele lisa, músculos, mãos, joelhos, rosto e cinto.
+  root.traverse(o => { if (o.isMesh && o.material === cmat(skin)) o.material = smat(skin); });
+  const Sk = smat(skin);
+  for (const s of arms){
+    const b = new THREE.Mesh(new THREE.SphereGeometry(.15,10,8), Sk); b.position.y = -.25; b.scale.set(1,1.35,1); s.add(b);
+    const e = new THREE.Mesh(new THREE.SphereGeometry(.12,10,8), Sk); e.position.y = -.55; s.add(e);
+    const p = new THREE.Mesh(new THREE.SphereGeometry(.2,10,8), bronze); p.position.y = .02; p.scale.set(1,.8,1); s.add(p);
+    const th = box(.05,.1,.06,0,Sk); th.position.set(.1,-1.0,.08); s.add(th);
+  }
+  for (const hip of legs){ const kn = new THREE.Mesh(new THREE.SphereGeometry(.17,10,8), Sk); kn.position.set(0,-.63,.02); hip.add(kn); }
+  const belt = cyl(.66,.66,.12,0x4a3220,12); belt.position.y = 1.7; root.add(belt);
+  const nose = box(.07,.1,.08,0,Sk); nose.position.set(0,.19,.27); head.add(nose);
+  for (const sx of [-1,1]){ const br = box(.1,.02,.025,dark); br.position.set(.09*sx,.225,.255); head.add(br); }
   const dardo = cyl(.035,.035,2.2,0x6a4a2a); dardo.rotation.z = .6; dardo.position.set(-.2,2.2,-.55); root.add(dardo);
   return {root, legs, arms, head, skull, forehead, foreMat, foreRing, torso, hips, spear};
 }
-function buildHuman({h=1.75, robe=0x6b5a3c, skin=0x9a6b48}={}){
+// Detalhes que deixam os bonecos mais humanos: pescoço, ombros, cotovelos, mãos, joelhos, sandálias,
+// cinto e barra da túnica, nariz, olhos, sobrancelhas, cabelo e (na maioria) barba. Pele com sombreado suave.
+const smatCache = {};
+function smat(color){ return smatCache[color] || (smatCache[color] = mat(color, {flatShading:false, roughness:.85})); }
+function shade(color, f){ return new THREE.Color(color).multiplyScalar(f).getHex(); }
+let manSeed = 0;
+function detailMan(m, {skin=0x9a6b48, robe=0x7b3322, beard=null}={}){
+  const {root, legs, head, armR, armL, k} = m, Sk = smat(skin), dark = 0x2a1a10, cs = cmat(skin);
+  manSeed++;
+  if (beard === null) beard = manSeed % 3 !== 0;
+  for (const g of [...legs, armR, armL]) for (const c of g.children) if (c.material === cs) c.material = Sk;
+  if (head.material === cs) head.material = Sk;
+  const add = (parent, mesh, x, y, z) => { mesh.position.set(x*k, y*k, z*k); parent.add(mesh); return mesh; };
+  add(root, new THREE.Mesh(new THREE.CylinderGeometry(.06*k,.075*k,.14*k,10), Sk), 0, 1.5, 0);
+  for (const a of [armR, armL]){
+    add(a, new THREE.Mesh(new THREE.SphereGeometry(.08*k,10,8), smat(robe)), 0, .02, 0);
+    add(a, new THREE.Mesh(new THREE.SphereGeometry(.055*k,8,6), Sk), 0, -.33, 0);
+    add(a, new THREE.Mesh(new THREE.SphereGeometry(.05*k,8,6), Sk), 0, -.66, .01).scale.set(.9,.75,1.2);
+  }
+  for (const l of legs){
+    add(l, new THREE.Mesh(new THREE.SphereGeometry(.075*k,8,6), Sk), 0, -.4, .01);
+    add(l, new THREE.Mesh(new THREE.BoxGeometry(.12*k,.05*k,.24*k), cmat(0x4a3220)), 0, -.8, .05);
+    add(l, new THREE.Mesh(new THREE.BoxGeometry(.13*k,.02*k,.04*k), cmat(0x3a2616)), 0, -.76, .08);
+  }
+  add(root, new THREE.Mesh(new THREE.CylinderGeometry(.31*k,.31*k,.06*k,10), cmat(shade(robe,.45))), 0, .98, 0);
+  add(root, new THREE.Mesh(new THREE.CylinderGeometry(.33*k,.35*k,.07*k,10), cmat(shade(robe,.7))), 0, .78, 0);
+  add(head, new THREE.Mesh(new THREE.BoxGeometry(.035*k,.06*k,.045*k), Sk), 0, -.01, .135);
+  for (const sx of [-1,1]){
+    add(head, new THREE.Mesh(new THREE.SphereGeometry(.018*k,6,5), cmat(0x160d08)), sx*.05, .03, .125);
+    add(head, new THREE.Mesh(new THREE.BoxGeometry(.045*k,.012*k,.012*k), cmat(dark)), sx*.05, .062, .128);
+  }
+  add(head, new THREE.Mesh(new THREE.SphereGeometry(.146*k,10,6,0,PI*2,0,PI/2.1), cmat(dark)), 0, .01, -.01);
+  if (beard) add(head, new THREE.Mesh(new THREE.BoxGeometry(.13*k,.09*k,.07*k), cmat(dark)), 0, -.1, .09);
+  return m;
+}
+function buildHuman({h=1.75, robe=0x6b5a3c, skin=0x9a6b48, beard=null}={}){
   const root = new THREE.Group(); root.rotation.order = 'YXZ'; const k = h/1.75;
   const legs = [];
   for (const sx of [-1,1]){ const hip = new THREE.Group(); hip.position.set(.12*sx*k,.8*k,0); const l = cyl(.08*k,.07*k,.8*k,skin); l.position.y=-.4*k; hip.add(l); root.add(hip); legs.push(hip); }
   const body = cyl(.22*k,.3*k,.8*k,robe); body.position.y = 1.15*k; root.add(body);
   const head = sph(.14*k,skin); head.position.y = 1.66*k; root.add(head);
-  return {root, legs, body, head};
+  const armR = new THREE.Group(); armR.position.set(.3*k, 1.45*k, 0); const ar = cyl(.06*k,.05*k,.62*k,skin); ar.position.y = -.3*k; armR.add(ar); root.add(armR);
+  const armL = new THREE.Group(); armL.position.set(-.3*k, 1.45*k, 0); const al = cyl(.06*k,.05*k,.62*k,skin); al.position.y = -.3*k; armL.add(al); root.add(armL);
+  return detailMan({root, legs, body, head, armR, armL, k}, {skin, robe, beard});
 }
 // Golias em escala de jogo: maior que o tamanho real para a testa ser um alvo visível de longe.
 const GS = 1.45;

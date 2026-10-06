@@ -99,6 +99,7 @@ namespace Valentes
             U.Cyl(armR, new Vector3(0f, -0.3f, 0f), 0.055f, 0.62f, skin);
             armL = U.Pivot(root, "Braço esquerdo", new Vector3(-0.3f, 1.45f, 0f));
             U.Cyl(armL, new Vector3(0f, -0.3f, 0f), 0.055f, 0.62f, skin);
+            Figure.Detail(root, armR, armL, legs, 1f, skin, type == FoeType.Porta ? U.Hex(0xb07a32) : U.Hex(Robes[ti]));
 
             if (type == FoeType.Lanceiro || type == FoeType.Falange)
             {

@@ -87,6 +87,18 @@ namespace Valentes
             ring.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             ring.enabled = false;
             r.foreRing = ring;
+            // Detalhes: músculos, mãos, joelhos, rosto e cinto.
+            foreach (Transform s in r.arms)
+            {
+                U.Prim(PrimitiveType.Sphere, s, new Vector3(0f, -0.25f, 0f), new Vector3(0.3f, 0.4f, 0.3f), Skin);
+                U.Sph(s, new Vector3(0f, -0.55f, 0f), 0.12f, Skin);
+                U.Prim(PrimitiveType.Sphere, s, new Vector3(0f, 0.02f, 0f), new Vector3(0.4f, 0.32f, 0.4f), Bronze, 0.6f, 0.55f);
+                U.Box(s, new Vector3(0.1f, -1.0f, 0.08f), new Vector3(0.05f, 0.1f, 0.06f), Skin);
+            }
+            foreach (Transform hip in r.legs) U.Sph(hip, new Vector3(0f, -0.63f, 0.02f), 0.17f, Skin);
+            U.Cyl(r.root, new Vector3(0f, 1.7f, 0f), 0.66f, 0.12f, U.Hex(0x4a3220));
+            U.Box(r.head, new Vector3(0f, 0.19f, 0.27f), new Vector3(0.07f, 0.1f, 0.08f), Skin);
+            for (int i = 0; i < 2; i++) U.Box(r.head, new Vector3(0.09f * (i == 0 ? -1f : 1f), 0.225f, 0.255f), new Vector3(0.1f, 0.02f, 0.025f), Dark);
             GameObject dardo = U.Cyl(r.root, new Vector3(-0.2f, 2.2f, -0.55f), 0.035f, 2.2f, U.Hex(0x6a4a2a));
             dardo.transform.localRotation = Quaternion.Euler(0f, 0f, 35f);
             r.root.localScale = Vector3.one * GoliathScale;
@@ -107,6 +119,15 @@ namespace Valentes
             }
             r.body = U.Cyl(r.root, new Vector3(0f, 1.15f * k, 0f), 0.26f * k, 0.8f * k, robe).transform;
             r.head = U.Sph(r.root, new Vector3(0f, 1.66f * k, 0f), 0.14f * k, U.Hex(0x9a6b48)).transform;
+            r.arms = new Transform[2];
+            for (int i = 0; i < 2; i++)
+            {
+                float sx = i == 0 ? -1f : 1f;
+                Transform a = U.Pivot(r.root, i == 0 ? "Braço esquerdo" : "Braço direito", new Vector3(0.3f * k * sx, 1.45f * k, 0f));
+                U.Cyl(a, new Vector3(0f, -0.3f * k, 0f), 0.055f * k, 0.62f * k, U.Hex(0x9a6b48));
+                r.arms[i] = a;
+            }
+            Figure.Detail(r.root, r.arms[1], r.arms[0], r.legs, k, U.Hex(0x9a6b48), robe);
             return r;
         }
 

@@ -30,7 +30,7 @@ namespace Valentes
         {
             level = DifficultyLevel.Pastor, name = "Pastor",
             description = "Abertura longa, tiro perfeito fácil de ver e linha da trajetória.",
-            openingSeconds = 5f, sweetArcDegrees = 140f, trajectoryPreview = true, sweetArcVisible = true,
+            openingSeconds = 7f, sweetArcDegrees = 140f, trajectoryPreview = true, sweetArcVisible = true,
             swayMultiplier = 0.35f, roarCourageLoss = 8f, javelinDamage = 15f, spearDamage = 20f, lionSpeed = 4.2f,
             foreheadRadius = 0.42f, restartAtBrook = false, scoreMultiplier = 1f, goliathSpeed = 0.8f, aimAssistDegrees = 3.5f, releaseSpread = 0.55f
         };
@@ -39,7 +39,7 @@ namespace Valentes
         {
             level = DifficultyLevel.Guerreiro, name = "Guerreiro",
             description = "O equilíbrio pensado para a maioria dos jogadores.",
-            openingSeconds = 3.5f, sweetArcDegrees = 100f, trajectoryPreview = false, sweetArcVisible = true,
+            openingSeconds = 5f, sweetArcDegrees = 100f, trajectoryPreview = false, sweetArcVisible = true,
             swayMultiplier = 0.75f, roarCourageLoss = 15f, javelinDamage = 25f, spearDamage = 35f, lionSpeed = 6f,
             foreheadRadius = 0.32f, restartAtBrook = false, scoreMultiplier = 1.5f, goliathSpeed = 0.95f, aimAssistDegrees = 2f, releaseSpread = 0.8f
         };
@@ -48,7 +48,7 @@ namespace Valentes
         {
             level = DifficultyLevel.Valente, name = "Valente",
             description = "Abertura curta, sem indicador visual: só o som do giro certo.",
-            openingSeconds = 2f, sweetArcDegrees = 60f, trajectoryPreview = false, sweetArcVisible = false,
+            openingSeconds = 3f, sweetArcDegrees = 60f, trajectoryPreview = false, sweetArcVisible = false,
             swayMultiplier = 1.3f, roarCourageLoss = 22f, javelinDamage = 35f, spearDamage = 50f, lionSpeed = 7.5f,
             foreheadRadius = 0.24f, restartAtBrook = true, scoreMultiplier = 2f, goliathSpeed = 1.1f, aimAssistDegrees = 0f, releaseSpread = 1f
         };

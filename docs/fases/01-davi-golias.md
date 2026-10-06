@@ -200,7 +200,7 @@ margem de erro ao redor delas.
 
 | Parâmetro | Pastor (fácil) | Guerreiro (normal) | Valente (difícil) |
 |---|---|---|---|
-| Tempo da testa exposta | 5 s | 3,5 s | 2 s |
+| Tempo da testa exposta | 7 s | 5 s | 3 s |
 | Tamanho do alvo da testa | 0,42 m | 0,32 m | 0,24 m |
 | Anel dourado em volta da testa | Sim | Sim | Não |
 | Ajuda de mira (a mira gruda na testa) | Até 3,5° | Até 2° | Não |
