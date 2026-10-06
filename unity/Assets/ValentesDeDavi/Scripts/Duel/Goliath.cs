@@ -64,7 +64,7 @@ namespace Valentes
 
         public void Stun(float t) { stun = Mathf.Max(stun, t); }
 
-        public void Fall() { state = State.Fallen; fallT = 0f; }
+        public void Fall() { state = State.Fallen; fallT = 0f; if (rig.skin != null) rig.skin.Fall(); }
 
         /// <summary>Andar de um lado para outro no vale (menu e abertura da fase).</summary>
         public void Pace(float t)
@@ -76,6 +76,8 @@ namespace Valentes
 
         void AnimateLegs(float t, float amp)
         {
+            if (rig.skin != null) rig.skin.SetSpeed(2f);
+            if (bearer.skin != null) bearer.skin.SetSpeed(2f);
             for (int i = 0; i < 2; i++) rig.legs[i].localRotation = Quaternion.Euler(Mathf.Sin(t * 3f + i * Mathf.PI) * amp, 0f, 0f);
             for (int i = 0; i < 2; i++) bearer.legs[i].localRotation = Quaternion.Euler(Mathf.Sin(t * 5f + i * Mathf.PI) * amp, 0f, 0f);
         }
@@ -113,6 +115,7 @@ namespace Valentes
                             g.position += to / dist * 0.9f * d.goliathSpeed * dt;
                             AnimateLegs(Time.time, 20f);
                         }
+                        else { if (rig.skin != null) rig.skin.SetSpeed(0f); if (bearer.skin != null) bearer.skin.SetSpeed(0f); }
                         nextAction -= dt;
                         rig.arms[1].localRotation = Quaternion.identity;
                         if (dist < 4.4f) Enter(State.Attack);
@@ -189,7 +192,11 @@ namespace Valentes
             bearer.root.rotation = Quaternion.Euler(0f, U.YawTo(tb.x, tb.z), 0f);
         }
 
-        void Enter(State s) { state = s; stateT = 0f; acted = false; }
+        void Enter(State s)
+        {
+            state = s; stateT = 0f; acted = false;
+            if (rig.skin != null && (s == State.Attack || s == State.Throw || s == State.Roar)) rig.skin.Attack();
+        }
 
         void OpenUp(float k)
         {
@@ -202,7 +209,7 @@ namespace Valentes
             fallT += dt;
             float a = Mathf.Min(90f, Mathf.Pow(fallT / 1.6f, 2f) * 90f);
             Vector3 e = rig.root.eulerAngles;
-            rig.root.rotation = Quaternion.Euler(a, e.y, 0f);
+            if (rig.skin == null) rig.root.rotation = Quaternion.Euler(a, e.y, 0f);
             Mats.SetEmission(rig.foreheadMat, Color.black);
             rig.foreRing.enabled = false;
             // O escudeiro foge.

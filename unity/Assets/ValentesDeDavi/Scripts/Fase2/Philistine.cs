@@ -46,6 +46,7 @@ namespace Valentes
         int combo;
         Transform[] legs;
         Transform armR, armL, torch;
+        ModelSkin modelSkin;
 
         public bool Alive { get { return state != St.Fallen && state != St.Flee; } }
         public bool Fleeing { get { return state == St.Flee; } }
@@ -104,6 +105,8 @@ namespace Valentes
             armL = U.Pivot(root, "Braço esquerdo", new Vector3(-0.3f * k, 1.45f * k, 0f));
             U.Cyl(armL, new Vector3(0f, -0.3f * k, 0f), 0.055f * k, 0.62f * k, skin);
             Figure.Detail(root, armR, armL, legs, k, skin, type == PhilType.Capitao ? U.Hex(0xb07a32) : Robes[ti]);
+            modelSkin = ModelSkin.Attach(root, "Filisteu", k);
+            if (modelSkin != null) { modelSkin.MountHand(armR, true); modelSkin.MountHand(armL, false); }
 
             if (type == PhilType.Lanceiro || type == PhilType.Capitao)
             {
@@ -199,6 +202,7 @@ namespace Valentes
             Vector3 d = target - transform.position; d.y = 0f;
             float m = d.magnitude;
             if (m > 0.05f) transform.position += d / m * Mathf.Min(m, spd * dt);
+            if (modelSkin != null) { modelSkin.SetSpeed(spd); return; }
             for (int i = 0; i < 2; i++) legs[i].localRotation = Quaternion.Euler(Mathf.Sin(Time.time * spd * 3f + i * Mathf.PI) * 35f, 0f, 0f);
         }
 
@@ -215,7 +219,7 @@ namespace Valentes
             {
                 case St.Fallen:
                     t += dt;
-                    transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
+                    if (modelSkin == null) transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
                     if (t > 1.3f) Flee(false);
                     break;
                 case St.Flee:

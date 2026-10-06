@@ -7,6 +7,8 @@ namespace Valentes
     {
         public Transform root, armR, armL, torch;
         public Transform[] legs;
+        /// <summary>Modelo importado no lugar das primitivas (null quando não há modelo em Resources/Modelos).</summary>
+        public ModelSkin skin;
 
         static readonly Color Skin = U.Hex(0x9a6b48);
 
@@ -40,6 +42,10 @@ namespace Valentes
             f.armL = U.Pivot(f.root, "Braço esquerdo", new Vector3(-0.3f * k, 1.45f * k, 0f));
             U.Cyl(f.armL, new Vector3(0f, -0.3f * k, 0f), 0.055f * k, 0.62f * k, Skin);
             Detail(f.root, f.armR, f.armL, f.legs, k, Skin, robe);
+            // Modelo importado: pelo nome do personagem ou, sem ele, "Filisteu"/"Israelita".
+            string kind = ModelSkin.Exists(name) ? name : plume ? "Filisteu" : "Israelita";
+            f.skin = ModelSkin.Attach(f.root, kind, k);
+            if (f.skin != null) { f.skin.MountHand(f.armR, true); f.skin.MountHand(f.armL, false); }
             return f;
         }
 
@@ -132,10 +138,16 @@ namespace Valentes
 
         public void Walk(float speed)
         {
+            if (skin != null) { skin.SetSpeed(speed); return; }
             for (int i = 0; i < 2; i++) legs[i].localRotation = Quaternion.Euler(Mathf.Sin(Time.time * Mathf.Max(6f, speed * 3f) + i * Mathf.PI) * 35f, 0f, 0f);
         }
 
-        public void Stand() { for (int i = 0; i < 2; i++) legs[i].localRotation = Quaternion.Slerp(legs[i].localRotation, Quaternion.identity, 0.2f); }
+        public void Attack() { if (skin != null) skin.Attack(); }
+        public void Fall() { if (skin != null) skin.Fall(); }
+        /// <summary>Com modelo importado, a queda é a animação; sem ele, o corpo tomba (o chamador gira o root).</summary>
+        public bool Animated { get { return skin != null; } }
+
+        public void Stand() { if (skin != null) { skin.SetSpeed(0f); return; } for (int i = 0; i < 2; i++) legs[i].localRotation = Quaternion.Slerp(legs[i].localRotation, Quaternion.identity, 0.2f); }
 
         /// <summary>O cântaro de barro.</summary>
         public static Transform Jar(Transform parent)

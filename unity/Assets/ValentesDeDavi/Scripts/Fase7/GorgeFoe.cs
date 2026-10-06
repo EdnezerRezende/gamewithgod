@@ -79,7 +79,7 @@ namespace Valentes
             Fx.Burst(transform.position + Vector3.up * 1.2f, U.Hex(0xa28a5e), 5, 2f, 0.6f, 0.6f);
             Vector3 push = transform.position - Ctx.player.Position; push.y = 0f;
             transform.position += push.normalized * 0.8f;
-            if (hp <= 0f) { state = St.Fallen; t = 0f; if (Ctx.onFelled != null) Ctx.onFelled(this); }
+            if (hp <= 0f) { state = St.Fallen; t = 0f; fig.Fall(); if (Ctx.onFelled != null) Ctx.onFelled(this); }
             else { state = St.Stun; t = 0.5f; }
         }
 
@@ -99,7 +99,7 @@ namespace Valentes
             {
                 case St.Fallen:
                     t += dt;
-                    transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
+                    if (!fig.Animated) transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
                     if (t > 1.1f) Flee();
                     break;
                 case St.Flee:
@@ -138,7 +138,7 @@ namespace Valentes
                         cool -= dt;
                         if (dP > 2f) { p += (pp - p).normalized * speed * dt; fig.Walk(speed); } else fig.Stand();
                         Face(pp);
-                        if (dP <= 2.2f && cool <= 0f) { state = St.Windup; t = 0f; }
+                        if (dP <= 2.2f && cool <= 0f) { state = St.Windup; t = 0f; fig.Attack(); }
                     }
                     break;
             }

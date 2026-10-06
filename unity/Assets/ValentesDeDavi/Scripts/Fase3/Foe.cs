@@ -39,6 +39,7 @@ namespace Valentes
         float t, cool, wind, shootT;
         Transform[] legs;
         Transform armR, armL;
+        ModelSkin modelSkin;
 
         public bool Alive { get { return state != St.Fallen && state != St.Flee; } }
 
@@ -100,6 +101,8 @@ namespace Valentes
             armL = U.Pivot(root, "Braço esquerdo", new Vector3(-0.3f, 1.45f, 0f));
             U.Cyl(armL, new Vector3(0f, -0.3f, 0f), 0.055f, 0.62f, skin);
             Figure.Detail(root, armR, armL, legs, 1f, skin, type == FoeType.Porta ? U.Hex(0xb07a32) : U.Hex(Robes[ti]));
+            modelSkin = ModelSkin.Attach(root, type == FoeType.Instrutor ? "Instrutor" : "Filisteu", 1f);
+            if (modelSkin != null) { modelSkin.MountHand(armR, true); modelSkin.MountHand(armL, false); }
 
             if (type == FoeType.Lanceiro || type == FoeType.Falange)
             {
@@ -174,6 +177,7 @@ namespace Valentes
         void Down()
         {
             state = St.Fallen; t = 0f;
+            if (modelSkin != null) modelSkin.Fall();
             if (type == FoeType.Porta)
             {
                 Ctx.ui.Toast("O estandarte caiu. Os filisteus em volta perderam o ânimo.", 2f);
@@ -194,6 +198,7 @@ namespace Valentes
             Vector3 d = target - transform.position; d.y = 0f;
             float m = d.magnitude;
             if (m > 0.05f) transform.position += d / m * Mathf.Min(m, spd * dt);
+            if (modelSkin != null) { modelSkin.SetSpeed(spd); return; }
             for (int i = 0; i < 2; i++) legs[i].localRotation = Quaternion.Euler(Mathf.Sin(Time.time * spd * 3f + i * Mathf.PI) * 35f, 0f, 0f);
         }
 
@@ -217,7 +222,7 @@ namespace Valentes
             {
                 case St.Fallen:
                     t += dt;
-                    transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
+                    if (modelSkin == null) transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
                     if (t > 1.3f) Flee(false);
                     break;
                 case St.Flee:
@@ -269,7 +274,7 @@ namespace Valentes
                     {
                         cool -= dt;
                         if (dP >= 3f) StepToward(pp, 2f, dt);
-                        else if (cool <= 0f && Ctx.instructorAttack != null && Ctx.instructorAttack()) { state = St.Windup; t = 0f; wind = 0.7f; }
+                        else if (cool <= 0f && Ctx.instructorAttack != null && Ctx.instructorAttack()) { state = St.Windup; t = 0f; wind = 0.7f; if (modelSkin != null) modelSkin.Attack(); }
                     }
                     else if (dP < 15f || (Ctx.forceEngage != null && Ctx.forceEngage())) state = St.Advance;
                     break;

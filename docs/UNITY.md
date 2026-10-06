@@ -109,6 +109,7 @@ No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, 
 |---|---|
 | `Scripts/Core` | Dificuldade, versículos, entrada (Input System novo e antigo), sons sintetizados, materiais |
 | `Scripts/World` | Vale de Elá, campos de Belém, céu e luz, exércitos, modelos provisórios |
+| `Scripts/World/ModelSkin.cs` | Troca de um boneco de primitivas por um modelo 3D importado (prefab em `Resources/Modelos/<nome>`), com as mãos, a cabeça e as animações ligadas |
 | `Scripts/Player` | Davi em primeira pessoa (`PlayerController`) e a funda (`Sling`) |
 | `Scripts/Combat` | Pedra, regiões de acerto (`HitZone`) e estilhaços |
 | `Scripts/Training` | Treino: jarros parados, jarros balançando e leões |
@@ -140,7 +141,7 @@ Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, veloc
 
 ## Próximos passos sugeridos
 
-1. Trocar Golias, Davi e o escudeiro por modelos da Asset Store com animações do Mixamo.
+1. Trocar os bonecos por modelos 3D (Mixamo ou Asset Store): o código já aceita a troca, ver `docs/MODELOS.md` e o menu **Valentes de Davi → Modelos**.
 2. Refazer a abertura no Timeline + Cinemachine.
 3. Acampamento de Israel e a conversa com Saul (ainda não existem).
 4. Etapa do urso no treino.

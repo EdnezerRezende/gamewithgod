@@ -10,6 +10,7 @@ namespace Valentes
         public Material foreheadMat;
         /// <summary>Anel de mira em volta da testa de Golias (aparece na abertura).</summary>
         public LineRenderer foreRing;
+        public ModelSkin skin;
     }
 
     /// <summary>
@@ -102,6 +103,9 @@ namespace Valentes
             GameObject dardo = U.Cyl(r.root, new Vector3(-0.2f, 2.2f, -0.55f), 0.035f, 2.2f, U.Hex(0x6a4a2a));
             dardo.transform.localRotation = Quaternion.Euler(0f, 0f, 35f);
             r.root.localScale = Vector3.one * GoliathScale;
+            // Modelo importado "Golias": a testa (alvo) e o anel ficam e vão para o osso da cabeça; a lança, para a mão.
+            r.skin = ModelSkin.Attach(r.root, "Golias", 1f, r.forehead, r.foreRing.transform);
+            if (r.skin != null) { r.skin.MountHead(r.head); r.skin.MountHand(r.spear, true); }
             return r;
         }
 
@@ -128,6 +132,8 @@ namespace Valentes
                 r.arms[i] = a;
             }
             Figure.Detail(r.root, r.arms[1], r.arms[0], r.legs, k, U.Hex(0x9a6b48), robe);
+            r.skin = ModelSkin.Attach(r.root, ModelSkin.Exists(name) ? name : "Israelita", k);
+            if (r.skin != null) { r.skin.MountHand(r.arms[1], true); r.skin.MountHand(r.arms[0], false); }
             return r;
         }
 
@@ -135,6 +141,7 @@ namespace Valentes
         {
             Rig r = Human(parent, "Escudeiro", 1.7f, U.Hex(0x7b3322));
             r.shield = U.Pivot(r.root, "Escudo", new Vector3(0f, 1.0f, 0.45f));
+            if (r.skin != null) r.skin.MountHand(r.shield, false);
             U.Box(r.shield, Vector3.zero, new Vector3(1.1f, 1.7f, 0.1f), U.Hex(0x6d4a2b));
             U.Sph(r.shield, new Vector3(0f, 0f, 0.06f), 0.16f, Bronze, 0.6f, 0.55f);
             U.Box(r.shield, new Vector3(0f, 0.85f, 0f), new Vector3(1.14f, 0.08f, 0.12f), U.Hex(0x8a6534));

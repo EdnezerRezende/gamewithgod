@@ -154,7 +154,7 @@ namespace Valentes
             if (kind != SwingKind.Quick) transform.position += Flat(transform.position - from).normalized * 1.4f;
             if (hp <= 0)
             {
-                state = St.Fallen; t = 0f;
+                state = St.Fallen; t = 0f; fig.Fall();
                 if (fig.torch != null) fig.torch.gameObject.SetActive(false);
                 if (Ctx.onDown != null) Ctx.onDown(this);
                 return;
@@ -243,7 +243,7 @@ namespace Valentes
                     break;
                 case St.Fallen:
                     t += dt;
-                    transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
+                    if (!fig.Animated) transform.rotation = Quaternion.Euler(-Mathf.Min(90f, t * 290f), transform.eulerAngles.y, 0f);
                     if (t > 1.3f) Flee(false);
                     break;
                 case St.Flee:
@@ -309,7 +309,7 @@ namespace Valentes
                     {
                         if (dT > 2.1f) StepToward(tg, speed, dt); else fig.Stand();
                         Face(tg);
-                        if (dT <= 2.3f && cool <= 0f && (!targetIsPlayer || pl.health > 0f)) { state = St.Windup; t = 0f; wind = 0.65f; }
+                        if (dT <= 2.3f && cool <= 0f && (!targetIsPlayer || pl.health > 0f)) { state = St.Windup; t = 0f; wind = 0.65f; fig.Attack(); }
                         // Luta dentro do arraial faz barulho.
                         if (!training && dT < 6f && Mathf.Abs(p.x) < Refaim.CampHalfWidth + 4f && p.z > Refaim.CampZ0 - 4f && p.z < Refaim.CampZ1 + 4f) Ctx.raiseAlarm(1.5f * dt * 0.25f);
                         // Longe demais: perde os três de vista e volta a vigiar.
