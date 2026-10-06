@@ -1,1 +1,1 @@
-Coloque aqui as gravações dos versículos (ex.: v49.ogg). Veja docs/NARRACAO.md.
+Gravações dos versículos (ex.: v49.ogg), uma por chave de Verses.cs. Geradas no ElevenLabs; veja docs/NARRACAO.md para regravar.
