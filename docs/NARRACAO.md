@@ -1,11 +1,26 @@
 # Narração dos versículos
 
-Os versículos das cenas animadas são lidos em voz alta.
+Os versículos das cenas animadas e das telas são lidos em voz alta.
 
-- **No protótipo de navegador**, a leitura usa a voz do próprio aparelho: o jogo procura uma voz
-  masculina em português e deixa o tom mais grave e o ritmo mais lento. A qualidade depende do
-  aparelho (no Windows com Edge e no Android costuma haver boas vozes em português).
-- **Na Unity**, a narração toca gravações. Enquanto não houver gravação, a cena mostra só o texto.
+- **Gravações atuais:** geradas no ElevenLabs (voz "Bruno Zulian Profissional", modelo
+  `eleven_multilingual_v2`), uma por chave do roteiro abaixo. Voz masculina, grave e calma, com
+  volume normalizado (-16 LUFS) e meio segundo de silêncio nas pontas.
+  - Unity: `unity/Assets/ValentesDeDavi/Resources/Narracao/<chave>.ogg`
+  - Site: `publicar/web/narracao/<fase><chave>.mp3` (ex.: `f2v11a.mp3`; a fase 1 não tem prefixo).
+    Os protótipos em `prototipo/` usam o mesmo caminho relativo `narracao/`, por isso tocam a gravação
+    só depois de gerados em `publicar/web` (`sh publicar/gerar-web.sh`).
+- **Sem a gravação**, o site cai na voz do próprio navegador (procura uma voz masculina em português,
+  tom mais grave e ritmo lento) e a Unity mostra só o texto.
+
+Para trocar a voz ou regravar: gere um áudio por linha da tabela com o texto exato da coluna "Texto",
+converta com o `ffmpeg` (abaixo) e substitua os arquivos pelas mesmas chaves.
+
+```sh
+# mp3 do ElevenLabs -> ogg (Unity) e mp3 (site), mono 44,1 kHz, normalizado, 0,5 s de silêncio nas pontas
+F="loudnorm=I=-16:TP=-1.5:LRA=11,adelay=500,apad=pad_dur=0.5"
+ffmpeg -i v49.mp3 -af "$F" -ac 1 -ar 44100 -c:a libvorbis -q:a 4 unity/Assets/ValentesDeDavi/Resources/Narracao/v49.ogg
+ffmpeg -i v49.mp3 -af "$F" -ac 1 -ar 44100 -c:a libmp3lame -b:a 64k publicar/web/narracao/v49.mp3
+```
 
 ## A voz
 
@@ -14,12 +29,13 @@ Os versículos das cenas animadas são lidos em voz alta.
 - Nas reticências (...), uma pausa curta; o texto começa ou termina no meio do versículo.
 - Sem música nem efeitos na gravação: o jogo abaixa a própria música durante a leitura.
 
-## Formato dos arquivos (Unity)
+## Formato dos arquivos
 
 - Um arquivo por versículo, com o nome da **chave** da tabela: por exemplo, `v49.ogg`.
-- `.ogg` ou `.wav`, mono, 44,1 kHz, com meio segundo de silêncio no início e no fim.
-- Coloque em `Assets/ValentesDeDavi/Resources/Narracao/`. O jogo encontra sozinho; a cena espera a
-  leitura terminar antes de passar para o próximo plano.
+- Unity: `.ogg` ou `.wav`, mono, 44,1 kHz, em `Assets/ValentesDeDavi/Resources/Narracao/`. O jogo
+  encontra sozinho; a cena espera a leitura terminar antes de passar para o próximo plano.
+- Site: `.mp3` mono em `publicar/web/narracao/`. A cena estima a duração pelo número de palavras
+  (0,45 s por palavra + 2,5 s), então gravações bem mais lentas que isso podem ser cortadas.
 
 ## Como gravar
 
@@ -30,7 +46,7 @@ Os versículos das cenas animadas são lidos em voz alta.
    Antes de usar num jogo que será vendido, confirme que o plano contratado permite uso comercial.
 
 Os textos abaixo são provisórios (Almeida em domínio público) e devem ser revisados contra a
-edição escolhida **antes** de gravar.
+edição escolhida; se mudarem, regrave as chaves afetadas.
 
 ## Roteiro
 

@@ -1371,7 +1371,7 @@ function nextCineLine(){
   if (cine.i >= cine.lines.length) return endCine();
   const L = cine.lines[cine.i], q = $('cine-q'); q.style.opacity = 0;
   const txt = VS[L.v][0]; L.durEff = Math.max(L.dur, narrationSeconds(txt));
-  setTimeout(() => { if (!cine) return; q.textContent = txt; $('cine-ref').textContent = VS[L.v][1]; q.style.opacity = 1; speak(txt); }, 180);
+  setTimeout(() => { if (!cine) return; q.textContent = txt; $('cine-ref').textContent = VS[L.v][1]; q.style.opacity = 1; speak(txt, L.v); }, 180);
   if (L.start) L.start();
 }
 function endCine(){ stopSpeak(); if (!cine) return; const f = cine.onEnd; cine = null; $('cine').hidden = true; VM.visible = true; if (f) f(); }
@@ -1397,14 +1397,14 @@ function desireCine(then){
 function showOverlay(html, acts){
   unlock(); const ov = $('ov'); $('ov-card').innerHTML = html; ov.hidden = false; ov.scrollTop = 0;
   ov.onclick = e => { const b = e.target.closest('[data-act]'); if (!b || b.disabled) return; audio();
-    if (b.dataset.act === 'speak'){ speak(VS[b.dataset.k][0]); return; }
+    if (b.dataset.act === 'speak'){ speak(VS[b.dataset.k][0], b.dataset.k); return; }
     stopSpeak();
     const f = acts[b.dataset.act]; if (f) f(b); };
 }
 function hideOverlay(){ $('ov').hidden = true; }
 
-// ================= Narração dos versículos (voz do navegador) =================
-// Procura uma voz masculina em português; o tom mais grave e o ritmo lento deixam a leitura calma.
+// ================= Narração dos versículos =================
+// Voz do navegador (reserva): procura uma voz masculina em português, tom mais grave e ritmo lento.
 let narrOn = true;
 try { narrOn = localStorage.getItem('vdd-voice') !== 'off'; } catch(e) {}
 let ptVoice = null, voiceIsMale = false;
@@ -1418,7 +1418,22 @@ function pickVoice(){
   } catch(e) { ptVoice = null; }
 }
 try { if ('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } } catch(e) {}
-function speak(text){
+// Gravações em narracao/<fase><chave>.mp3 (voz masculina grave gerada no ElevenLabs; ver docs/NARRACAO.md).
+// Sem o arquivo (ex.: protótipo aberto direto da pasta), cai na voz do navegador.
+const NARR = 'f4';
+let narrAudio = null;
+function speak(text, key){
+  if (!narrOn || !text) return;
+  stopSpeak();
+  if (!key) return speakBrowser(text);
+  const a = new Audio('narracao/' + NARR + key + '.mp3');
+  const fallback = () => { if (narrAudio === a){ narrAudio = null; speakBrowser(text); } };
+  a.onplay = () => { if (AC && musicBus && musicOn) musicBus.gain.setTargetAtTime(MUSIC_VOL*.35, AC.currentTime, .3); };
+  a.onended = () => { narrAudio = null; if (AC && musicBus && musicOn) musicBus.gain.setTargetAtTime(MUSIC_VOL, AC.currentTime, .6); };
+  a.onerror = fallback;
+  narrAudio = a; a.play().catch(fallback);
+}
+function speakBrowser(text){
   if (!narrOn || !text) return;
   try {
     if (!('speechSynthesis' in window)) return;
@@ -1431,10 +1446,10 @@ function speak(text){
     speechSynthesis.speak(u);
   } catch(e) {}
 }
-function stopSpeak(){ try { speechSynthesis.cancel(); } catch(e) {} if (AC && musicBus && musicOn) musicBus.gain.setTargetAtTime(MUSIC_VOL, AC.currentTime, .3); }
+function stopSpeak(){ if (narrAudio){ narrAudio.onended = null; narrAudio.pause(); narrAudio = null; } try { speechSynthesis.cancel(); } catch(e) {} if (AC && musicBus && musicOn) musicBus.gain.setTargetAtTime(MUSIC_VOL, AC.currentTime, .3); }
 function setNarration(on){ narrOn = on; try { localStorage.setItem('vdd-voice', on ? 'on' : 'off'); } catch(e) {} if (!on) stopSpeak(); }
-/** Tempo para a voz terminar de ler (cerca de 2,4 palavras por segundo), para a cena não cortar a leitura. */
-function narrationSeconds(text){ return narrOn ? text.split(/\s+/).length * .42 + 1.2 : 0; }
+/** Tempo para a gravação terminar (até 0,45 s por palavra, mais o silêncio das pontas), para a cena não cortar a leitura. */
+function narrationSeconds(text){ return narrOn ? text.split(/\s+/).length * .45 + 2.5 : 0; }
 addEventListener('keydown', e => { if (e.code === 'KeyN' && !e.repeat){ setNarration(!narrOn); toast(narrOn ? 'Narração ligada' : 'Narração desligada', 1.2); } });
 
 // ================= Como jogar (tutorial) =================
