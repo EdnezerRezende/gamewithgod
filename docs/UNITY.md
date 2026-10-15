@@ -172,5 +172,4 @@ Os números de balanceamento (tempo da testa exposta, faixa dourada, dano, veloc
 
 1. Trocar os bonecos por modelos 3D (Mixamo ou Asset Store): o código já aceita a troca, ver `docs/MODELOS.md` e o menu **Valentes de Davi → Modelos**.
 2. Refazer a abertura no Timeline + Cinemachine.
-3. Acampamento de Israel e a conversa com Saul (ainda não existem).
-4. Etapa do urso no treino.
+3. Narração gravada para as falas do acampamento (soldados e Eliabe) e mais gente para conversar, se valer a pena.

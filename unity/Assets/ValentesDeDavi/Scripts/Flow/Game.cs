@@ -13,7 +13,7 @@ namespace Valentes
     /// </summary>
     public class Game : MonoBehaviour
     {
-        enum Mode { Menu, Cine, Training, Duel, Result }
+        enum Mode { Menu, Cine, Camp, Training, Duel, Result }
         enum Kind { Full, TrainingOnly, DuelOnly }
 
         [Tooltip("Material-base do pipeline (URP Lit). Criado automaticamente pelo editor.")]
@@ -30,6 +30,7 @@ namespace Valentes
         Goliath goliath;
         Duel duel;
         Training training;
+        Camp camp;
         Cutscene cutscene;
         UI ui;
 
@@ -97,6 +98,11 @@ namespace Valentes
             duel.onLose = OnDuelLost;
             goliath.duel = duel;
 
+            camp = Camp.Build(world.valley.transform);
+            camp.player = player;
+            camp.ui = ui;
+            camp.goliath = goliath;
+
             training = gameObject.AddComponent<Training>();
             training.world = world;
             training.player = player;
@@ -118,7 +124,7 @@ namespace Valentes
             ui.Tick(Time.unscaledDeltaTime);
             if (slowUntil > 0f && Time.unscaledTime >= slowUntil && !Paused) { slowUntil = 0f; Time.timeScale = 1f; }
 
-            bool playing = (mode == Mode.Training || mode == Mode.Duel) && !cutscene.Playing && !duel.Over;
+            bool playing = (mode == Mode.Camp || mode == Mode.Training || mode == Mode.Duel) && !cutscene.Playing && !duel.Over;
             if (!Paused && (playing || cutscene.Playing) && GameInput.PausePressed()) ShowPause();
 
             // Notebook com tela de toque: voltar a usar o mouse desliga os controles de toque.
@@ -128,10 +134,11 @@ namespace Valentes
             UnityEngine.Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
             UnityEngine.Cursor.visible = !lockCursor;
             player.controlling = control;
-            sling.SetVisible(playing && !Paused);
+            sling.SetVisible(playing && !Paused && mode != Mode.Camp);
+            if (playing && mode == Mode.Camp) ui.SetCampStats();
             ui.ShowHud(playing && !ui.OverlayOpen);
             ui.ShowTouch(playing && !Paused && !ui.OverlayOpen);
-            if (playing) { ui.DrawGauge(sling); ui.SetCrosshair(sling.aimOnTarget); }
+            if (playing && mode != Mode.Camp) { ui.DrawGauge(sling); ui.SetCrosshair(sling.aimOnTarget); }
 
             if (GameInput.NarrationPressed()) { Settings.Narration = !Settings.Narration; ui.Toast(Settings.Narration ? "Narração ligada" : "Narração desligada", 1.2f); }
             if (GameInput.MusicPressed())
@@ -245,15 +252,16 @@ namespace Valentes
         {
             bool inCine = cutscene.Playing;
             Card c = ui.OpenCard();
-            c.Eyebrow("Pausa · " + (inCine ? "Cena animada" : mode == Mode.Training ? "Treino" : "Duelo") + " · " + Difficulty.Current.name);
+            c.Eyebrow("Pausa · " + (inCine ? "Cena animada" : mode == Mode.Camp ? "Acampamento" : mode == Mode.Training ? "Treino" : "Duelo") + " · " + Difficulty.Current.name);
             c.Title("Jogo pausado");
             VisualElement row = c.Row();
             Card.Btn(row, "Continuar", true, Resume);
             if (inCine) Card.Btn(row, "Pular a cena", false, () => { Resume(); cutscene.End(); });
-            else Card.Btn(row, mode == Mode.Training ? "Recomeçar o treino" : "Recomeçar o duelo", false, () =>
+            else Card.Btn(row, mode == Mode.Camp ? "Recomeçar a chegada" : mode == Mode.Training ? "Recomeçar o treino" : "Recomeçar o duelo", false, () =>
             {
                 Resume();
-                if (mode == Mode.Training) StartTraining();
+                if (mode == Mode.Camp) StartCamp(campThen);
+                else if (mode == Mode.Training) StartTraining();
                 else { ClearProjectiles(); PlaceDuel(); BeginDuel(); }
             });
             Card.Btn(row, "Voltar ao menu", false, ShowMenu);
@@ -276,7 +284,33 @@ namespace Valentes
             kind = Kind.Full;
             trainingDone = false;
             ui.CloseOverlay();
-            IntroCine(() => FlashbackCine(StartTraining));
+            IntroCine(() => StartCamp(() => FlashbackCine(StartTraining)));
+        }
+
+        Action campThen;
+
+        /// <summary>Chegada ao acampamento (1 Sm 17:17-30): exploração curta em primeira pessoa; termina ao falar com Eliabe.</summary>
+        void StartCamp(Action then)
+        {
+            campThen = then;
+            Music.Set("training");
+            ClearProjectiles();
+            PlaceDuel();
+            player.Place(Camp.Center + new Vector3(0f, 0f, -19f), 0f, 0f);
+            player.clampPosition = pos =>
+            {
+                Vector3 d = pos - new Vector3(Camp.Center.x, pos.y, Camp.Center.z);
+                if (d.magnitude > Camp.Radius) pos = new Vector3(Camp.Center.x, pos.y, Camp.Center.z) + d.normalized * Camp.Radius;
+                return pos;
+            };
+            player.courage = 70f; player.armor = false; player.health = 100f;
+            sling.canThrow = () => false;
+            sling.takeStone = null;
+            sling.zoomWhileCharging = false;
+            sling.assist = null;
+            camp.onFinished = then;
+            mode = Mode.Camp;
+            camp.Begin();
         }
 
         void StartDuelOnly()
@@ -395,6 +429,7 @@ namespace Valentes
 
         void PlaceDuel()
         {
+            camp.Hide();
             world.Show(World.Area.Valley);
             SetFlashbackLook(false);
             goliath.Place(new Vector3(0f, 0f, 30f), new Vector3(0f, 0f, -28f));

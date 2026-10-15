@@ -276,6 +276,17 @@ namespace Valentes
 
         public void Hurt() { hurtT = 0.45f; }
 
+        /// <summary>HUD da chegada ao acampamento: só o objetivo.</summary>
+        public void SetCampStats()
+        {
+            statStones.style.display = DisplayStyle.None; statVida.style.display = DisplayStyle.None;
+            statCor.style.display = DisplayStyle.None; statScore.style.display = DisplayStyle.None;
+            statCampo.style.display = DisplayStyle.None; statArma.style.display = DisplayStyle.None;
+            waveLabel.text = ""; holdBar.style.display = DisplayStyle.None; zoneLabel.style.display = DisplayStyle.None;
+            statFad.style.display = DisplayStyle.None;
+            opening.style.display = DisplayStyle.None;
+        }
+
         public void SetTrainingStats(int points)
         {
             statStones.style.display = DisplayStyle.None; statVida.style.display = DisplayStyle.None;

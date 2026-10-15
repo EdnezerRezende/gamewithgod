@@ -169,6 +169,35 @@ namespace Valentes
             return r;
         }
 
+        /// <summary>O urso do treino (fase 1): grande, de pelo escuro e resistente. O ponto fraco é a cabeça.</summary>
+        public static Rig Bear(Transform parent)
+        {
+            Rig r = new Rig();
+            r.root = U.Pivot(parent, "Urso", Vector3.zero);
+            Color fur = U.Hex(0x4a3524), dk = U.Hex(0x33241a);
+            r.body = U.Box(r.root, new Vector3(0f, 1.0f, 0f), new Vector3(0.95f, 0.95f, 1.5f), fur).transform;
+            U.Prim(PrimitiveType.Sphere, r.root, new Vector3(0f, 1.5f, 0.3f), new Vector3(1.1f, 0.8f, 1.2f) * 0.5f * 2f, fur);
+            r.head = U.Sph(r.root, new Vector3(0f, 1.35f, 1.1f), 0.34f, fur).transform;
+            U.Box(r.root, new Vector3(0f, 1.25f, 1.4f), new Vector3(0.24f, 0.2f, 0.3f), U.Hex(0x6b4e36));
+            U.Box(r.root, new Vector3(0f, 1.3f, 1.57f), new Vector3(0.08f, 0.06f, 0.06f), U.Hex(0x120a06));
+            for (int i = 0; i < 2; i++)
+            {
+                float sx = i == 0 ? -1f : 1f;
+                U.Sph(r.root, new Vector3(0.2f * sx, 1.62f, 1.0f), 0.09f, fur);
+                U.Sph(r.root, new Vector3(0.13f * sx, 1.42f, 1.38f), 0.035f, U.Hex(0x120a06));
+            }
+            r.legs = new Transform[4];
+            float[,] lp = { { -0.34f, -0.58f }, { 0.34f, -0.58f }, { -0.34f, 0.58f }, { 0.34f, 0.58f } };
+            for (int i = 0; i < 4; i++)
+            {
+                Transform p = U.Pivot(r.root, "Pata", new Vector3(lp[i, 0], 0.7f, lp[i, 1]));
+                U.Box(p, new Vector3(0f, -0.35f, 0f), new Vector3(0.26f, 0.7f, 0.26f), dk);
+                r.legs[i] = p;
+            }
+            U.Sph(r.root, new Vector3(0f, 1.1f, -0.8f), 0.12f, fur);
+            return r;
+        }
+
         public static Transform Sheep(Transform parent)
         {
             Transform t = U.Pivot(parent, "Ovelha", Vector3.zero);

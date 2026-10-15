@@ -17,7 +17,7 @@ namespace Valentes
         class Lion
         {
             public Rig rig; public string state = "run"; public int hp = 2; public float stagger, deadT;
-            public bool active = true; public Sheep carry;
+            public bool active = true; public bool bear; public Sheep carry;
         }
 
         public World world;
@@ -36,7 +36,7 @@ namespace Valentes
         readonly List<Jar> jars = new List<Jar>();
         readonly List<Sheep> sheep = new List<Sheep>();
         readonly List<Lion> lions = new List<Lion>();
-        readonly float[] lionSchedule = { 1f, 7.5f, 13f };
+        readonly float[] lionSchedule = { 1f, 7.5f, 13f }, bearSchedule = { 1.5f };
         int spawned;
         float stageTime, endTimer = -1f;
         bool running;
@@ -89,7 +89,7 @@ namespace Valentes
             stageTime = 0f;
             if (n == 0)
             {
-                ui.SetObjective("Etapa 1 de 3: jarros parados", "Acerte os 5 jarros. Segure o botão para girar a funda e solte na faixa dourada.");
+                ui.SetObjective("Etapa 1 de 4: jarros parados", "Acerte os 5 jarros. Segure o botão para girar a funda e solte na faixa dourada.");
                 float[,] pos = { { -6, -12 }, { -2, -16 }, { 3, -13 }, { 7, -19 }, { 0, -24 } };
                 for (int i = 0; i < 5; i++)
                 {
@@ -102,7 +102,7 @@ namespace Valentes
             }
             else if (n == 1)
             {
-                ui.SetObjective("Etapa 2 de 3: jarros em movimento", "Acerte os 4 jarros balançando. Antecipe o movimento.");
+                ui.SetObjective("Etapa 2 de 4: jarros em movimento", "Acerte os 4 jarros balançando. Antecipe o movimento.");
                 float[,] pos = { { -7, -15 }, { 4, -17 }, { -1, -22 }, { 9, -25 } };
                 float speedScale = Difficulty.Current.lionSpeed / 6f * 0.5f + 0.5f;
                 for (int i = 0; i < 4; i++)
@@ -122,9 +122,15 @@ namespace Valentes
                     j.ph = UnityEngine.Random.Range(0f, 6f);
                 }
             }
+            else if (n == 2)
+            {
+                ui.SetObjective("Etapa 3 de 4: o leão", "Defenda o rebanho. Na cabeça, uma pedra basta; no corpo, são duas.");
+                lions.Clear();
+                spawned = 0;
+            }
             else
             {
-                ui.SetObjective("Etapa 3 de 3: o leão", "Defenda o rebanho. Na cabeça, uma pedra basta; no corpo, são duas.");
+                ui.SetObjective("Etapa 4 de 4: o urso", "O urso é resistente: pedras no corpo não adiantam. Só a cabeça é o ponto fraco, e ele precisa de mais de uma pedra.");
                 lions.Clear();
                 spawned = 0;
             }
@@ -163,6 +169,68 @@ namespace Valentes
             ui.Toast("Um leão vem para o rebanho!", 1.6f);
             HitZone.Sphere(rig.head, "cabeça do leão", Vector3.zero, 0.36f / 0.5f, (s, hp) => HitLion(L, true)).counts = () => L.state != "dead";
             HitZone.Box(rig.root, "corpo do leão", new Vector3(0f, 0.78f, 0f), new Vector3(0.6f, 0.6f, 1.3f), (s, hp) => HitLion(L, false)).counts = () => L.state != "dead";
+        }
+
+        void SpawnBear()
+        {
+            float a = UnityEngine.Random.Range(-0.3f, 0.3f), R = 36f;
+            Rig rig = Models.Bear(stageRoot);
+            Vector3 p = Flock + new Vector3(Mathf.Sin(a) * R, 0f, -Mathf.Cos(a) * R);
+            p.y = World.FieldHeight(p.x, p.z);
+            rig.root.position = p;
+            DifficultyLevel lv = Difficulty.Current.level;
+            Lion B = new Lion { rig = rig, bear = true, hp = lv == DifficultyLevel.Pastor ? 2 : lv == DifficultyLevel.Valente ? 4 : 3 };
+            lions.Add(B);
+            Sfx.Play("growl");
+            ui.Toast("Um urso vem para o rebanho!", 1.8f);
+            HitZone.Sphere(rig.head, "cabeça do urso", Vector3.zero, 0.4f / 0.68f, (s, hp) => HitBear(B, true)).counts = () => B.state != "dead";
+            HitZone.Box(rig.root, "corpo do urso", new Vector3(0f, 1.0f, 0f), new Vector3(1.1f, 1.2f, 1.6f), (s, hp) => HitBear(B, false)).counts = () => false;
+        }
+
+        void HitBear(Lion B, bool head)
+        {
+            if (B.state == "dead") return;
+            hits++;
+            if (!head)
+            {
+                Sfx.Play("clang");
+                B.stagger = 0.25f;
+                Fx.Burst(B.rig.body.position, U.Hex(0x4a3524), 4, 1.2f);
+                ui.Toast("O corpo do urso aguenta. Mire na cabeça.", 1.4f);
+                return;
+            }
+            B.hp--;
+            score += 100;
+            Fx.Burst(B.rig.head.position, U.Hex(0x6a4323), 8, 2f);
+            if (B.hp <= 0)
+            {
+                B.state = "dead";
+                Sfx.Play("thud");
+                score += 300;
+                ui.Toast("Na cabeça! O urso caiu. +400", 1.8f);
+                ReleaseSheep(B, "urso");
+            }
+            else
+            {
+                B.stagger = 0.9f;
+                Sfx.Play("growl");
+                ui.Toast("Na cabeça! Ele ainda se mexe (" + B.hp + (B.hp == 1 ? " pedra)." : " pedras)."), 1.4f);
+            }
+        }
+
+        void ReleaseSheep(Lion L, string animal)
+        {
+            if (L.carry == null) return;
+            Sheep s = L.carry;
+            s.alive = true;
+            s.t.gameObject.SetActive(true);
+            Vector3 p = L.rig.root.position + Vector3.right;
+            p.y = World.FieldHeight(p.x, p.z);
+            s.t.position = p;
+            score += 150;
+            ui.Toast("Você livrou a ovelha da boca do " + animal + "! +150", 2.6f);
+            Sfx.Play("bleat");
+            L.carry = null;
         }
 
         void HitLion(Lion L, bool head)
@@ -214,7 +282,7 @@ namespace Valentes
                     r.localRotation = Quaternion.Euler(0f, e.y, Mathf.Min(90f, L.deadT * 290f));
                     continue;
                 }
-                float spd = baseSpeed * (L.stagger > 0f ? 0.25f : 1f);
+                float spd = baseSpeed * (L.bear ? 0.5f : 1f) * (L.stagger > 0f ? 0.25f : 1f);
                 L.stagger = Mathf.Max(0f, L.stagger - dt);
                 Vector3 p = r.position, target;
                 if (L.state == "run")
@@ -236,7 +304,7 @@ namespace Valentes
                         L.carry = best;
                         L.state = "flee";
                         Sfx.Play("bleat");
-                        ui.Toast("O leão levou uma ovelha! Derrube-o antes que fuja.", 2.4f);
+                        ui.Toast(L.bear ? "O urso levou uma ovelha! Derrube-o antes que fuja." : "O leão levou uma ovelha! Derrube-o antes que fuja.", 2.4f);
                     }
                 }
                 else
@@ -289,22 +357,27 @@ namespace Valentes
                     p.y = World.FieldHeight(p.x, p.z) + Mathf.Abs(Mathf.Sin(Time.time * 1.3f + s.ph)) * 0.02f;
                     s.t.position = p;
                 }
-            if (stage == 2)
+            if (stage >= 2)
             {
-                while (spawned < 3 && stageTime >= lionSchedule[spawned]) SpawnLion(spawned++);
+                float[] sched = stage == 3 ? bearSchedule : lionSchedule;
+                while (spawned < sched.Length && stageTime >= sched[spawned])
+                {
+                    if (stage == 3) { SpawnBear(); spawned++; }
+                    else SpawnLion(spawned++);
+                }
                 UpdateLions(dt);
             }
 
             bool done;
             if (stage < 2) { done = true; foreach (Jar j in jars) if (j.alive) done = false; }
-            else { done = spawned == 3; foreach (Lion L in lions) if (L.active && L.state != "dead") done = false; }
-            if (done && endTimer < 0f) { endTimer = 1.6f; if (stage < 2) ui.Toast("Etapa concluída"); }
+            else { done = spawned == (stage == 3 ? bearSchedule.Length : lionSchedule.Length); foreach (Lion L in lions) if (L.active && L.state != "dead") done = false; }
+            if (done && endTimer < 0f) { endTimer = 1.6f; if (stage < 3) ui.Toast("Etapa concluída"); }
             if (endTimer > 0f)
             {
                 endTimer -= dt;
                 if (endTimer <= 0f)
                 {
-                    if (stage < 2) SetupStage(stage + 1);
+                    if (stage < 3) SetupStage(stage + 1);
                     else Finish();
                 }
             }
@@ -318,7 +391,7 @@ namespace Valentes
             foreach (Sheep s in sheep) if (s.alive) savedSheep++;
             accuracy = shots > 0 ? hits / (float)shots : 0f;
             score += savedSheep * 100 + Mathf.RoundToInt(accuracy * 300f);
-            medal = score >= 2100 ? Medal.Ouro : score >= 1400 ? Medal.Prata : Medal.Bronze;
+            medal = score >= 2600 ? Medal.Ouro : score >= 1800 ? Medal.Prata : Medal.Bronze;
             if (onFinished != null) onFinished(this);
         }
 

@@ -48,6 +48,12 @@ pessoa.
 - Eliabe repreende Davi (17:28). Diálogo curto, sem escolhas.
 - Davi é levado a Saul.
 
+**Como está no jogo:** Davi chega pelo fundo do acampamento (tendas, fogueiras, sete homens) com o farnel
+(o saco aparece na mão esquerda). Golias grita ao longe. Três soldados falam quando Davi chega perto
+(17:25 em duas falas, a segunda seguida da resposta de Davi em 17:26; e o medo do acampamento, 17:16 e 24).
+Eliabe, na tenda com a faixa vermelha e marcado por um anel dourado no chão, repreende Davi (17:28) e Davi
+responde (17:29). Depois da conversa com Eliabe, a tela escurece e segue a cena com Saul. As falas são
+provisórias e ainda não têm narração gravada.
 ## 3. Diante de Saul (cena curta)
 
 Saul: *"Não poderás ir contra este filisteu... tu és ainda moço."* (17:33)
@@ -62,7 +68,7 @@ O treino é o próprio relato de Davi, não um estande genérico.
 | a) Alvos parados | Jarros e pedras no campo | Girar e soltar a funda, arco da pedra |
 | b) Alvos em movimento | Jarros balançando em galhos | Antecipar o alvo |
 | c) O leão | Leão corre para o rebanho; derrubar antes que alcance uma ovelha | Precisão sob pressão |
-| d) O urso | Resistente; só a cabeça é ponto fraco | Mirar no ponto fraco (prepara o duelo com Golias) |
+| d) O urso | Resistente; só a cabeça é ponto fraco (o corpo aguenta qualquer pedra). Precisa de 2, 3 ou 4 acertos na cabeça no Pastor, Guerreiro e Valente; anda mais devagar que o leão | Mirar no ponto fraco (prepara o duelo com Golias) |
 
 - **Medalhas:** bronze, prata e ouro por etapa, com base em precisão, tempo e
   ovelhas salvas.
