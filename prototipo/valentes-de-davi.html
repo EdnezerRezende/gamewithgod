@@ -83,6 +83,11 @@
   #toast{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-size:20px;font-weight:500;text-align:center;max-width:90vw;
     text-shadow:0 2px 6px rgba(0,0,0,.9);opacity:0;transition:opacity .25s}
   #toast.on{opacity:1}
+  #talk{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);max-width:min(62ch,92vw);text-align:center;padding:12px 18px;background:rgba(20,13,8,.78);border:1px solid rgba(234,220,189,.25);border-radius:4px;opacity:0;transition:opacity .35s;pointer-events:none}
+  #talk.on{opacity:1}
+  #talk b{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--bronze-hi);margin-bottom:4px}
+  #talk q{display:block;quotes:none;font-style:italic;font-size:clamp(16px,2.2vw,22px)}
+  #talk small{display:block;margin-top:4px;color:var(--parch-dim);font-size:12px;letter-spacing:.1em}
   #opening{position:absolute;left:50%;top:32%;transform:translateX(-50%);font-family:var(--display);font-size:30px;letter-spacing:.2em;color:var(--bronze-hi);text-shadow:0 0 18px rgba(236,189,106,.6)}
   #hurt{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(160,30,15,.55));opacity:0;transition:opacity .35s}
 
@@ -151,6 +156,7 @@
   <div id="opening" hidden>Abertura</div>
   <canvas id="gauge" width="280" height="280"></canvas>
   <div id="toast"></div>
+  <div id="talk"><b id="talk-who"></b><q id="talk-q"></q><small id="talk-ref"></small></div>
   <div id="hurt"></div>
   <div class="esc-hint">Esc · pausa e menu · botão direito · zoom da mira · H · ajuda de mira · M · música · N · narração</div>
 </div>
@@ -552,6 +558,20 @@ function makeLion(){
   const tail = cyl(.03,.03,.7,0xb07f43,4); tail.rotation.x = .9; tail.position.set(0,.85,-.9); g.add(tail);
   return {g, head, body, legs};
 }
+function makeBear(){
+  const g = new THREE.Group(); g.rotation.order = 'YXZ';
+  const fur = 0x4a3524, dk = 0x33241a;
+  const body = box(.95,.95,1.5,fur); body.position.y = 1.0; g.add(body);
+  const hump = sph(.5,fur); hump.position.set(0,1.5,.3); hump.scale.set(1.1,.8,1.2); g.add(hump);
+  const head = sph(.34,fur); head.position.set(0,1.35,1.1); g.add(head);
+  const muz = box(.24,.2,.3,0x6b4e36); muz.position.set(0,1.25,1.4); g.add(muz);
+  const nose = box(.08,.06,.06,0x120a06); nose.position.set(0,1.3,1.57); g.add(nose);
+  for (const sx of [-1,1]){ const e = sph(.09,fur); e.position.set(.2*sx,1.62,1.0); g.add(e); const ey = sph(.035,0x120a06); ey.position.set(.13*sx,1.42,1.38); g.add(ey); }
+  const legs = [];
+  for (const [x,z] of [[-.34,-.58],[.34,-.58],[-.34,.58],[.34,.58]]){ const p = new THREE.Group(); p.position.set(x,.7,z); const l = box(.26,.7,.26,dk); l.position.y = -.35; p.add(l); g.add(p); legs.push(p); }
+  const tail = sph(.12,fur); tail.position.set(0,1.1,-.8); g.add(tail);
+  return {g, head, body, legs};
+}
 function makeJar(){
   const g = new THREE.Group(), m = cmat(0xb5603a);
   const b = new THREE.Mesh(new THREE.SphereGeometry(.2,10,8), m); b.scale.y = 1.2; g.add(b);
@@ -598,7 +618,7 @@ const tmp1 = V(), tmp2 = V(), tmp3 = V();
 const wp = (o, v) => o.getWorldPosition(v);
 
 // ================= Input =================
-const playing = () => (mode === 'training' || mode === 'duel') && !cine;
+const playing = () => (mode === 'training' || mode === 'duel' || mode === 'camp') && !cine;
 function tryLock(){
   goFullscreen();
   if (noLock) return;
@@ -719,7 +739,7 @@ function drawGauge(){
 }
 function updateHUD(){
   const duel = mode === 'duel';
-  $('st-stones').hidden = !duel; $('st-vida').hidden = !duel; $('st-cor').hidden = !duel; $('st-score').hidden = duel;
+  $('st-stones').hidden = !duel; $('st-vida').hidden = !duel; $('st-cor').hidden = !duel; $('st-score').hidden = duel || mode === 'camp';
   if (duel){
     $('pips').innerHTML = [0,1,2,3,4].map(i => `<span class="${i < D.stonesLeft ? '' : 'used'}"></span>`).join('');
     $('vida').style.width = clamp(P.vida,0,100) + '%'; $('cor').style.width = clamp(P.cor,0,100) + '%';
@@ -888,6 +908,7 @@ function updatePlayer(dt){
   if (keys.ArrowLeft) P.yaw += 1.8*dt; if (keys.ArrowRight) P.yaw -= 1.8*dt;
   if (keys.ArrowUp) P.pitch = clamp(P.pitch + 1.2*dt, -1.35, 1.35); if (keys.ArrowDown) P.pitch = clamp(P.pitch - 1.2*dt, -1.35, 1.35);
   if (mode === 'training'){ const dx = P.pos.x, dz = P.pos.z - 2, d = Math.hypot(dx,dz); if (d > 14){ P.pos.x = dx/d*14; P.pos.z = 2 + dz/d*14; } }
+  else if (mode === 'camp'){ const dx = P.pos.x - CAMP.x, dz = P.pos.z - CAMP.z, d = Math.hypot(dx,dz); if (d > 21){ P.pos.x = CAMP.x + dx/d*21; P.pos.z = CAMP.z + dz/d*21; } }
   else { P.pos.x = clamp(P.pos.x,-45,45); P.pos.z = clamp(P.pos.z,-46,48);
     const gx = P.pos.x - GL.root.position.x, gz = P.pos.z - GL.root.position.z, gd = Math.hypot(gx,gz);
     if (gd < 1.5 && !D.won){ P.pos.x = GL.root.position.x + gx/gd*1.5; P.pos.z = GL.root.position.z + gz/gd*1.5; } }
@@ -928,14 +949,14 @@ function setupStage(n){
   clearStage(); T.stage = n; T.endT = -1;
   const d = D_();
   if (n === 0){
-    setObj('Etapa 1 de 3: jarros parados', 'Acerte os 5 jarros. Segure o botão para girar a funda e solte no ponto certo.');
+    setObj('Etapa 1 de 4: jarros parados', 'Acerte os 5 jarros. Segure o botão para girar a funda e solte no ponto certo.');
     for (const [x,z] of [[-6,-12],[-2,-16],[3,-13],[7,-19],[0,-24]]){
       const gy = fieldH(x,z); const post = cyl(.05,.06,1.15,0x5a3f27,5); post.position.set(x,gy+.57,z); T.grp.add(post);
       const m = makeJar(); m.position.set(x,gy+1.35,z); T.grp.add(m);
       const j = {m, alive:true}; T.jars.push(j); targets.push(jarTarget(j,100));
     }
   } else if (n === 1){
-    setObj('Etapa 2 de 3: jarros em movimento', 'Acerte os 4 jarros balançando. Antecipe o movimento.');
+    setObj('Etapa 2 de 4: jarros em movimento', 'Acerte os 4 jarros balançando. Antecipe o movimento.');
     for (const [x,z] of [[-7,-15],[4,-17],[-1,-22],[9,-25]]){
       const len = 2.8, tr = makeTree(len); tr.position.set(x-len+.3, fieldH(x-len+.3,z), z); T.grp.add(tr);
       const piv = V(x, tr.position.y + 3.35, z);
@@ -944,13 +965,17 @@ function setupStage(n){
       rope.frustumCulled = false; T.grp.add(rope);
       const j = {m, alive:true, piv, rope, amp:rand(.55,.85), w:rand(1.3,2.1)*(d.lion/6*.5+.5), ph:rand(0,6)}; T.jars.push(j); targets.push(jarTarget(j,150));
     }
-  } else {
-    setObj('Etapa 3 de 3: o leão', 'Defenda o rebanho. Na cabeça, uma pedra basta; no corpo, são duas.');
+  } else if (n === 2){
+    setObj('Etapa 3 de 4: o leão', 'Defenda o rebanho. Na cabeça, uma pedra basta; no corpo, são duas.');
     T.lions = []; T.spawned = 0; T.lionSched = [1, 7.5, 13]; T.stageT = 0;
+  } else {
+    setObj('Etapa 4 de 4: o urso', 'O urso é resistente: pedras no corpo não adiantam. Só a cabeça é o ponto fraco, e ele precisa de mais de uma pedra.');
+    T.lions = []; T.spawned = 0; T.lionSched = [1.5]; T.stageT = 0;
   }
   addSheepTargets();
 }
 function spawnLion(i){
+  if (T.stage === 3) return spawnBear();
   const a = [-.7, .6, 0][i] + rand(-.15,.15), R = 38;
   const L = makeLion(); const x = FC.x + Math.sin(a)*R, z = FC.z - Math.cos(a)*R;
   L.g.position.set(x, fieldH(x,z), z); T.grp.add(L.g);
@@ -958,6 +983,25 @@ function spawnLion(i){
   T.lions.push(lion); sfx.growl(); toast('Um leão vem para o rebanho!', 1.6);
   targets.push(sphereT(() => wp(lion.head, tmp1), .36, () => lionHit(lion, true), () => lion.state !== 'dead'));
   targets.push(sphereT(() => wp(lion.body, tmp1), .55, () => lionHit(lion, false), () => lion.state !== 'dead'));
+}
+function spawnBear(){
+  const a = rand(-.3,.3), R = 36, B = makeBear(), x = FC.x + Math.sin(a)*R, z = FC.z - Math.cos(a)*R;
+  B.g.position.set(x, fieldH(x,z), z); T.grp.add(B.g);
+  const hp = ({pastor:2, guerreiro:3, valente:4})[dk];
+  const bear = Object.assign(B, {state:'run', bear:true, hp, stag:0, active:true, carry:null, deadT:0});
+  T.lions.push(bear); sfx.growl(); toast('Um urso vem para o rebanho!', 1.8);
+  targets.push(sphereT(() => wp(bear.head, tmp1), .4, () => bearHit(bear, true), () => bear.state !== 'dead'));
+  targets.push(sphereT(() => wp(bear.body, tmp1), .75, () => bearHit(bear, false), () => bear.state !== 'dead'));
+}
+function bearHit(B, head){
+  if (B.state === 'dead') return;
+  T.hits++;
+  if (!head){ sfx.clang(); B.stag = .25; burst(wp(B.body,tmp2), 0x4a3524, 4, 1.2); toast('O corpo do urso aguenta. Mire na cabeça.', 1.4); return; }
+  B.hp--; T.score += 100; burst(wp(B.head,tmp2), 0x6a4323, 8, 2);
+  if (B.hp <= 0){
+    B.state = 'dead'; sfx.thud(); T.score += 300; toast('Na cabeça! O urso caiu. +400', 1.8);
+    if (B.carry){ const sh = B.carry; sh.alive = true; sh.g.visible = true; sh.g.position.copy(B.g.position).add(V(1,0,0)); sh.g.position.y = fieldH(sh.g.position.x, sh.g.position.z); T.score += 150; toast('Você livrou a ovelha da boca do urso! +150', 2.6); sfx.bleat(); B.carry = null; }
+  } else { B.stag = .9; sfx.growl(); toast('Na cabeça! Ele ainda se mexe (' + B.hp + (B.hp === 1 ? ' pedra).' : ' pedras).'), 1.4); }
 }
 function lionHit(L, head){
   if (L.state === 'dead') return;
@@ -974,13 +1018,13 @@ function updateLions(dt){
     if (!L.active) continue;
     const p = L.g.position;
     if (L.state === 'dead'){ L.deadT += dt; L.g.rotation.z = Math.min(PI/2, L.deadT*5); continue; }
-    let tx, tz, spd = d.lion * (L.stag > 0 ? .25 : 1);
+    let tx, tz, spd = d.lion * (L.bear ? .5 : 1) * (L.stag > 0 ? .25 : 1);
     L.stag = Math.max(0, L.stag - dt);
     if (L.state === 'run'){
       let best = null, bd = 1e9; for (const sh of T.sheep){ if (!sh.alive) continue; const dd = sh.g.position.distanceTo(p); if (dd < bd){ bd = dd; best = sh; } }
       if (!best){ L.state = 'flee'; continue; }
       tx = best.g.position.x; tz = best.g.position.z;
-      if (bd < 1.1){ best.alive = false; best.g.visible = false; L.carry = best; L.state = 'flee'; sfx.bleat(); toast('O leão levou uma ovelha! Derrube-o antes que fuja.', 2.4); }
+      if (bd < 1.1){ best.alive = false; best.g.visible = false; L.carry = best; L.state = 'flee'; sfx.bleat(); toast(L.bear ? 'O urso levou uma ovelha! Derrube-o antes que fuja.' : 'O leão levou uma ovelha! Derrube-o antes que fuja.', 2.4); }
     } else { const ax = p.x - FC.x, az = p.z - FC.z, ad = Math.hypot(ax,az) || 1; tx = p.x + ax/ad*10; tz = p.z + az/ad*10; spd *= 1.05;
       if (ad > 44){ L.active = false; L.g.visible = false; if (L.carry) L.carry.lost = true; } }
     const dx = tx - p.x, dz = tz - p.z, dd = Math.hypot(dx,dz) || 1;
@@ -994,14 +1038,14 @@ function updateTraining(dt){
   if (T.stage === 1) for (const j of T.jars){ const th = j.amp*Math.sin(gt*j.w + j.ph), L = 1.7; j.m.position.set(j.piv.x + Math.sin(th)*L, j.piv.y - Math.cos(th)*L - .3, j.piv.z);
     const a = j.rope.geometry.attributes.position.array; a[0]=j.piv.x; a[1]=j.piv.y; a[2]=j.piv.z; a[3]=j.m.position.x; a[4]=j.m.position.y+.3; a[5]=j.m.position.z; j.rope.geometry.attributes.position.needsUpdate = true; }
   for (const sh of T.sheep) if (sh.alive) sh.g.position.y = fieldH(sh.g.position.x, sh.g.position.z) + Math.abs(Math.sin(gt*1.3+sh.ph))*.02;
-  if (T.stage === 2){
+  if (T.stage >= 2){
     T.stageT += dt;
-    while (T.spawned < 3 && T.stageT >= T.lionSched[T.spawned]) spawnLion(T.spawned++);
+    while (T.spawned < T.lionSched.length && T.stageT >= T.lionSched[T.spawned]) spawnLion(T.spawned++);
     updateLions(dt);
   }
-  const done = T.stage < 2 ? T.jars.every(j => !j.alive) : (T.spawned === 3 && T.lions.every(L => !L.active || L.state === 'dead'));
-  if (done && T.endT < 0){ T.endT = 1.6; if (T.stage < 2) toast('Etapa concluída'); }
-  if (T.endT > 0){ T.endT -= dt; if (T.endT <= 0){ if (T.stage < 2) setupStage(T.stage+1); else finishTraining(); } }
+  const done = T.stage < 2 ? T.jars.every(j => !j.alive) : (T.spawned === T.lionSched.length && T.lions.every(L => !L.active || L.state === 'dead'));
+  if (done && T.endT < 0){ T.endT = 1.6; if (T.stage < 3) toast('Etapa concluída'); }
+  if (T.endT > 0){ T.endT -= dt; if (T.endT <= 0){ if (T.stage < 3) setupStage(T.stage+1); else finishTraining(); } }
 }
 function startTraining(after){
   setMood('training');
@@ -1019,7 +1063,7 @@ function finishTraining(){
   const acc = T.shots ? T.hits / T.shots : 0;
   const sheepPts = saved*100, accPts = Math.round(acc*300);
   T.score += sheepPts + accPts;
-  const medal = T.score >= 2100 ? 'ouro' : T.score >= 1400 ? 'prata' : 'bronze';
+  const medal = T.score >= 2600 ? 'ouro' : T.score >= 1800 ? 'prata' : 'bronze';
   flow.medal = medal; flow.trainScore = T.score;
   flow.corStart = ({bronze:45, prata:58, ouro:72})[medal] + (dk === 'pastor' ? 10 : 0);
   mode = 'result'; canvas.style.filter = ''; hideHUD();
@@ -1051,7 +1095,7 @@ function finishTraining(){
 // ================= Duel =================
 const D = {state:'walk', stT:0, nextAct:3, openT:0, stun:0, stonesLeft:5, used:0, won:false, lost:false, approach:0, lastDist:0, time:0, fallT:0, headTilt:.35, atkHit:false, thrown:false, endT:-1};
 function placeDuel(){
-  D.won = false; D.lost = false; D.fallT = 0;
+  D.won = false; D.lost = false; D.fallT = 0; campGrp.visible = false; sack.visible = false; hideTalk();
   valley.visible = true; field.visible = false; groundH = valleyH; canvas.style.filter = '';
   GL.root.position.set(0, valleyH(0,30), 30); GL.root.rotation.set(0, PI, 0); GL.root.visible = true;
   ES.root.position.set(0, valleyH(0,28), 28); ES.root.rotation.set(0, PI, 0); ES.root.visible = true;
@@ -1294,6 +1338,85 @@ function startDuelCine(then){
   ], () => { GL.head.rotation.x = .35; beginDuel(); });
 }
 
+
+// ================= Chegada ao acampamento (1 Sm 17:17-30) =================
+// Davi traz grãos tostados, pães e queijos aos irmãos. Soldados comentam a recompensa do rei; Eliabe o repreende.
+// Texto provisório (Almeida, domínio público), a revisar contra a edição escolhida.
+const CAMP = {x:0, z:-40};
+const campGrp = new THREE.Group(); valley.add(campGrp); campGrp.visible = false;
+const sack = box(.2,.2,.16,0xb8a574); sack.position.set(-.3,-.32,-.5); sack.rotation.set(.1,.3,.15); VM.add(sack); sack.visible = false;
+const CAMP_TALK = {
+  s1: [{who:'Soldado', q:'Vistes aquele homem que subiu? Subiu para afrontar a Israel; e ao que o ferir, o rei o enriquecerá com grandes riquezas,', ref:'1 Samuel 17:25'}],
+  s2: [{who:'Soldado', q:'...e lhe dará sua filha, e a casa de seu pai fará livre em Israel.', ref:'1 Samuel 17:25'},
+       {who:'Davi', q:'Quem é, pois, este filisteu incircunciso, para afrontar os exércitos do Deus vivo?', ref:'1 Samuel 17:26'}],
+  s3: [{who:'Soldado', q:'Quarenta dias que ele desafia de manhã e de tarde, e ninguém sobe contra ele. O medo tomou o acampamento.', ref:'1 Samuel 17:16, 24'}],
+  eliabe: [{who:'Eliabe', q:'Por que desceste aqui? E com quem deixaste aquelas poucas ovelhas no deserto? Bem conheço a tua soberba, e a malícia do teu coração.', ref:'1 Samuel 17:28'},
+           {who:'Davi', q:'Que fiz eu agora? Não foi isto só uma palavra?', ref:'1 Samuel 17:29'}],
+};
+const CAMP_NPC = [];
+let campThen = null, talkQ = [], talkT = 0, talkHideT = 0, campDone = false;
+{
+  const tentMat = cmat(0xd9c9a0), band = cmat(0x8c2f22);
+  const tent = (x, z, sc, red) => { const g = new THREE.Group(); const body = new THREE.Mesh(new THREE.ConeGeometry(2.1*sc, 2.5*sc, 4), tentMat); body.rotation.y = PI/4; body.position.y = 1.25*sc; g.add(body);
+    if (red){ const b = new THREE.Mesh(new THREE.CylinderGeometry(1.52*sc, 1.62*sc, .22, 4), band); b.rotation.y = PI/4; b.position.y = .55*sc; g.add(b); }
+    g.position.set(CAMP.x + x, valleyH(CAMP.x + x, CAMP.z + z), CAMP.z + z); g.rotation.y = rand(-.3,.3); campGrp.add(g); };
+  for (const [x,z] of [[-12,-6],[-14,6],[12,-8],[14,5],[-5,13],[7,14],[-3,-12]]) tent(x, z, 1, false);
+  tent(5, 8, 1.3, true);   // a tenda de Eliabe
+  CAMP.fires = [];
+  for (const [x,z] of [[-5,-3],[4,-4],[-8,8]]){
+    const g = new THREE.Group(); for (let i=0;i<7;i++){ const a = i/7*PI*2, st = new THREE.Mesh(new THREE.DodecahedronGeometry(.16,0), cmat(0x7d7566)); st.position.set(Math.cos(a)*.5, .1, Math.sin(a)*.5); g.add(st); }
+    const fl = new THREE.Mesh(new THREE.ConeGeometry(.28,.8,5), new THREE.MeshBasicMaterial({color:0xffa13a})); fl.position.y = .5; g.add(fl);
+    g.position.set(CAMP.x + x, valleyH(CAMP.x + x, CAMP.z + z), CAMP.z + z); campGrp.add(g); CAMP.fires.push(fl);
+  }
+  const people = [
+    {id:'s1', x:-4, z:-6, robe:0x6f6a3c, face:.6}, {id:'s2', x:6, z:-1, robe:0x7d5f3a, face:-.9}, {id:'s3', x:-9, z:4, robe:0x8a7a52, face:1.4},
+    {id:'eliabe', x:3, z:5, robe:0x3d5a8a, face:2.9, tall:true},
+    {id:'', x:-2, z:6, robe:0x5e5638, face:.3}, {id:'', x:10, z:-5, robe:0x6f6a3c, face:2.2}, {id:'', x:-11, z:-2, robe:0x7d5f3a, face:-.4},
+  ];
+  for (const n of people){
+    const m = buildHuman({h: n.tall ? 1.82 : 1.75, robe:n.robe, beard: n.id === 'eliabe' ? true : null}); m.root.position.set(CAMP.x + n.x, valleyH(CAMP.x + n.x, CAMP.z + n.z), CAMP.z + n.z); m.root.rotation.y = n.face;
+    campGrp.add(m.root); CAMP_NPC.push(Object.assign(n, {m, said:false}));
+  }
+  const ring = new THREE.Mesh(new THREE.RingGeometry(.5,.62,24), new THREE.MeshBasicMaterial({color:0xffd166, transparent:true, opacity:.8, side:THREE.DoubleSide, depthTest:false}));
+  ring.rotation.x = -PI/2; ring.renderOrder = 9; ring.position.y = .06; CAMP.ring = ring; campGrp.add(ring);
+}
+function showTalk(l){
+  $('talk-who').textContent = l.who; $('talk-q').textContent = '“' + l.q + '”'; $('talk-ref').textContent = l.ref; $('talk').classList.add('on');
+  const secs = Math.max(4.2, narrationSeconds(l.q)); talkT = secs; speak(l.q);
+}
+function hideTalk(){ talkQ = []; talkT = 0; $('talk').classList.remove('on'); stopSpeak(); }
+function say(id){ if (talkQ.length || talkT > 0) return false; talkQ = CAMP_TALK[id].slice(); return true; }
+function startCamp(then){
+  campThen = then; campDone = false;
+  setMood('training'); mode = 'camp'; valley.visible = true; field.visible = false; groundH = valleyH; canvas.style.filter = '';
+  placeDuel(); campGrp.visible = true; sack.visible = true; hideTalk();
+  for (const n of CAMP_NPC) n.said = false;
+  P.pos.set(CAMP.x, 0, CAMP.z - 19); P.yaw = PI; P.pitch = 0; P.vel.set(0,0,0); P.cor = 70; P.armor = false;
+  const e = CAMP_NPC.find(n => n.id === 'eliabe'); CAMP.ring.position.set(e.m.root.position.x, e.m.root.position.y + .06, e.m.root.position.z);
+  setObj('Chegada ao acampamento', 'Davi trouxe grãos tostados, pães e queijos aos irmãos (17:17-18). Leve o farnel a Eliabe, na tenda com a faixa vermelha. Ouça os soldados no caminho.');
+  showHUD(); sfx.roar(); shake = .8; toast('Ao longe, Golias grita o desafio.', 2.4);
+}
+function updateCamp(dt){
+  introPace(dt); GL.head.rotation.x = .3;
+  CAMP.fires.forEach((f,i) => { f.scale.y = .85 + .25*Math.sin(gt*9 + i*2); f.scale.x = f.scale.z = .9 + .12*Math.sin(gt*7 + i); });
+  CAMP.ring.scale.setScalar(1 + .12*Math.sin(gt*4)); CAMP.ring.visible = !campDone;
+  if (talkT > 0){ talkT -= dt; if (talkT <= 0){ $('talk').classList.remove('on');
+    if (talkQ.length){ setTimeout(() => { if (mode === 'camp' && talkQ.length) showTalk(talkQ.shift()); }, 400); }
+    else if (campDone){ campDone = false; const f = campThen; setTimeout(() => { if (mode === 'camp'){ hideTalk(); campGrp.visible = false; sack.visible = false; hideHUD(); mode = 'cine'; const fade = $('fade'); fade.style.opacity = 1; setTimeout(() => { fade.style.opacity = 0; if (f) f(); }, 700); } }, 500); } } }
+  if (!talkQ.length && talkT <= 0){
+    for (const n of CAMP_NPC){
+      if (!n.id || n.said) continue;
+      const d = Math.hypot(P.pos.x - n.m.root.position.x, P.pos.z - n.m.root.position.z);
+      if (d < 4.2 && say(n.id)){
+        n.said = true; n.m.root.rotation.y = Math.atan2(P.pos.x - n.m.root.position.x, P.pos.z - n.m.root.position.z);
+        if (n.id === 'eliabe'){ campDone = true; setObj('Chegada ao acampamento', '"Davi é levado a Saul."'); }
+        break;
+      }
+    }
+  }
+  if (talkQ.length && talkT <= 0) showTalk(talkQ.shift());
+}
+
 // ================= Screens =================
 function showHUD(){ $('hud').hidden = false; VM.visible = true; }
 function hideHUD(){ $('hud').hidden = true; preview.visible = false; marker.visible = false; }
@@ -1487,13 +1610,13 @@ function showMenu(){
 }
 function showPause(){
   pauseOn = true; stopSpeak(); S.charging = false; preview.visible = false; marker.visible = false;
-  const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Duelo';
+  const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'camp' ? 'Acampamento' : mode === 'training' ? 'Treino' : 'Duelo';
   const html = () => `
     <div class="eyebrow">Pausa · ${where} · ${D_().name}</div>
     <h2>Jogo pausado</h2>
     <div class="row">
       <button class="btn primary" data-act="resume">Continuar</button>
-      ${inCine ? '<button class="btn" data-act="skip">Pular a cena</button>' : `<button class="btn" data-act="restart">${mode === 'training' ? 'Recomeçar o treino' : 'Recomeçar o duelo'}</button>`}
+      ${inCine ? '<button class="btn" data-act="skip">Pular a cena</button>' : `<button class="btn" data-act="restart">${mode === 'camp' ? 'Recomeçar a chegada' : mode === 'training' ? 'Recomeçar o treino' : 'Recomeçar o duelo'}</button>`}
       <button class="btn" data-act="menu">Voltar ao menu</button>
     </div>
     <div class="row">
@@ -1508,14 +1631,14 @@ function showPause(){
     voice: () => { setNarration(!narrOn); $('ov-card').innerHTML = html(); },
     resume: () => { hideOverlay(); pauseOn = false; tryLock(); },
     skip: () => { hideOverlay(); pauseOn = false; tryLock(); endCine(); },
-    restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'training') startTraining(); else { placeDuel(); beginDuel(); } },
+    restart: () => { hideOverlay(); pauseOn = false; tryLock(); if (mode === 'camp') startCamp(campThen); else if (mode === 'training') startTraining(); else { placeDuel(); beginDuel(); } },
     menu: showMenu,
   });
 }
 function startFull(){
   if (!tutorialSeen()) return showTutorial(startFull);
   flow.kind = 'full'; flow.medal = null; hideOverlay(); tryLock();
-  startIntroCine(() => startFlashbackCine(() => startTraining()));
+  startIntroCine(() => startCamp(() => startFlashbackCine(() => startTraining())));
 }
 function startDuelOnly(){ flow.kind = 'duel'; flow.medal = null; flow.corStart = 55 + (dk === 'pastor' ? 10 : 0); goArmor(); }
 function goArmor(){
@@ -1585,6 +1708,7 @@ function update(dt, rdt){
   else if (playing()){
     updatePlayer(dt); updateSling(dt);
     if (mode === 'training') updateTraining(dt);
+    else if (mode === 'camp') updateCamp(dt);
     else { D.time += dt; updateGolias(dt); }
     fpCamera();
   }
