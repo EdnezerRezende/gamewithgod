@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>body{margin:0}</style>
+<script defer data-domain="valentes-de-davi-with-god.netlify.app" src="https://plausible.io/js/script.js"></script>
+<script>window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}</script>
 <title>Abisai e os Trezentos</title>
 </head>
 <body>
@@ -1045,7 +1047,7 @@ function updateRescue(dt){
 }
 function fall(reason){
   if (mode !== 'battle' || modal) return;
-  modal = true; B.deaths++; attackUp(true); setMood('quiet');
+  modal = true; track('Caiu', {dificuldade: dk}); B.deaths++; attackUp(true); setMood('quiet');
   const three = D_().toStart || B.part === 'three';
   setTimeout(() => {
     hideHUD();
@@ -1248,7 +1250,11 @@ const unlockAll = /[?&]liberar(=|&|$)/.test(location.search);
 function loadProgress(){ try { return JSON.parse(localStorage.getItem('vdd-progress')) || {}; } catch(e) { return {}; } }
 function phaseOpen(n, prog = loadProgress()){ return !onSite || unlockAll || n === 1 || !!(prog[n-1] && prog[n-1].won); }
 // Registra a vitória e diz se ela acabou de liberar a fase seguinte.
+// Estatísticas anônimas (Plausible, sem cookies, sem dados pessoais). O script só existe no site publicado
+// (publicar/gerar-web.sh); sem ele, estas chamadas não fazem nada.
+function track(name, props){ try { if (window.plausible) window.plausible(name, {props: Object.assign({fase: String(6)}, props)}); } catch(e) {} }
 function saveWin(n, stars, score){
+  track('Fase vencida', {dificuldade: dk, estrelas: String(stars)});
   const prog = loadProgress(), before = phaseOpen(n + 1, prog), o = prog[n] || {};
   prog[n] = {won:true, stars:Math.max(o.stars || 0, stars), best:Math.max(o.best || 0, score)};
   try { localStorage.setItem('vdd-progress', JSON.stringify(prog)); } catch(e) {}
@@ -1318,11 +1324,11 @@ function showMenu(){
     music: () => { setMusic(!musicOn); $('ov-card').innerHTML = html(); },
     voice: () => { setNarration(!narrOn); $('ov-card').innerHTML = html(); },
     tutorial: () => showTutorial(null),
-    full: startFull, train: () => { B.kind = 'train'; B.medal = null; hideOverlay(); tryLock(); startTraining(); }, battle: startBattleOnly,
+    full: startFull, train: () => { B.kind = 'train'; track('Jogo iniciado', {modo: 'só o treino', dificuldade: dk}); B.medal = null; hideOverlay(); tryLock(); startTraining(); }, battle: startBattleOnly,
   });
 }
-function startFull(){ if (!tutorialSeen()) return showTutorial(startFull); B.kind = 'full'; B.medal = null; hideOverlay(); tryLock(); introCine(() => startTraining()); }
-function startBattleOnly(){ B.kind = 'battle'; B.medal = null; B.corStart = 65 + (dk === 'pastor' ? 10 : 0); hideOverlay(); tryLock(); startThree(true); }
+function startFull(){ if (!tutorialSeen()) return showTutorial(startFull); B.kind = 'full'; track('Jogo iniciado', {modo: 'completa', dificuldade: dk}); B.medal = null; hideOverlay(); tryLock(); introCine(() => startTraining()); }
+function startBattleOnly(){ B.kind = 'battle'; track('Jogo iniciado', {modo: 'só a missão', dificuldade: dk}); B.medal = null; B.corStart = 65 + (dk === 'pastor' ? 10 : 0); hideOverlay(); tryLock(); startThree(true); }
 function showPause(){
   pauseOn = true; stopSpeak(); attackUp(true); mouseR = false;
   const inCine = !!cine, where = inCine ? 'Cena animada' : mode === 'training' ? 'Treino' : 'Missão';

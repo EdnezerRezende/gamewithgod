@@ -1224,7 +1224,7 @@ function win(){
 }
 function lose(reason){
   setMood('quiet');
-  if (D.lost || D.won) return; D.lost = true; mode = 'result'; S.charging = false; preview.visible = false; marker.visible = false;
+  if (D.lost || D.won) return; D.lost = true; track('Caiu', {dificuldade: dk}); mode = 'result'; S.charging = false; preview.visible = false; marker.visible = false;
   setTimeout(() => {
     hideHUD();
     const restartRibeiro = D_().restart === 'ribeiro';
@@ -1532,7 +1532,11 @@ const unlockAll = /[?&]liberar(=|&|$)/.test(location.search);
 function loadProgress(){ try { return JSON.parse(localStorage.getItem('vdd-progress')) || {}; } catch(e) { return {}; } }
 function phaseOpen(n, prog = loadProgress()){ return !onSite || unlockAll || n === 1 || !!(prog[n-1] && prog[n-1].won); }
 // Registra a vitória e diz se ela acabou de liberar a fase seguinte.
+// Estatísticas anônimas (Plausible, sem cookies, sem dados pessoais). O script só existe no site publicado
+// (publicar/gerar-web.sh); sem ele, estas chamadas não fazem nada.
+function track(name, props){ try { if (window.plausible) window.plausible(name, {props: Object.assign({fase: String(1)}, props)}); } catch(e) {} }
 function saveWin(n, stars, score){
+  track('Fase vencida', {dificuldade: dk, estrelas: String(stars)});
   const prog = loadProgress(), before = phaseOpen(n + 1, prog), o = prog[n] || {};
   prog[n] = {won:true, stars:Math.max(o.stars || 0, stars), best:Math.max(o.best || 0, score)};
   try { localStorage.setItem('vdd-progress', JSON.stringify(prog)); } catch(e) {}
@@ -1604,7 +1608,7 @@ function showMenu(){
     aim: () => { setAimHelp(!aimHelp); $('ov-card').innerHTML = html(); },
     tutorial: () => showTutorial(null),
     voice: () => { setNarration(!narrOn); $('ov-card').innerHTML = html(); },
-    full: () => startFull(), train: () => { flow.kind = 'train'; hideOverlay(); tryLock(); startTraining(); }, duel: () => startDuelOnly(),
+    full: () => startFull(), train: () => { flow.kind = 'train'; track('Jogo iniciado', {modo: 'só o treino', dificuldade: dk}); hideOverlay(); tryLock(); startTraining(); }, duel: () => startDuelOnly(),
   };
   showOverlay(html(), acts);
 }
@@ -1637,10 +1641,10 @@ function showPause(){
 }
 function startFull(){
   if (!tutorialSeen()) return showTutorial(startFull);
-  flow.kind = 'full'; flow.medal = null; hideOverlay(); tryLock();
+  flow.kind = 'full'; track('Jogo iniciado', {modo: 'completa', dificuldade: dk}); flow.medal = null; hideOverlay(); tryLock();
   startIntroCine(() => startCamp(() => startFlashbackCine(() => startTraining())));
 }
-function startDuelOnly(){ flow.kind = 'duel'; flow.medal = null; flow.corStart = 55 + (dk === 'pastor' ? 10 : 0); goArmor(); }
+function startDuelOnly(){ flow.kind = 'duel'; track('Jogo iniciado', {modo: 'só o duelo', dificuldade: dk}); flow.medal = null; flow.corStart = 55 + (dk === 'pastor' ? 10 : 0); goArmor(); }
 function goArmor(){
   mode = 'result'; hideHUD(); canvas.style.filter = ''; placeDuel();
   showOverlay(`

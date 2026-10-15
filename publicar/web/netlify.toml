@@ -1,3 +1,19 @@
 [build]
   publish = "."
   command = "echo pronto"
+
+# Painel de estatísticas, protegido por usuário e senha (ver netlify/edge-functions/analytics.ts).
+[[edge_functions]]
+  function = "analytics"
+  path = "/analytics"
+
+[[edge_functions]]
+  function = "analytics"
+  path = "/analytics/*"
+
+# O código das funções não precisa ser público.
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404.html"
+  status = 404
+  force = true
