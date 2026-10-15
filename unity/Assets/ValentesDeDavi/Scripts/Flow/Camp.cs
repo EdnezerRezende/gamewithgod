@@ -14,7 +14,7 @@ namespace Valentes
         public static readonly Vector3 Center = new Vector3(0f, 0f, -40f);
         public const float Radius = 21f;
 
-        class Line { public string who, quote, reference; }
+        class Line { public string who, quote, reference, key; }
         class Npc { public string id; public Figure fig; public bool said; }
 
         public PlayerController player;
@@ -31,14 +31,14 @@ namespace Valentes
 
         static readonly Dictionary<string, Line[]> Talk = new Dictionary<string, Line[]>
         {
-            { "s1", new[] { new Line { who = "Soldado", quote = "Vistes aquele homem que subiu? Subiu para afrontar a Israel; e ao que o ferir, o rei o enriquecerá com grandes riquezas,", reference = "1 Samuel 17:25" } } },
+            { "s1", new[] { new Line { key = "c25a", who = "Soldado", quote = "Vistes aquele homem que subiu? Subiu para afrontar a Israel; e ao que o ferir, o rei o enriquecerá com grandes riquezas,", reference = "1 Samuel 17:25" } } },
             { "s2", new[] {
-                new Line { who = "Soldado", quote = "...e lhe dará sua filha, e a casa de seu pai fará livre em Israel.", reference = "1 Samuel 17:25" },
-                new Line { who = "Davi", quote = "Quem é, pois, este filisteu incircunciso, para afrontar os exércitos do Deus vivo?", reference = "1 Samuel 17:26" } } },
-            { "s3", new[] { new Line { who = "Soldado", quote = "Quarenta dias que ele desafia de manhã e de tarde, e ninguém sobe contra ele. O medo tomou o acampamento.", reference = "1 Samuel 17:16, 24" } } },
+                new Line { key = "c25b", who = "Soldado", quote = "...e lhe dará sua filha, e a casa de seu pai fará livre em Israel.", reference = "1 Samuel 17:25" },
+                new Line { key = "c26", who = "Davi", quote = "Quem é, pois, este filisteu incircunciso, para afrontar os exércitos do Deus vivo?", reference = "1 Samuel 17:26" } } },
+            { "s3", new[] { new Line { key = "c16", who = "Soldado", quote = "Quarenta dias que ele desafia de manhã e de tarde, e ninguém sobe contra ele. O medo tomou o acampamento.", reference = "1 Samuel 17:16, 24" } } },
             { "eliabe", new[] {
-                new Line { who = "Eliabe", quote = "Por que desceste aqui? E com quem deixaste aquelas poucas ovelhas no deserto? Bem conheço a tua soberba, e a malícia do teu coração.", reference = "1 Samuel 17:28" },
-                new Line { who = "Davi", quote = "Que fiz eu agora? Não foi isto só uma palavra?", reference = "1 Samuel 17:29" } } },
+                new Line { key = "c28", who = "Eliabe", quote = "Por que desceste aqui? E com quem deixaste aquelas poucas ovelhas no deserto? Bem conheço a tua soberba, e a malícia do teu coração.", reference = "1 Samuel 17:28" },
+                new Line { key = "c29", who = "Davi", quote = "Que fiz eu agora? Não foi isto só uma palavra?", reference = "1 Samuel 17:29" } } },
         };
 
         public static Camp Build(Transform parent)
@@ -126,7 +126,7 @@ namespace Valentes
             ui.Toast("Ao longe, Golias grita o desafio.", 2.4f);
         }
 
-        public void Hide() { running = false; queue.Clear(); gameObject.SetActive(false); }
+        public void Hide() { running = false; queue.Clear(); Narration.Stop(); gameObject.SetActive(false); }
 
         void Update()
         {
@@ -166,7 +166,9 @@ namespace Valentes
         void Show(Line l)
         {
             int words = l.quote.Split(' ').Length;
-            talkT = Mathf.Max(4.2f, Settings.Narration ? words * 0.45f + 2.5f : 4.2f);
+            // Com a gravação (Resources/Narracao/<chave>), a fala dura o áudio; sem ela, estima pelo número de palavras.
+            float rec = Narration.Play(l.key);
+            talkT = Mathf.Max(4.2f, rec > 0f ? rec + 0.8f : Settings.Narration ? words * 0.45f + 2.5f : 4.2f);
             ui.Toast(l.who.ToUpperInvariant() + "\n“" + l.quote + "”\n" + l.reference, talkT);
         }
     }

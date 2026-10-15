@@ -53,7 +53,7 @@ pessoa.
 (17:25 em duas falas, a segunda seguida da resposta de Davi em 17:26; e o medo do acampamento, 17:16 e 24).
 Eliabe, na tenda com a faixa vermelha e marcado por um anel dourado no chão, repreende Davi (17:28) e Davi
 responde (17:29). Depois da conversa com Eliabe, a tela escurece e segue a cena com Saul. As falas são
-provisórias e ainda não têm narração gravada.
+provisórias (Almeida) e têm narração gravada na mesma voz dos versículos (chaves `c25a`, `c25b`, `c26`, `c16`, `c28`, `c29`).
 ## 3. Diante de Saul (cena curta)
 
 Saul: *"Não poderás ir contra este filisteu... tu és ainda moço."* (17:33)

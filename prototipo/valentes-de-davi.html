@@ -1346,12 +1346,12 @@ const CAMP = {x:0, z:-40};
 const campGrp = new THREE.Group(); valley.add(campGrp); campGrp.visible = false;
 const sack = box(.2,.2,.16,0xb8a574); sack.position.set(-.3,-.32,-.5); sack.rotation.set(.1,.3,.15); VM.add(sack); sack.visible = false;
 const CAMP_TALK = {
-  s1: [{who:'Soldado', q:'Vistes aquele homem que subiu? Subiu para afrontar a Israel; e ao que o ferir, o rei o enriquecerá com grandes riquezas,', ref:'1 Samuel 17:25'}],
-  s2: [{who:'Soldado', q:'...e lhe dará sua filha, e a casa de seu pai fará livre em Israel.', ref:'1 Samuel 17:25'},
-       {who:'Davi', q:'Quem é, pois, este filisteu incircunciso, para afrontar os exércitos do Deus vivo?', ref:'1 Samuel 17:26'}],
-  s3: [{who:'Soldado', q:'Quarenta dias que ele desafia de manhã e de tarde, e ninguém sobe contra ele. O medo tomou o acampamento.', ref:'1 Samuel 17:16, 24'}],
-  eliabe: [{who:'Eliabe', q:'Por que desceste aqui? E com quem deixaste aquelas poucas ovelhas no deserto? Bem conheço a tua soberba, e a malícia do teu coração.', ref:'1 Samuel 17:28'},
-           {who:'Davi', q:'Que fiz eu agora? Não foi isto só uma palavra?', ref:'1 Samuel 17:29'}],
+  s1: [{k:'c25a', who:'Soldado', q:'Vistes aquele homem que subiu? Subiu para afrontar a Israel; e ao que o ferir, o rei o enriquecerá com grandes riquezas,', ref:'1 Samuel 17:25'}],
+  s2: [{k:'c25b', who:'Soldado', q:'...e lhe dará sua filha, e a casa de seu pai fará livre em Israel.', ref:'1 Samuel 17:25'},
+       {k:'c26', who:'Davi', q:'Quem é, pois, este filisteu incircunciso, para afrontar os exércitos do Deus vivo?', ref:'1 Samuel 17:26'}],
+  s3: [{k:'c16', who:'Soldado', q:'Quarenta dias que ele desafia de manhã e de tarde, e ninguém sobe contra ele. O medo tomou o acampamento.', ref:'1 Samuel 17:16, 24'}],
+  eliabe: [{k:'c28', who:'Eliabe', q:'Por que desceste aqui? E com quem deixaste aquelas poucas ovelhas no deserto? Bem conheço a tua soberba, e a malícia do teu coração.', ref:'1 Samuel 17:28'},
+           {k:'c29', who:'Davi', q:'Que fiz eu agora? Não foi isto só uma palavra?', ref:'1 Samuel 17:29'}],
 };
 const CAMP_NPC = [];
 let campThen = null, talkQ = [], talkT = 0, talkHideT = 0, campDone = false;
@@ -1382,7 +1382,7 @@ let campThen = null, talkQ = [], talkT = 0, talkHideT = 0, campDone = false;
 }
 function showTalk(l){
   $('talk-who').textContent = l.who; $('talk-q').textContent = '“' + l.q + '”'; $('talk-ref').textContent = l.ref; $('talk').classList.add('on');
-  const secs = Math.max(4.2, narrationSeconds(l.q)); talkT = secs; speak(l.q);
+  const secs = Math.max(4.2, narrationSeconds(l.q)); talkT = secs; speak(l.q, l.k);
 }
 function hideTalk(){ talkQ = []; talkT = 0; $('talk').classList.remove('on'); stopSpeak(); }
 function say(id){ if (talkQ.length || talkT > 0) return false; talkQ = CAMP_TALK[id].slice(); return true; }

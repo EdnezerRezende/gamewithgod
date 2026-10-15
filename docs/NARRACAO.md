@@ -67,6 +67,12 @@ edição escolhida; se mudarem, regrave as chaves afetadas.
 | `v48` | 1 Samuel 17:48 | Cena animada | ...Davi se apressou, e correu ao combate, a encontrar-se com o filisteu. |
 | `v49` | 1 Samuel 17:49 | Cena animada | E Davi pôs a mão no alforje, e tomou dali uma pedra, e com a funda lha atirou, e feriu o filisteu na testa; e caiu sobre o seu rosto em terra. |
 | `v51` | 1 Samuel 17:51 | Cena animada | ...vendo os filisteus que o seu campeão era morto, fugiram. |
+| `c25a` | 1 Samuel 17:25 | Acampamento (fala do soldado) | Vistes aquele homem que subiu? Subiu para afrontar a Israel; e ao que o ferir, o rei o enriquecerá com grandes riquezas, |
+| `c25b` | 1 Samuel 17:25 | Acampamento (fala do soldado) | ...e lhe dará sua filha, e a casa de seu pai fará livre em Israel. |
+| `c26` | 1 Samuel 17:26 | Acampamento (resposta de Davi) | Quem é, pois, este filisteu incircunciso, para afrontar os exércitos do Deus vivo? |
+| `c16` | 1 Samuel 17:16, 24 | Acampamento (fala do soldado) | Quarenta dias que ele desafia de manhã e de tarde, e ninguém sobe contra ele. O medo tomou o acampamento. |
+| `c28` | 1 Samuel 17:28 | Acampamento (Eliabe) | Por que desceste aqui? E com quem deixaste aquelas poucas ovelhas no deserto? Bem conheço a tua soberba, e a malícia do teu coração. |
+| `c29` | 1 Samuel 17:29 | Acampamento (resposta de Davi) | Que fiz eu agora? Não foi isto só uma palavra? |
 | `f2v8` | 2 Samuel 23:8 | Cena animada | Estes são os nomes dos valentes que Davi teve... |
 | `f2v11a` | 2 Samuel 23:11 | Cena animada | E depois dele Samá, filho de Agé, o hararita; e ajuntaram-se os filisteus em tropa, e havia ali um pedaço de campo cheio de lentilhas... |
 | `f2v11b` | 2 Samuel 23:11 | Cena animada | ...e o povo fugiu de diante dos filisteus. |
