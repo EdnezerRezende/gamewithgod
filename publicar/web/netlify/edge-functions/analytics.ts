@@ -42,7 +42,8 @@ function escapeAttr(s: string): string {
 }
 
 export default async (request: Request): Promise<Response> => {
-  const user = Netlify.env.get("ANALYTICS_USER"), pass = Netlify.env.get("ANALYTICS_PASSWORD"), share = Netlify.env.get("PLAUSIBLE_SHARE_URL");
+  // Espaços e quebras de linha colados por engano nas variáveis do Netlify não contam.
+  const user = Netlify.env.get("ANALYTICS_USER")?.trim(), pass = Netlify.env.get("ANALYTICS_PASSWORD")?.trim(), share = Netlify.env.get("PLAUSIBLE_SHARE_URL")?.trim();
   if (!user || !pass) {
     return new Response("Painel ainda não configurado.", { status: 503, headers });
   }
@@ -50,8 +51,12 @@ export default async (request: Request): Promise<Response> => {
   const auth = request.headers.get("authorization") ?? "";
   const m = auth.match(/^Basic\s+(.+)$/i);
   if (!m) return deny();
+  // O navegador manda "usuário:senha" em UTF-8; sem decodificar assim, letras com acento nunca batem.
   let sent = "";
-  try { sent = atob(m[1]); } catch { return deny(); }
+  try {
+    const bin = atob(m[1].trim());
+    sent = new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
+  } catch { return deny(); }
   const i = sent.indexOf(":");
   const okUser = await same(i < 0 ? sent : sent.slice(0, i), user);
   const okPass = await same(i < 0 ? "" : sent.slice(i + 1), pass);

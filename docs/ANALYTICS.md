@@ -21,8 +21,9 @@ dificuldade. As páginas só enviam os eventos pelo site publicado: o script do 
 ## Configurar (uma vez)
 
 1. **Plausible:** crie a conta em plausible.io e adicione o site com o domínio
-   `valentes-de-davi-with-god.netlify.app` (o mesmo que está em `PLAUSIBLE_DOMAIN`, em
-   `publicar/gerar-web.sh`; se o site ganhar um endereço próprio, troque lá e gere de novo).
+   `valentes-de-davi-with-god.netlify.app`. O Plausible entrega um trecho de instalação com um código do
+   próprio site (`pa-....js`); ele está em `publicar/gerar-web.sh`. Se o site ganhar outro endereço ou
+   o código mudar, troque o trecho lá e gere de novo (`sh publicar/gerar-web.sh`).
 2. **Eventos e propriedades:** em *Site Settings → Goals*, crie metas personalizadas com os nomes
    `Jogo iniciado`, `Fase vencida` e `Caiu`. Em *Site Settings → Custom Properties*, cadastre
    `fase`, `modo`, `dificuldade` e `estrelas` (sem isso o Plausible guarda os eventos, mas não deixa
@@ -47,6 +48,10 @@ dificuldade. As páginas só enviam os eventos pelo site publicado: o script do 
 - O link do Plausible nunca fica no repositório nem na página pública: só é entregue depois da senha.
 - A resposta não é guardada em cache nem indexada por buscadores.
 - Para trocar a senha, mude `ANALYTICS_PASSWORD` no Netlify e faça um novo deploy.
+- **Senha não entra?** (1) as variáveis só valem depois de um novo deploy; (2) confira se o escopo da variável
+  inclui *Functions* ou *Runtime* (o padrão "All scopes" serve) e se o contexto inclui o deploy que você está
+  abrindo (produção ou deploy do branch); (3) usuário e senha diferenciam maiúsculas de minúsculas; (4) espaços
+  nas pontas são ignorados e letras com acento funcionam.
 
 ## Limites e próximos passos
 
