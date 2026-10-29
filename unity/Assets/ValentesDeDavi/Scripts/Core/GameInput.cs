@@ -17,6 +17,8 @@ namespace Valentes
         {
             Vector2 k = KeyboardMove();
             if (k.sqrMagnitude > 0f) return k.normalized;
+            Vector2 g = GamepadMove();
+            if (g.sqrMagnitude > 0.0144f) return g;
             return TouchControls.Active ? TouchControls.Move : Vector2.zero;
         }
 
@@ -59,12 +61,67 @@ namespace Valentes
         /// <summary>Tocar a trombeta (fase 3): T ou o botão Trombeta.</summary>
         public static bool HornPressed() { return TouchControls.ConsumeHorn() || RawKeyDown("t"); }
 
+        // ---------------------------------------------------------------- controle (gamepad) e menus
+        // Mapa: analógico esquerdo anda · direito olha · RT/RB golpe ou funda · LT/LB escudo e aparar · A desviar ·
+        // X trocar de arma ou ordem · Y orar · B ação · D-pad cima trombeta · clique do analógico esquerdo corre ·
+        // Start pausa · D-pad baixo ajuda de mira. Nos menus: D-pad ou analógico navegam, A confirma.
+
+        /// <summary>Olhar com o analógico direito (-1 a 1, já com zona morta). Zero sem controle.</summary>
+        public static Vector2 StickLook()
+        {
+            Vector2 v = RawStickLook();
+            float m = v.magnitude;
+            if (m < 0.18f) return Vector2.zero;
+            // Curva suave: mira fina perto do centro, rápida na ponta.
+            float s = Mathf.Clamp01((m - 0.18f) / 0.82f);
+            return v / m * (s * s);
+        }
+
+        /// <summary>Direção de menu (D-pad ou analógico esquerdo): cada eixo é -1, 0 ou 1. y positivo = cima.</summary>
+        public static Vector2 MenuDirection() { return RawMenuDirection(); }
+        /// <summary>Confirmar no menu (botão A).</summary>
+        public static bool MenuSubmit() { return RawMenuSubmit(); }
+        /// <summary>O mouse mexeu ou clicou: o menu volta a seguir o ponteiro.</summary>
+        public static bool PointerUsed() { return RawMouseDelta().sqrMagnitude > 4f || RawFireDown() && !GamepadFireDown(); }
+
         /// <summary>Toque ou clique em qualquer lugar (avançar a cena animada).</summary>
         public static bool TapPressed() { return RawTap(); }
 
 #if ENABLE_INPUT_SYSTEM
         static Keyboard K { get { return Keyboard.current; } }
         static Mouse M { get { return Mouse.current; } }
+        static Gamepad G { get { return Gamepad.current; } }
+
+        static Vector2 GamepadMove() { return G != null ? G.leftStick.ReadValue() : Vector2.zero; }
+        static Vector2 RawStickLook() { return G != null ? G.rightStick.ReadValue() : Vector2.zero; }
+        static bool GamepadFireDown() { return G != null && (G.rightTrigger.wasPressedThisFrame || G.rightShoulder.wasPressedThisFrame); }
+        static int menuFrame = -1;
+        static bool RawMenuSubmit()
+        {
+            bool r = G != null && G.buttonSouth.wasPressedThisFrame;
+            if (r) menuFrame = Time.frameCount;   // o mesmo A que confirmou o menu não pode virar "desviar" no jogo
+            return r;
+        }
+        static bool PadDown(UnityEngine.InputSystem.Controls.ButtonControl b) { return b != null && b.wasPressedThisFrame && Time.frameCount != menuFrame; }
+        static Vector2 RawMenuDirection()
+        {
+            if (G == null) return Vector2.zero;
+            Vector2 d = G.dpad.ReadValue(), st = G.leftStick.ReadValue();
+            if (d.sqrMagnitude < 0.25f) d = st;
+            if (d.sqrMagnitude < 0.25f) return Vector2.zero;
+            // Só o eixo dominante conta, para não andar na diagonal sem querer.
+            return Mathf.Abs(d.x) > Mathf.Abs(d.y) ? new Vector2(Mathf.Sign(d.x), 0f) : new Vector2(0f, Mathf.Sign(d.y));
+        }
+        static UnityEngine.InputSystem.Controls.ButtonControl PadFor(string k)
+        {
+            if (G == null) return null;
+            switch (k)
+            {
+                case "q": return G.buttonWest; case "f": return G.buttonNorth; case "space": return G.buttonSouth; case "e": return G.buttonEast;
+                case "t": return G.dpad.up; case "1": return G.dpad.left; case "2": return G.dpad.right;
+            }
+            return null;
+        }
 
         static Vector2 KeyboardMove()
         {
@@ -80,19 +137,20 @@ namespace Valentes
             float y = (K.upArrowKey.isPressed ? 1f : 0f) - (K.downArrowKey.isPressed ? 1f : 0f);
             return new Vector2(x, y);
         }
-        public static bool Sprint() { return K != null && (K.leftShiftKey.isPressed || K.rightShiftKey.isPressed); }
+        public static bool Sprint() { return K != null && (K.leftShiftKey.isPressed || K.rightShiftKey.isPressed) || G != null && G.leftStickButton.isPressed; }
         static Vector2 RawMouseDelta() { return M != null ? M.delta.ReadValue() : Vector2.zero; }
-        static bool RawFireDown() { return M != null && M.leftButton.wasPressedThisFrame; }
-        static bool RawFireHeld() { return M != null && M.leftButton.isPressed; }
-        static bool RawPause() { return K != null && (K.escapeKey.wasPressedThisFrame || K.pKey.wasPressedThisFrame); }
+        static bool RawFireDown() { return M != null && M.leftButton.wasPressedThisFrame || GamepadFireDown(); }
+        static bool RawFireHeld() { return M != null && M.leftButton.isPressed || G != null && (G.rightTrigger.isPressed || G.rightShoulder.isPressed); }
+        static bool RawPause() { return K != null && (K.escapeKey.wasPressedThisFrame || K.pKey.wasPressedThisFrame) || G != null && G.startButton.wasPressedThisFrame; }
         static bool RawTap()
         {
             if (M != null && M.leftButton.wasPressedThisFrame) return true;
+            if (G != null && PadDown(G.buttonSouth)) return true;
             Touchscreen ts = Touchscreen.current;
             return ts != null && ts.primaryTouch.press.wasPressedThisFrame;
         }
-        public static bool SkipPressed() { return K != null && (K.enterKey.wasPressedThisFrame || K.numpadEnterKey.wasPressedThisFrame); }
-        static bool RawRightHeld() { return M != null && M.rightButton.isPressed; }
+        public static bool SkipPressed() { return K != null && (K.enterKey.wasPressedThisFrame || K.numpadEnterKey.wasPressedThisFrame) || G != null && G.buttonEast.wasPressedThisFrame; }
+        static bool RawRightHeld() { return M != null && M.rightButton.isPressed || G != null && (G.leftTrigger.isPressed || G.leftShoulder.isPressed); }
         static UnityEngine.InputSystem.Controls.KeyControl KeyFor(string k)
         {
             if (K == null) return null;
@@ -103,12 +161,19 @@ namespace Valentes
             }
             return null;
         }
-        static bool RawKeyDown(string k) { var c = KeyFor(k); return c != null && c.wasPressedThisFrame; }
-        static bool RawKeyHeld(string k) { var c = KeyFor(k); return c != null && c.isPressed; }
-        public static bool AimHelpPressed() { return K != null && K.hKey.wasPressedThisFrame; }
+        static bool RawKeyDown(string k) { var c = KeyFor(k); return c != null && c.wasPressedThisFrame || PadDown(PadFor(k)); }
+        static bool RawKeyHeld(string k) { var c = KeyFor(k); var p = PadFor(k); return c != null && c.isPressed || p != null && p.isPressed; }
+        public static bool AimHelpPressed() { return K != null && K.hKey.wasPressedThisFrame || G != null && G.dpad.down.wasPressedThisFrame; }
         public static bool MusicPressed() { return K != null && K.mKey.wasPressedThisFrame; }
         public static bool NarrationPressed() { return K != null && K.nKey.wasPressedThisFrame; }
 #else
+        // Sem o Input System novo não há suporte a controle (ative o Input System em Project Settings → Player).
+        static Vector2 GamepadMove() { return Vector2.zero; }
+        static Vector2 RawStickLook() { return Vector2.zero; }
+        static bool GamepadFireDown() { return false; }
+        static bool RawMenuSubmit() { return false; }
+        static Vector2 RawMenuDirection() { return Vector2.zero; }
+
         static Vector2 KeyboardMove()
         {
             float x = (Input.GetKey(KeyCode.D) ? 1f : 0f) - (Input.GetKey(KeyCode.A) ? 1f : 0f);

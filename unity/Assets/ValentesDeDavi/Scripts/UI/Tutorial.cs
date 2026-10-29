@@ -29,7 +29,7 @@ namespace Valentes
             new Page { title = "Coragem",
                 text = "O medo é real: com pouca coragem, a mira treme e os golpes ficam lentos. Você ganha coragem agindo como no texto: avançando contra o gigante, permanecendo na posição, orando. Não é magia: é o que acontece dentro do herói quando ele confia em Deus e age." },
             new Page { title = "Controles",
-                text = "Computador: mouse para olhar e mirar, W A S D para andar, botão esquerdo para usar a arma (segurar muda o golpe ou gira a funda).  Celular: direcional à esquerda, arraste à direita para olhar e botões de ação à direita, melhor na horizontal.  Sempre: Esc pausa, H ajuda de mira, M música, N narração." },
+                text = "Computador: mouse para olhar e mirar, W A S D para andar, botão esquerdo para usar a arma (segurar muda o golpe ou gira a funda).  Celular: direcional à esquerda, arraste à direita para olhar e botões de ação à direita, melhor na horizontal.  Controle: analógico esquerdo anda, direito olha, RT golpe, LT escudo, A desviar. Sempre: Esc ou Start pausa, H ajuda de mira, M música, N narração. Em Opções você ajusta volume e sensibilidade." },
         };
 
         public static bool Seen { get { return PlayerPrefs.GetInt(SeenKey, 0) == 1; } }

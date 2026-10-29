@@ -112,6 +112,26 @@ No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, 
 | E (segurar) | Ação: arrancar a lança do egípcio desequilibrado; esperar a neve passar, atirar pedras, pegar a espada |
 | F (segurar) | Orar |
 
+### Controle (gamepad) em todas as fases
+
+| Controle | Ação |
+|---|---|
+| Analógico esquerdo · clique nele | Andar · correr |
+| Analógico direito | Olhar (a sensibilidade fica em Opções) |
+| RT ou RB | Funda, golpe ou estocada (segurar muda o golpe ou gira a funda) |
+| LT ou LB | Escudo, aparar e zoom da mira |
+| A | Desviar (também confirma nos menus e avança a cena) |
+| X | Trocar de arma ou dar ordem |
+| Y (segurar) | Orar |
+| B (segurar) | Ação (tirar água, arrancar a lança) · pula a cena animada |
+| D-pad cima · baixo | Trombeta · ajuda de mira |
+| Start | Pausa |
+
+Nos menus: D-pad ou analógico esquerdo escolhem, A confirma e esquerda e direita ajustam as barras de Opções.
+Em Opções (menu e pausa) ficam também o volume de música, efeitos e narração, a sensibilidade, o olhar vertical
+invertido, a tela cheia e a qualidade. "Sair do jogo" aparece nos menus e na pausa (não no navegador nem no celular).
+O controle só funciona com o Input System novo ativo (Project Settings → Player → Active Input Handling).
+
 ### Controles da Fase 6
 
 | Tecla | Ação |

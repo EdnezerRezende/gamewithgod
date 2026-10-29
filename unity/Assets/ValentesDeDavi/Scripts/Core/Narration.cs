@@ -32,6 +32,7 @@ namespace Valentes
             AudioClip clip = Resources.Load<AudioClip>("Narracao/" + key);
             if (clip == null) return 0f;
             instance.source.clip = clip;
+            instance.source.volume = Settings.NarrationVolume;
             instance.source.Play();
             Music.Duck(true);
             return clip.length;

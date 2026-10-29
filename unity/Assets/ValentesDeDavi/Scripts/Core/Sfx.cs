@@ -65,7 +65,7 @@ namespace Valentes
             AudioSource s = instance.sources[instance.next];
             instance.next = (instance.next + 1) % instance.sources.Length;
             s.pitch = pitch;
-            s.PlayOneShot(c, volume);
+            s.PlayOneShot(c, volume * Settings.SfxVolume);
         }
 
         enum Wave { Sine, Triangle, Saw, Square }

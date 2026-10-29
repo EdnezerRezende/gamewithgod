@@ -11,6 +11,7 @@ namespace Valentes
         public const float EyeHeight = 1.6f;
         const float MouseSensitivity = 0.0022f;
         const float TouchSensitivity = 0.0048f;
+        const float StickSpeed = 2.4f;
 
         public Camera cam;
         public World world;
@@ -70,14 +71,18 @@ namespace Valentes
             Vector2 md = GameInput.MouseDelta();
             if (Mathf.Abs(md.x) < 180f && Mathf.Abs(md.y) < 180f)
             {
-                float k = MouseSensitivity * Zoom;
+                float k = MouseSensitivity * Settings.Sensitivity * Zoom;
                 yaw += md.x * k;
-                pitch = Mathf.Clamp(pitch + md.y * k, -1.35f, 1.35f);
+                pitch = Mathf.Clamp(pitch + md.y * k * (Settings.InvertY ? -1f : 1f), -1.35f, 1.35f);
             }
             // Arrasto na tela (pixels do painel, y para baixo): arrastar para baixo olha para baixo.
             Vector2 td = TouchControls.ConsumeLook();
-            yaw += td.x * TouchSensitivity * Zoom;
-            pitch = Mathf.Clamp(pitch - td.y * TouchSensitivity * Zoom, -1.35f, 1.35f);
+            yaw += td.x * TouchSensitivity * Settings.Sensitivity * Zoom;
+            pitch = Mathf.Clamp(pitch - td.y * TouchSensitivity * Settings.Sensitivity * Zoom * (Settings.InvertY ? -1f : 1f), -1.35f, 1.35f);
+            // Controle: analógico direito (radianos por segundo no máximo).
+            Vector2 sl = GameInput.StickLook();
+            yaw += sl.x * StickSpeed * Settings.Sensitivity * Zoom * dt;
+            pitch = Mathf.Clamp(pitch + sl.y * StickSpeed * Settings.Sensitivity * Zoom * dt * (Settings.InvertY ? -1f : 1f), -1.35f, 1.35f);
             Vector2 al = GameInput.ArrowLook();
             yaw += al.x * 1.8f * dt;
             pitch = Mathf.Clamp(pitch + al.y * 1.2f * dt, -1.35f, 1.35f);

@@ -389,6 +389,8 @@ namespace Valentes
             Card.Btn(row, "Música: " + (Settings.Music ? "ligada" : "desligada"), false, () => { Settings.Music = !Settings.Music; redraw(); });
             Card.Btn(row, "Narração: " + (Settings.Narration ? "ligada" : "desligada"), false, () => { Settings.Narration = !Settings.Narration; redraw(); });
             Card.Btn(row, "Como jogar", false, () => Tutorial.Show(ui, null, redraw));
+            Card.Btn(row, "Opções", false, () => Options.Show(ui, redraw));
+            if (Options.CanQuit) Card.Btn(row, "Sair do jogo", false, Options.Quit);
         }
 
         void ShowPause()

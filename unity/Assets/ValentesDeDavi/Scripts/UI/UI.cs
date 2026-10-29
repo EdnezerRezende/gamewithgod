@@ -33,6 +33,96 @@ namespace Valentes
 
         public bool OverlayOpen { get { return overlay.style.display == DisplayStyle.Flex; } }
 
+        // ------------------------------------------------------------------ menus com controle (gamepad)
+
+        class NavSaved { public Color color; public float width; }
+        readonly Dictionary<VisualElement, NavSaved> navSaved = new Dictionary<VisualElement, NavSaved>();
+        readonly List<VisualElement> navItems = new List<VisualElement>();
+        int navIndex = -1;
+        float navTimer;
+        bool navHeld, navPadMode;
+
+        void NavReset()
+        {
+            foreach (KeyValuePair<VisualElement, NavSaved> kv in navSaved) NavHighlight(kv.Key, false);
+            navSaved.Clear();
+            navItems.Clear();
+            navIndex = -1;
+        }
+
+        void NavCollect()
+        {
+            navItems.Clear();
+            overlayScroll.contentContainer.Query<VisualElement>().ForEach(e =>
+            {
+                bool item = e is AdjustRow || e is Button && e.focusable;
+                if (item && e.resolvedStyle.display != DisplayStyle.None && e.enabledInHierarchy) navItems.Add(e);
+            });
+        }
+
+        void NavHighlight(VisualElement e, bool on)
+        {
+            if (e == null) return;
+            NavSaved s;
+            if (on)
+            {
+                if (!navSaved.TryGetValue(e, out s)) { s = new NavSaved { color = e.style.borderTopColor.value, width = e.style.borderTopWidth.value }; navSaved[e] = s; }
+                e.style.borderTopColor = e.style.borderBottomColor = e.style.borderLeftColor = e.style.borderRightColor = BronzeHi;
+                e.style.borderTopWidth = e.style.borderBottomWidth = e.style.borderLeftWidth = e.style.borderRightWidth = 3f;
+            }
+            else if (navSaved.TryGetValue(e, out s))
+            {
+                e.style.borderTopColor = e.style.borderBottomColor = e.style.borderLeftColor = e.style.borderRightColor = s.color;
+                e.style.borderTopWidth = e.style.borderBottomWidth = e.style.borderLeftWidth = e.style.borderRightWidth = s.width;
+            }
+        }
+
+        void NavSelect(int i)
+        {
+            if (navItems.Count == 0) return;
+            i = Mathf.Clamp(i, 0, navItems.Count - 1);
+            if (navIndex >= 0 && navIndex < navItems.Count) NavHighlight(navItems[navIndex], false);
+            navIndex = i;
+            NavHighlight(navItems[i], true);
+            overlayScroll.ScrollTo(navItems[i]);
+        }
+
+        /// <summary>D-pad e analógico escolhem o botão, A confirma; nas barras, esquerda e direita ajustam.</summary>
+        void NavUpdate(float dt)
+        {
+            if (!OverlayOpen) { if (navItems.Count > 0 || navIndex >= 0) NavReset(); return; }
+            if (GameInput.PointerUsed()) { navPadMode = false; if (navIndex >= 0) NavReset(); return; }
+            Vector2 d = GameInput.MenuDirection();
+            bool submit = GameInput.MenuSubmit(), step = false;
+            if (d != Vector2.zero)
+            {
+                if (!navHeld) { navHeld = true; navTimer = 0.4f; step = true; }
+                else { navTimer -= dt; if (navTimer <= 0f) { navTimer = 0.12f; step = true; } }
+            }
+            else navHeld = false;
+            if (!step && !submit && !(navPadMode && navIndex < 0)) return;
+            if (step || submit) navPadMode = true;
+            NavCollect();
+            if (navItems.Count == 0) return;
+            if (navIndex < 0 || navIndex >= navItems.Count || !navSaved.ContainsKey(navItems[navIndex]))
+            {
+                NavSelect(0);   // primeiro toque no controle: só mostra onde está o foco
+                return;
+            }
+            VisualElement cur = navItems[navIndex];
+            if (step)
+            {
+                AdjustRow ar = cur as AdjustRow;
+                if (d.x != 0f && ar != null) ar.adjust((int)d.x);
+                else if (d.y != 0f) NavSelect(navIndex + (d.y > 0f ? -1 : 1));
+                else if (d.x != 0f) NavSelect(navIndex + (d.x > 0f ? 1 : -1));
+            }
+            else if (submit && cur is Button)
+            {
+                using (NavigationSubmitEvent ev = NavigationSubmitEvent.GetPooled()) { ev.target = cur; cur.SendEvent(ev); }
+            }
+        }
+
         public UI(Transform parent, PanelSettings panelSettings)
         {
             GameObject go = new GameObject("Interface");
@@ -430,6 +520,7 @@ namespace Valentes
 
         public void Tick(float unscaledDt)
         {
+            NavUpdate(unscaledDt);
             if (toastT > 0f)
             {
                 toastT -= unscaledDt;
@@ -521,6 +612,7 @@ namespace Valentes
 
         public Card OpenCard()
         {
+            NavReset();
             overlayScroll.Clear();
             VisualElement wrap = new VisualElement();
             wrap.style.alignItems = Align.Center;
@@ -535,7 +627,14 @@ namespace Valentes
             return new Card(card);
         }
 
-        public void CloseOverlay() { overlay.style.display = DisplayStyle.None; }
+        public void CloseOverlay() { NavReset(); overlay.style.display = DisplayStyle.None; }
+    }
+
+    /// <summary>Linha com uma barra ajustável (volume, sensibilidade): clique, arraste, − e +, ou esquerda e direita no controle.</summary>
+    public class AdjustRow : VisualElement
+    {
+        /// <summary>-1 diminui, +1 aumenta um passo.</summary>
+        public Action<int> adjust;
     }
 
     /// <summary>Monta o conteúdo de uma tela (menu, resultado, escolhas).</summary>
@@ -608,6 +707,51 @@ namespace Valentes
         }
 
         public void Space(float h) { VisualElement v = new VisualElement(); v.style.height = h; el.Add(v); }
+
+        /// <summary>Barra de 0 a 100% (get/set em 0..1). "onChange" roda a cada ajuste (por exemplo, tocar um som de teste).</summary>
+        public void Adjust(string label, Func<float> get, Action<float> set, float step, Action onChange = null)
+        {
+            AdjustRow row = new AdjustRow();
+            row.style.flexDirection = FlexDirection.Row; row.style.alignItems = Align.Center;
+            row.style.maxWidth = 700f; row.style.marginBottom = 8f;
+            UI.Border(row, new Color(0.92f, 0.86f, 0.74f, 0.0f), 1, 3);
+            UI.Pad(row, 6, 10);
+            UI.Text(row, label, 18, UI.Parch).style.width = 210f;
+            Label minus = UI.Text(row, "−", 26, UI.BronzeHi, true); minus.style.width = 32f; minus.style.unityTextAlign = TextAnchor.MiddleCenter;
+            VisualElement track = new VisualElement();
+            track.style.width = 240f; track.style.height = 14f;
+            track.style.backgroundColor = new Color(0.92f, 0.86f, 0.74f, 0.16f);
+            track.style.borderTopLeftRadius = track.style.borderTopRightRadius = track.style.borderBottomLeftRadius = track.style.borderBottomRightRadius = 7f;
+            VisualElement fill = new VisualElement();
+            fill.style.height = Length.Percent(100); fill.style.backgroundColor = UI.Bronze;
+            fill.style.borderTopLeftRadius = fill.style.borderBottomLeftRadius = 7f;
+            track.Add(fill);
+            row.Add(track);
+            Label plus = UI.Text(row, "+", 26, UI.BronzeHi, true); plus.style.width = 32f; plus.style.unityTextAlign = TextAnchor.MiddleCenter;
+            Label value = UI.Text(row, "", 17, UI.ParchDim); value.style.width = 56f; value.style.unityTextAlign = TextAnchor.MiddleRight;
+            Action refresh = () =>
+            {
+                float v = Mathf.Clamp01(get());
+                fill.style.width = Length.Percent(v * 100f);
+                value.text = Mathf.RoundToInt(v * 100f) + "%";
+            };
+            Action<float> apply = v => { set(Mathf.Clamp01(v)); refresh(); if (onChange != null) onChange(); };
+            row.adjust = dir => apply(get() + dir * step);
+            minus.RegisterCallback<PointerDownEvent>(e => row.adjust(-1));
+            plus.RegisterCallback<PointerDownEvent>(e => row.adjust(1));
+            track.RegisterCallback<PointerDownEvent>(e =>
+            {
+                track.CapturePointer(e.pointerId);
+                apply(e.localPosition.x / Mathf.Max(1f, track.resolvedStyle.width));
+            });
+            track.RegisterCallback<PointerMoveEvent>(e =>
+            {
+                if (track.HasPointerCapture(e.pointerId)) apply(e.localPosition.x / Mathf.Max(1f, track.resolvedStyle.width));
+            });
+            track.RegisterCallback<PointerUpEvent>(e => { if (track.HasPointerCapture(e.pointerId)) track.ReleasePointer(e.pointerId); });
+            refresh();
+            el.Add(row);
+        }
 
         public VisualElement Row()
         {

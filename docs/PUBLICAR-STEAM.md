@@ -35,12 +35,13 @@ das fases 1 e 2 e ouvir os jogadores enquanto a página da Steam junta desejos.
 - [ ] **Rodar tudo no editor.** O código das fases 2 a 7, do acampamento e da troca de modelos só foi compilado;
       ninguém abriu as cenas ainda. Esta é a prioridade: jogar cada fase até o fim e corrigir o que aparecer.
 - [ ] **Equilíbrio de dificuldade** jogado de verdade (contadores 300/800, alarme, vida do leão e do urso).
-- [ ] **Botão "Sair"** no menu (hoje não existe `Application.Quit`).
-- [ ] **Opções:** volume separado de música, efeitos e narração (hoje só liga/desliga), sensibilidade do mouse,
-      tela cheia/janela e resolução, qualidade gráfica.
+- [x] **Botão "Sair do jogo"** nos menus e na pausa (escrito; falta jogar no editor).
+- [x] **Opções** (menu e pausa): volume de música, efeitos e narração, sensibilidade, olhar vertical invertido,
+      ajuda de mira, tela cheia/janela e qualidade gráfica (escrito; falta jogar no editor). Falta a escolha de resolução.
 - [ ] **Teclas configuráveis** ou, pelo menos, tela de controles clara.
-- [ ] **Controle (gamepad)**, necessário para o **Steam Deck** ser "Verificado" e para muita gente jogar. Hoje só
-      há teclado/mouse e toque. Com o Input System já instalado, é adicionar as ações do controle.
+- [x] **Controle (gamepad):** analógicos andam e olham, RT/RB golpe ou funda, LT/LB escudo, A desviar, X trocar,
+      Y orar, B ação, Start pausa, menus navegáveis (escrito para o Input System; falta testar com um controle de
+      verdade). Para o Steam Deck "Verificado" ainda faltam ícones de botões do controle na interface.
 - [ ] **Idiomas:** português já; inglês amplia muito o público (a Steam deixa marcar os idiomas da interface,
       do áudio e das legendas). O texto bíblico em inglês precisa de uma edição de domínio público.
 - [ ] **Salvar e continuar:** conferir progresso, recordes e dificuldade escolhida ao fechar e abrir o jogo.

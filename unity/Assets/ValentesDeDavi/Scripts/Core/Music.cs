@@ -71,11 +71,11 @@ namespace Valentes
 
         void Update()
         {
-            float target = Settings.Music ? Volume * (ducked ? 0.35f : 1f) : 0f, k = Mathf.Clamp01(Time.unscaledDeltaTime / 1.2f);
+            float target = Settings.Music ? Volume * Settings.MusicVolume * (ducked ? 0.35f : 1f) : 0f, k = Mathf.Clamp01(Time.unscaledDeltaTime / 1.2f);
             foreach (AudioSource s in new[] { a, b })
             {
                 float goal = s == current ? target : 0f;
-                s.volume = Mathf.MoveTowards(s.volume, goal, k * Volume);
+                s.volume = Mathf.MoveTowards(s.volume, goal, k * Volume * 2f);
                 if (s != current && s.isPlaying && s.volume <= 0.001f) s.Stop();
             }
         }
