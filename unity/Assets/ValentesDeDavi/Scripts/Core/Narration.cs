@@ -4,7 +4,7 @@ namespace Valentes
 {
     /// <summary>
     /// Narração dos versículos. Toca a gravação em Resources/Narracao/&lt;chave&gt; (por exemplo,
-    /// Resources/Narracao/v49.ogg) quando ela existe; sem gravação, a cena segue só com o texto.
+    /// Resources/Narracao/v49.ogg) quando ela existe; sem gravação, a cena segue só com o texto. Em outros idiomas a pasta é Narracao/<código>/ (por exemplo, Narracao/en/).
     /// O roteiro de gravação está em docs/NARRACAO.md.
     /// </summary>
     public class Narration : MonoBehaviour
@@ -29,7 +29,8 @@ namespace Valentes
             if (instance == null) return 0f;
             Stop();
             if (!Settings.Narration) return 0f;
-            AudioClip clip = Resources.Load<AudioClip>("Narracao/" + key);
+            // Em inglês a gravação fica em Narracao/en/<chave>; sem ela, fica só o texto (não misturar idiomas).
+            AudioClip clip = Resources.Load<AudioClip>("Narracao/" + (Loc.IsPortuguese ? "" : Loc.Language + "/") + key);
             if (clip == null) return 0f;
             instance.source.clip = clip;
             instance.source.volume = Settings.NarrationVolume;

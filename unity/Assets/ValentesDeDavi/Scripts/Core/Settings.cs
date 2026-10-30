@@ -26,6 +26,15 @@ namespace Valentes
             set { PlayerPrefs.SetInt(MusicKey, value ? 1 : 0); PlayerPrefs.Save(); }
         }
 
+        // ---------------------------------------------------------------- idioma
+
+        /// <summary>"pt" ou "en". Na primeira vez, segue o idioma do sistema. Ao trocar, a cena é recarregada (ver Options).</summary>
+        public static string Language
+        {
+            get { string l = PlayerPrefs.GetString("valentes.language", ""); return l == "" ? Loc.FromSystem() : l; }
+            set { PlayerPrefs.SetString("valentes.language", value); PlayerPrefs.Save(); }
+        }
+
         // ---------------------------------------------------------------- volumes (0 a 1)
 
         public static float MusicVolume { get { return Get("valentes.musicVolume", 1f); } set { Set("valentes.musicVolume", value); } }

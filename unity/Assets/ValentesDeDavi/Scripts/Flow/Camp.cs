@@ -169,7 +169,9 @@ namespace Valentes
             // Com a gravação (Resources/Narracao/<chave>), a fala dura o áudio; sem ela, estima pelo número de palavras.
             float rec = Narration.Play(l.key);
             talkT = Mathf.Max(4.2f, rec > 0f ? rec + 0.8f : Settings.Narration ? words * 0.45f + 2.5f : 4.2f);
-            ui.Toast(l.who.ToUpperInvariant() + "\n“" + l.quote + "”\n" + l.reference, talkT);
+            string text = Loc.T(l.who).ToUpperInvariant() + "\n“" + Loc.T(l.quote) + "”\n" + Loc.Ref(l.reference);
+            Loc.Done(text);
+            ui.Toast(text, talkT);
         }
     }
 }

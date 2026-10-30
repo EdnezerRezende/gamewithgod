@@ -49,7 +49,8 @@ namespace Valentes
                 VisualElement v = new VisualElement();
                 v.style.borderLeftColor = UI.Bronze; v.style.borderLeftWidth = 3f; v.style.paddingLeft = 16f; v.style.marginBottom = 22f;
                 UI.Text(v, p.verse, 20, UI.Parch, false, true);
-                UI.Text(v, p.reference.ToUpperInvariant(), 13, UI.BronzeHi).style.marginTop = 6f;
+                string refUp = Loc.Ref(p.reference).ToUpperInvariant(); Loc.Done(refUp);
+                UI.Text(v, refUp, 13, UI.BronzeHi).style.marginTop = 6f;
                 c.el.Add(v);
             }
             Action done = () =>

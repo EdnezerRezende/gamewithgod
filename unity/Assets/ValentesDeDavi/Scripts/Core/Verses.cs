@@ -5,7 +5,7 @@ namespace Valentes
     /// <summary>
     /// Textos bíblicos da fase. PROVISÓRIOS: revisar contra a edição da Almeida em domínio público escolhida.
     /// </summary>
-    public static class Verses
+    public static partial class Verses
     {
         public struct Verse
         {
@@ -80,6 +80,15 @@ namespace Valentes
             { "v46", new Verse("...e toda a terra saberá que há Deus em Israel.", "1 Samuel 17:46") },
         };
 
-        public static Verse Get(string key) { return all[key]; }
+        /// <summary>O versículo no idioma atual: em inglês, o texto vem da King James (domínio público), de VersesEn.cs.</summary>
+        public static Verse Get(string key)
+        {
+            Verse v = all[key];
+            if (Loc.IsPortuguese) return v;
+            string en;
+            if (english.TryGetValue(key, out en)) { Loc.Done(en); v.text = en; }
+            v.reference = Loc.Ref(v.reference);
+            return v;
+        }
     }
 }

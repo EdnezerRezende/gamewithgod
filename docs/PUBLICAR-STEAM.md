@@ -42,8 +42,9 @@ das fases 1 e 2 e ouvir os jogadores enquanto a página da Steam junta desejos.
 - [x] **Controle (gamepad):** analógicos andam e olham, RT/RB golpe ou funda, LT/LB escudo, A desviar, X trocar,
       Y orar, B ação, Start pausa, menus navegáveis (escrito para o Input System; falta testar com um controle de
       verdade). A interface mostra os ícones dos botões do controle (A, B, X, Y, gatilhos, analógicos, D-pad, Start) quando o jogador usa o controle; para o selo "Verificado" do Steam Deck ainda falta testar no aparelho e conferir o tamanho do texto na tela de 7 polegadas.
-- [ ] **Idiomas:** português já; inglês amplia muito o público (a Steam deixa marcar os idiomas da interface,
-      do áudio e das legendas). O texto bíblico em inglês precisa de uma edição de domínio público.
+- [x] **Idiomas:** português e inglês no texto (botão "Idioma" nas Opções; o padrão segue o idioma do sistema).
+      Versículos em inglês: King James Version (domínio público). Falta: gravar a narração em inglês
+      (`docs/narracao-en.tsv`), revisar o inglês com um falante nativo e marcar os idiomas na página da Steam.
 - [ ] **Salvar e continuar:** conferir progresso, recordes e dificuldade escolhida ao fechar e abrir o jogo.
 - [ ] **Desempenho:** 60 quadros por segundo em um computador modesto e no Steam Deck; testar em hardware real.
 - [ ] **Relatório de erros** (log em arquivo e, se quiser, um serviço de crash).

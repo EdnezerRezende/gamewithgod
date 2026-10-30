@@ -155,6 +155,14 @@ O controle só funciona com o Input System novo ativo (Project Settings → Play
 | Q | Trocar entre a lança e a espada da cintura |
 | F (segurar) | Orar |
 
+## Idiomas
+
+O texto do código está em português; `Loc.T("...")` devolve a tradução do idioma escolhido (`Settings.Language`).
+As traduções ficam em `Resources/Idiomas/<código>.txt` (`português TAB tradução`; linha com `~` no começo = pedaço
+de texto que o código monta somando partes). Texto sem tradução aparece em português e, no editor, vai ao Console
+como aviso (uma vez). Versículos: `Verses.cs` (português) e `VersesEn.cs` (King James). Texto novo na interface
+passa por `UI.Text`, `Toast`, `SetObjective` etc., que já chamam `Loc.T`.
+
 ## Como o código está organizado
 
 | Pasta | O que tem |

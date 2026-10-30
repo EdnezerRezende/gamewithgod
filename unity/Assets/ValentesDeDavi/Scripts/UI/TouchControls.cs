@@ -48,16 +48,16 @@ namespace Valentes
             if (dashBtn == null) return;
             DisplayStyle d = v ? DisplayStyle.Flex : DisplayStyle.None;
             dashBtn.style.display = d; actBtn.style.display = d;
-            actLabel.text = string.IsNullOrEmpty(actText) ? "Ação" : actText;
+            actLabel.text = Loc.T(string.IsNullOrEmpty(actText) ? "Ação" : actText);
             actBtn.style.opacity = string.IsNullOrEmpty(actText) ? 0.5f : 1f;
         }
 
         /// <summary>Fase 3: o botão Escudo vira "Aparar" e o ⇄ vira "Desviar".</summary>
-        public static void SetShieldLabel(string text) { if (shieldLabel != null) shieldLabel.text = text; }
+        public static void SetShieldLabel(string text) { if (shieldLabel != null) shieldLabel.text = Loc.T(text); }
         public static void SetSwapLabel(string text, float fontSize)
         {
             if (swapButton == null) return;
-            swapButton.text = text; swapButton.style.fontSize = fontSize;
+            swapButton.text = Loc.T(text); swapButton.style.fontSize = fontSize;
             swapButton.style.width = fontSize < 20f ? 86f : 62f;
         }
         /// <summary>Fase 5: sem troca de arma nem ordens, o botão ⇄ some.</summary>
@@ -76,7 +76,7 @@ namespace Valentes
             shieldBtn.style.display = d; prayBtn.style.display = d; swapBtn.style.display = d;
         }
 
-        public static void SetFireLabel(string text) { if (fireLabel != null) fireLabel.text = text; }
+        public static void SetFireLabel(string text) { if (fireLabel != null) fireLabel.text = Loc.T(text); }
 
         /// <summary>Botão que fica "segurado" enquanto o dedo está nele.</summary>
         static VisualElement HoldButton(string text, float right, float bottom, float size, System.Action<bool> set) { Label l; return HoldButton(text, right, bottom, size, set, out l); }
@@ -224,7 +224,7 @@ namespace Valentes
             layer.Add(swap);
             swapBtn = swap; swapButton = swap;
             Button horn = new Button(() => hornPending = true);
-            horn.text = "Trombeta";
+            horn.text = Loc.T("Trombeta");
             UI.Abs(horn, 28, 64, null, null);
             horn.style.width = 96; horn.style.height = 42; horn.style.fontSize = 15;
             horn.style.color = UI.Parch;
@@ -234,7 +234,7 @@ namespace Valentes
             hornBtn = horn;
             ShowHorn(false);
             Button dash = new Button(() => dashPending = true);
-            dash.text = "Desviar";
+            dash.text = Loc.T("Desviar");
             UI.Abs(dash, null, null, 40, 226);
             dash.style.width = 88; dash.style.height = 44; dash.style.fontSize = 15;
             dash.style.color = UI.Parch;

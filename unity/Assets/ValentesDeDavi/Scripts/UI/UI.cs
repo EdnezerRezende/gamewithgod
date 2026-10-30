@@ -180,7 +180,7 @@ namespace Valentes
 
         public static Label Text(VisualElement parent, string text, float size, Color color, bool bold = false, bool italic = false)
         {
-            Label l = new Label(text);
+            Label l = new Label(Loc.T(text));
             l.style.fontSize = size;
             l.style.color = color;
             l.style.whiteSpace = WhiteSpace.Normal;
@@ -356,7 +356,7 @@ namespace Valentes
             TouchControls.Show(t && playing);
             esc.style.display = t || pad ? DisplayStyle.None : DisplayStyle.Flex;
             padBar.style.display = pad ? DisplayStyle.Flex : DisplayStyle.None;
-            cineHint.text = t ? "Toque: avançar · ❚❚: pausa" : GameInput.UsingGamepad ? "A: avançar · B: pular · Start: pausa" : "Clique: avançar · Enter: pular · Esc: pausa";
+            cineHint.text = Loc.T(t ? "Toque: avançar · ❚❚: pausa" : GameInput.UsingGamepad ? "A: avançar · B: pular · Start: pausa" : "Clique: avançar · Enter: pular · Esc: pausa");
         }
 
         /// <summary>Mira dourada quando está sobre um alvo que conta.</summary>
@@ -367,9 +367,9 @@ namespace Valentes
             crossV.style.backgroundColor = c;
         }
 
-        public void SetObjective(string title, string detail) { obj.text = title; sub.text = detail; }
+        public void SetObjective(string title, string detail) { obj.text = Loc.T(title); sub.text = Loc.T(detail); }
 
-        public void Toast(string msg, float dur = 2.2f) { toast.text = msg; toast.style.opacity = 1f; toastT = dur; }
+        public void Toast(string msg, float dur = 2.2f) { toast.text = Loc.T(msg); toast.style.opacity = 1f; toastT = dur; }
 
         public void Hurt() { hurtT = 0.45f; }
 
@@ -419,8 +419,8 @@ namespace Valentes
             vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
             corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
             campoFill.style.width = Length.Percent(Mathf.Clamp(field, 0, 100));
-            armaLabel.text = weapon;
-            waveLabel.text = wave;
+            armaLabel.text = Loc.T(weapon);
+            waveLabel.text = Loc.T(wave);
             holdBar.style.display = hold01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
             if (hold01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(hold01) * 100f);
             zoneLabel.style.display = zoneWarning ? DisplayStyle.Flex : DisplayStyle.None;
@@ -442,10 +442,10 @@ namespace Valentes
             vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
             corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
             fadFill.style.width = Length.Percent(Mathf.Clamp(fatigue, 0, 100));
-            waveLabel.text = wave;
+            waveLabel.text = Loc.T(wave);
             holdBar.style.display = hold01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
             if (hold01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(hold01) * 100f);
-            zoneLabel.text = "Você recuou para trás do estandarte. Eleazar não voltou atrás.";
+            zoneLabel.text = Loc.T("Você recuou para trás do estandarte. Eleazar não voltou atrás.");
             zoneLabel.style.display = zoneWarning ? DisplayStyle.Flex : DisplayStyle.None;
             stuckOn = stuck;
         }
@@ -468,9 +468,9 @@ namespace Valentes
             corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
             aguaFill.style.width = Length.Percent(Mathf.Clamp(water, 0, 100));
             alarmeFill.style.width = Length.Percent(Mathf.Clamp(alarm, 0, 100));
-            waveLabel.text = wave;
+            waveLabel.text = Loc.T(wave);
             holdBar.style.display = DisplayStyle.None;
-            zoneLabel.text = warning ?? "";
+            zoneLabel.text = Loc.T(warning ?? "");
             zoneLabel.style.display = string.IsNullOrEmpty(warning) ? DisplayStyle.None : DisplayStyle.Flex;
             stuckOn = false;
         }
@@ -487,7 +487,7 @@ namespace Valentes
             score.text = points.ToString();
             vidaFill.style.width = Length.Percent(Mathf.Clamp(health, 0, 100));
             corFill.style.width = Length.Percent(Mathf.Clamp(courage, 0, 100));
-            waveLabel.text = wave;
+            waveLabel.text = Loc.T(wave);
             holdBar.style.display = boss01 >= 0f ? DisplayStyle.Flex : DisplayStyle.None;
             holdFill.style.backgroundColor = Blood;
             if (boss01 >= 0f) holdFill.style.width = Length.Percent(Mathf.Clamp01(boss01) * 100f);
@@ -519,11 +519,11 @@ namespace Valentes
                 }
             gaugeTex.SetPixels32(gaugePx);
             gaugeTex.Apply(false);
-            gaugeText.text = text;
+            gaugeText.text = Loc.T(text);
             gaugeText.style.color = ParchDim;
         }
 
-        public void SetHint(string text) { esc.text = text; }
+        public void SetHint(string text) { esc.text = Loc.T(text); }
 
         /// <summary>
         /// Dicas do controle na parte de baixo: "CÓDIGO:texto" separados por "|". Códigos: A B X Y, LS RS (analógicos),
@@ -619,7 +619,7 @@ namespace Valentes
             }
             gaugeTex.SetPixels32(gaugePx);
             gaugeTex.Apply(false);
-            gaugeText.text = s.charging ? (!s.reach ? "longe: gire mais" : arcVisible ? "" : "ouça o giro") : "segure para girar";
+            gaugeText.text = Loc.T(s.charging ? (!s.reach ? "longe: gire mais" : arcVisible ? "" : "ouça o giro") : "segure para girar");
             gaugeText.style.color = s.charging && !s.reach ? U.Hex(0xe07a5f) : ParchDim;
         }
 
@@ -650,6 +650,7 @@ namespace Valentes
         {
             cineQuote.text = quote;
             cineRef.text = reference.ToUpperInvariant();
+            Loc.Done(cineRef.text);
         }
 
         // ------------------------------------------------------------------ telas
@@ -702,7 +703,7 @@ namespace Valentes
 
         public void Eyebrow(string t)
         {
-            Label l = UI.Text(null, t.ToUpperInvariant(), 14, UI.BronzeHi);
+            Label l = UI.Text(null, Loc.Upper(t), 14, UI.BronzeHi);
             l.style.letterSpacing = 4f;
             Gap(l, 10);
         }
@@ -720,7 +721,8 @@ namespace Valentes
             b.style.borderLeftColor = UI.Bronze; b.style.borderLeftWidth = 3f; b.style.paddingLeft = 16f;
             b.style.maxWidth = 760f;
             UI.Text(b, v.text, 20, UI.Parch, false, true);
-            Label r = UI.Text(b, v.reference.ToUpperInvariant(), 13, UI.BronzeHi);
+            string refUp = v.reference.ToUpperInvariant(); Loc.Done(refUp);
+            Label r = UI.Text(b, refUp, 13, UI.BronzeHi);
             r.style.letterSpacing = 3f; r.style.marginTop = 6f;
             Gap(b, 22);
         }
@@ -819,7 +821,7 @@ namespace Valentes
         public static Button Btn(VisualElement row, string text, bool primary, Action onClick)
         {
             Button b = new Button(onClick);
-            b.text = text;
+            b.text = Loc.T(text);
             b.style.fontSize = 18f;
             b.style.color = primary ? U.Hex(0x1b120a) : UI.Parch;
             b.style.backgroundColor = primary ? UI.Bronze : new Color(0.92f, 0.86f, 0.74f, 0.07f);
@@ -860,7 +862,7 @@ namespace Valentes
         /// <summary>Rótulo pequeno em maiúsculas que separa as partes do menu.</summary>
         public void Section(string t)
         {
-            Label l = UI.Text(null, t.ToUpperInvariant(), 13, UI.ParchDim);
+            Label l = UI.Text(null, Loc.Upper(t), 13, UI.ParchDim);
             l.style.letterSpacing = 3f;
             Gap(l, 8);
         }
@@ -890,7 +892,7 @@ namespace Valentes
                 UI.Pad(b, 12, 14);
                 b.style.marginRight = 10f; b.style.marginBottom = 10f; b.style.marginLeft = 0f; b.style.marginTop = 0f;
                 if (!open || !p.Built) b.style.opacity = 0.5f;
-                Label eb = UI.Text(b, ("Fase " + p.n + (cur ? " · atual" : "")).ToUpperInvariant(), 12, UI.BronzeHi);
+                Label eb = UI.Text(b, Loc.Upper("Fase " + p.n + (cur ? " · atual" : "")), 12, UI.BronzeHi);
                 eb.style.letterSpacing = 3f;
                 Label t = UI.Text(b, p.title, 20, UI.Parch);
                 t.style.whiteSpace = WhiteSpace.Normal; t.style.marginTop = 4f;

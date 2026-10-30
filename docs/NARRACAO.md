@@ -120,3 +120,13 @@ edição escolhida; se mudarem, regrave as chaves afetadas.
 | `f7rc6` | 2 Samuel 23:18 | Cena animada | Também Abisai, irmão de Joabe... alçou a sua lança contra trezentos, e os feriu. |
 | `f7rc7` | 2 Samuel 23:8 | Cena animada | Josebe-Bassebete, o principal dos capitães... se opôs a oitocentos, e os feriu de uma vez. |
 | `f7v39` | 2 Samuel 23:39 | Cena animada e telas | ...Urias, o heteu; trinta e sete ao todo. |
+
+## Inglês
+
+O jogo tem inglês completo no texto (`Resources/Idiomas/en.txt`, versículos da King James em `Scripts/Core/VersesEn.cs`).
+A narração em inglês ainda **não foi gravada**: sem os arquivos, as cenas em inglês seguem só com o texto.
+
+- Pasta: `Resources/Narracao/en/<chave>.ogg`, com as mesmas chaves do português (`v49`, `f7rc3`, `c26`...).
+- Roteiro pronto: `docs/narracao-en.tsv` (68 chaves e o texto a ler).
+- Mesma receita do português: voz grave e calma, `loudnorm=I=-16:TP=-1.5:LRA=11`, meio segundo de silêncio antes e depois.
+- Antes de gravar, regularizar o plano pago da ElevenLabs (uso comercial; ver `docs/PUBLICAR-STEAM.md`).

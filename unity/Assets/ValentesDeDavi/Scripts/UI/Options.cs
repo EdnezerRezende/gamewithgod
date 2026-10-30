@@ -53,6 +53,13 @@ namespace Valentes
             c.Eyebrow("Opções");
             c.Title("Opções");
 
+            c.Section("Idioma");
+            VisualElement lang = c.Row();
+            string langName = Loc.IsPortuguese ? "Idioma: Português" : "Language: English";
+            Loc.Done(langName);
+            Card.Btn(lang, langName, false, () => { Settings.Language = Loc.IsPortuguese ? Loc.English : Loc.Portuguese; again(); });
+            c.Note("O idioma vale por inteiro a partir da próxima fase.");
+
             c.Section("Som");
             c.Adjust("Música", () => Settings.MusicVolume, v => Settings.MusicVolume = v, 0.1f);
             c.Adjust("Efeitos", () => Settings.SfxVolume, v => Settings.SfxVolume = v, 0.1f, () => Sfx.Play("clang", 0.6f));

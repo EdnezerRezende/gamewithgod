@@ -414,7 +414,7 @@ namespace Valentes
                 else if (picked.Count < 5) picked.Add(i);
                 for (int k = 0; k < buttons.Count; k++) Card.MarkStone(buttons[k], picked.IndexOf(k) + 1);
                 ok.SetEnabled(picked.Count == 5);
-                ok.text = "Guardar no alforje (" + picked.Count + "/5)";
+                ok.text = Loc.T("Guardar no alforje (" + picked.Count + "/5)");
             });
             VisualElement row = c.Row();
             ok = Card.Btn(row, "Guardar no alforje (0/5)", true, () =>

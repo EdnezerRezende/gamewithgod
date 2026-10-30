@@ -1,0 +1,804 @@
+# Português<TAB>English. "~" no começo = pedaço de texto montado pelo código. \n = quebra de linha.
+Estilhaço	Shard
+Pedra	Stone
+Pastor	Shepherd
+Abertura longa, tiro perfeito fácil de ver e linha da trajetória.	A long opening, the perfect shot is easy to see, and the stone's path is drawn.
+Guerreiro	Warrior
+O equilíbrio pensado para a maioria dos jogadores.	The balance meant for most players.
+Valente	Valiant
+Abertura curta, sem indicador visual: só o som do giro certo.	A short opening, no visual cue: only the sound of the right spin.
+~Música 	Music: 
+Davi × Golias	David × Goliath
+Samá e o campo de lentilhas	Shammah and the lentil field
+Eleazar e a mão pegada à espada	Eleazar and the hand clinging to the sword
+Os três valentes e a água de Belém	The three mighty men and the water of Bethlehem
+Benaia: o leão na cova e o egípcio	Benaiah: the lion in the pit and the Egyptian
+Abisai: a lança contra trezentos	Abishai: the spear against three hundred
+Josebe-Bassebete: oitocentos de uma vez	Josheb-basshebeth: eight hundred at one time
+Golias abaixou a cabeça: o capacete cobriu a testa.	Goliath lowered his head: the helmet covered his forehead.
+O capacete de bronze protegeu a cabeça.	The bronze helmet protected his head.
+O escudeiro bloqueou com o escudo.	The shield-bearer blocked with his shield.
+couraça	breastplate
+A couraça de escamas protegeu o corpo.	The scale breastplate protected his body.
+As caneleiras de bronze protegeram as pernas.	The bronze greaves protected his legs.
+Acertou o escudeiro, não o gigante.	You hit the shield-bearer, not the giant.
+Derrube Golias com uma pedra na testa	Bring Goliath down with a stone to the forehead
+Ele só expõe a testa depois de rugir, atirar o dardo ou golpear. Avance: correr em direção a ele dá coragem.	He only exposes his forehead after roaring, throwing the javelin or striking. Advance: running toward him gives courage.
+Espere a abertura. Avance em direção a ele.	Wait for the opening. Advance toward him.
+Passou perto! A coragem aumenta.	Close! Your courage grows.
+As cinco pedras acabaram.	The five stones are gone.
+Davi caiu diante do gigante.	David fell before the giant.
+~Golias ruge. A coragem cai (−	Goliath roars. Courage drops (−
+A lança de Golias acertou Davi.	Goliath's spear hit David.
+Você desviou da lança.	You dodged the spear.
+Dardo! Desvie para o lado.	Javelin! Dodge to the side.
+O dardo atingiu Davi.	The javelin hit David.
+O povo foge	The people flee
+Permaneça no meio do campo	Stay in the middle of the field
+~Próxima onda em 	Next wave in 
+~Onda 	Wave 
+~ de 4	 of 4
+Fogo apagado.	Fire out.
+Soldado de Israel	Soldier of Israel
+Os soldados de Israel correm para o acampamento. Você pode fugir com eles ou ficar no meio do campo.	The soldiers of Israel run to the camp. You can flee with them or stay in the middle of the field.
+"Fuja, Samá! Eles são muitos!"	"Run, Shammah! There are too many of them!"
+Lanceiros avançam sobre o campo.	Spearmen advance on the field.
+Arqueiros atiram de longe: escudo nas flechas, funda neles.	Archers shoot from afar: shield against the arrows, sling against them.
+Escudeiros e portadores de tocha, por dois lados. Golpe forte quebra o escudo.	Shield-bearers and torch-bearers, from two sides. A heavy blow breaks the shield.
+Todos juntos, com um capitão. Apare os golpes dele.	All together, with a captain. Parry his blows.
+~Defenda o campo · Onda 	Defend the field · Wave 
+São muitos demais. Não saia das lentilhas e não caia: o marcador só avança assim. Com pouca coragem, segure F (ou Orar) para orar.	There are far too many. Do not leave the lentils and do not fall: the counter only advances that way. With low courage, hold F (or Pray) to pray.
+Permaneça!	Hold your ground!
+Respire	Breathe
+Suas pedras foram recolhidas (5). Apague o fogo que restar e volte ao meio do campo.	Your stones were gathered (5). Put out any fire left and return to the middle of the field.
+O campo foi tomado.	The field was taken.
+~Aguarde 	Wait 
+~ s para orar de novo.	 s to pray again.
+Samá orou e encontrou coragem.	Shammah prayed and found courage.
+Treino 1 de 3: bonecos de palha	Training 1 of 3: straw dummies
+Golpeie o boneco que brilhar. Clique: golpe rápido. Segure e solte: golpe forte (para os que têm tábua).	Strike the dummy that glows. Click: quick strike. Hold and release: heavy strike (for those with a board).
+Treino 2 de 3: flechas sem ponta	Training 2 of 3: blunt arrows
+O instrutor vai atirar. Segure o botão direito (ou Escudo) virado para ele; erguer no instante certo apara.	The instructor will shoot. Hold the right button (or Shield) facing him; raising it at the right moment parries.
+A flecha passou longe.	The arrow went wide.
+Treino 3 de 3: tochas	Training 3 of 3: torches
+Com a funda (Q troca de arma), derrube os portadores de tocha antes que alcancem os fardos.	With the sling (Q switches weapons), bring down the torch-bearers before they reach the bales.
+Aparou! +150	Parried! +150
+Bloqueou +80	Blocked +80
+A flecha sem ponta acertou Samá.	The blunt arrow hit Shammah.
+Tocha derrubada! +120	Torch down! +120
+Muito devagar!	Too slow!
+Um fardo pegou fogo.	A bale caught fire.
+Filisteus	Philistines
+Esc · pausa · Q · trocar arma · botão direito · escudo · F · orar · H · mira · M · música	Esc · pause · Q · switch weapon · right button · shield · F · pray · H · aim · M · music
+LS:Andar|RS:Olhar|RT:Golpe ou funda|LT:Escudo|X:Trocar arma|Y:Orar|Start:Pausa	LS:Move|RS:Look|RT:Strike or sling|LT:Shield|X:Switch weapon|Y:Pray|Start:Pause
+Funda	Sling
+Golpe	Strike
+Narração ligada	Narration on
+Narração desligada	Narration off
+Música ligada	Music on
+Música desligada	Music off
+Ajuda de mira ligada	Aim assist on
+Ajuda de mira desligada	Aim assist off
+Espada e escudo	Sword and shield
+escudo erguido	shield raised
+golpe forte!	heavy strike!
+segure: forte	hold: heavy
+clique: golpe	click: strike
+Fase 2 · Samá	Phase 2 · Shammah
+2 Samuel 23:11-12. Todos fogem; Samá fica no meio do campo e o defende de espada e escudo, até o grande livramento.	2 Samuel 23:11-12. Everyone flees; Shammah stands in the middle of the field and defends it with sword and shield, until the great deliverance.
+Dificuldade	Difficulty
+Jogar a fase completa	Play the full phase
+Só o treino	Training only
+Só a batalha	Battle only
+Clique esquerdo	Left click
+Segurar botão direito	Hold right button
+F (segurar)	F (hold)
+Golpe rápido · segure e solte para o golpe forte (quebra escudos)	Quick strike · hold and release for the heavy strike (breaks shields)
+Erguer o escudo · no instante do golpe, apara	Raise the shield · at the moment of the blow, parry
+Trocar entre espada e funda	Switch between sword and sling
+Orar por 2 s, parado: recupera coragem	Pray for 2 s, standing still: restores courage
+Andar · correr	Walk · run
+Pausa · ajuda de mira · música	Pause · aim assist · music
+No celular: direcional, arrastar para olhar e os botões Golpe, Escudo, ⇄ e Orar. Modelos, sons e versículos provisórios.	On mobile: pad, drag to look, and the Strike, Shield, ⇄ and Pray buttons. Models, sounds and verses are provisional.
+~Música: 	Music: 
+~Ajuda de mira: 	Aim assist: 
+~Narração: 	Narration: 
+Como jogar	How to play
+Opções	Options
+Sair do jogo	Quit game
+~Pausa · 	Pause · 
+Cena animada	Cutscene
+~Treino	Training
+Batalha	Battle
+Jogo pausado	Game paused
+Continuar	Continue
+Pular a cena	Skip the cutscene
+Recomeçar o treino	Restart the training
+Recomeçar a batalha	Restart the battle
+Voltar ao menu	Back to the menu
+~Treino concluído · 	Training complete · 
+O acampamento dos valentes	The mighty men's camp
+~Medalha de 	Medal: 
+Flechas aparadas	Arrows parried
+Flechas bloqueadas	Arrows blocked
+Coragem inicial na batalha	Starting courage in battle
+Pontos	Points
+~ de 8	 of 8
+Seguir para a batalha	Go to the battle
+Repetir o treino	Repeat the training
+A escolha	The choice
+Você fugiu com o povo	You fled with the people
+Atrás de você, o campo ficou sem ninguém. O relato diz outra coisa:	Behind you, the field is empty. The account says otherwise:
+Voltar ao meio do campo	Return to the middle of the field
+Voltar é permitido, mas o item de Fidelidade "Não fugiu com o povo" fica perdido nesta partida.	Returning is allowed, but the Faithfulness item "Did not flee with the people" is lost in this run.
+~Batalha · 	Battle · 
+Você recomeça a resistência final do zero. O campo mantém o que sobrou, com pelo menos 40%.	You restart the final stand from zero. The field keeps what was left, at least 40%.
+~Você recomeça na onda 	You restart at wave 
+~. O campo mantém o que sobrou, com pelo menos 40%.	. The field keeps what was left, at least 40%.
+Tentar de novo	Try again
+Não fugiu com o povo	Did not flee with the people
+Ficou no meio do campo	Stayed in the middle of the field
+O campo continuou de pé	The field stood firm
+Permaneceu até o livramento sem cair	Held on until the deliverance without falling
+~O campo de lentilhas · 	The lentil field · 
+O Senhor operou um grande livramento	The Lord wrought a great deliverance
+ (não jogado)	 (not played)
+~Defesa · campo 	Defense · field 
+~ afastados · 	 driven off · 
+~ aparadas	 parried
+~Fidelidade ao relato · 	Faithfulness to the account · 
+~Multiplicador 	Multiplier 
+2 Sm 23:11	2 Sam 23:11
+2 Sm 23:12	2 Sam 23:12
+Relato paralelo: 1 Crônicas 11:12-14 descreve uma batalha parecida num campo de cevada, com Eleazar ao lado de Davi.	Parallel account: 1 Chronicles 11:12-14 describes a similar battle in a barley field, with Eleazar beside David.
+Jogar a fase de novo	Play the phase again
+Repetir só a batalha	Repeat only the battle
+Permaneça	Hold your ground
+Bloqueio perfeito com folga, ondas menores e livramento em 90 s.	Perfect block with room to spare, smaller waves and deliverance in 90 s.
+Janela de bloqueio curta, ondas grandes e livramento em 150 s.	Short block window, large waves and deliverance in 150 s.
+Tenda	Tent
+Filisteu	Philistine
+cabeça	head
+A pedra bateu no escudo.	The stone hit the shield.
+O escudo bloqueou. Segure para um golpe forte.	The shield blocked. Hold for a heavy strike.
+O capitão acertou Samá.	The captain hit Shammah.
+Um filisteu acertou Samá.	A Philistine hit Shammah.
+A flecha acertou Samá.	The arrow hit Shammah.
+Aparou!	Parried!
+Samá caiu no campo.	Shammah fell in the field.
+Uma flecha acertou Eleazar.	An arrow hit Eleazar.
+Sem fôlego para desviar.	Out of breath to dodge.
+Desviou.	Dodged.
+Aparou! O próximo golpe é crítico.	Parried! The next strike is critical.
+Eleazar caiu no vale.	Eleazar fell in the valley.
+Esc · pausa · botão direito · aparar · Espaço · desviar · F · orar · T · trombeta · M · música · N · narração	Esc · pause · right button · parry · Space · dodge · F · pray · T · trumpet · M · music · N · narration
+LS:Andar|RS:Olhar|RT:Golpe|LT:Aparar|A:Desviar|Y:Orar|DU:Trombeta|Start:Pausa	LS:Move|RS:Look|RT:Strike|LT:Parry|A:Dodge|Y:Pray|DU:Trumpet|Start:Pause
+Aparar	Parry
+Desviar	Dodge
+mão pegada à espada	hand clinging to the sword
+crítico!	critical!
+~sequência 	sequence 
+~ de 3	 of 3
+A mão pegada à espada	The hand clinging to the sword
+A espada não sai mais da mão: cada golpe é forte, mas mais lento. Continue lutando.	The sword no longer leaves the hand: every strike is heavy, but slower. Keep fighting.
+Fase 3 · Eleazar	Phase 3 · Eleazar
+2 Samuel 23:9-10. Quando os homens de Israel sobem a colina, Eleazar desce ao vale de Pas-Damim e luta até a mão ficar pegada à espada.	2 Samuel 23:9-10. When the men of Israel go up the hill, Eleazar goes down into the valley of Pas-dammim and fights until his hand clings to the sword.
+Segurar e soltar	Hold and release
+Botão direito	Right button
+Espaço	Space
+F (segurar) · T	F (hold) · T
+Golpe · três rápidos seguidos formam a sequência (o terceiro acerta mais longe e mais forte)	Strike · three quick ones in a row form the sequence (the third hits farther and harder)
+Golpe forte (abre a falange)	Heavy strike (opens the phalanx)
+Aparar com a espada no instante do golpe · o próximo golpe é crítico	Parry with the sword at the moment of the blow · the next strike is critical
+Desviar (gasta fôlego)	Dodge (costs stamina)
+Orar · tocar a trombeta	Pray · sound the trumpet
+Pausa · música · narração	Pause · music · narration
+No celular: direcional, arrastar para olhar e os botões Golpe, Aparar, Desviar, Orar e Trombeta. Modelos, sons e versículos provisórios.	On mobile: pad, drag to look, and the Strike, Parry, Dodge, Pray and Trumpet buttons. Models, sounds and verses are provisional.
+O ritmo da espada	The rhythm of the sword
+Ataques aparados	Attacks parried
+Ataques desviados	Attacks dodged
+A trombeta	The trumpet
+Chamar o povo para ajudar?	Call the people to help?
+Três soldados descerão para lutar ao seu lado. A luta fica mais fácil, mas o relato conta outra coisa:	Three soldiers will come down to fight beside you. The fight gets easier, but the account tells another story:
+Tocar a trombeta	Sound the trumpet
+Continuar sozinho	Keep going alone
+Tocar a trombeta faz perder o item de Fidelidade "Lutou sem esperar o povo".	Sounding the trumpet loses the Faithfulness item "Fought without waiting for the people".
+Você recomeça a resistência final do zero.	You restart the final stand from zero.
+~Você recomeça na linha 	You restart at line 
+ A mão continua pegada à espada.	 The hand still clings to the sword.
+Levantou-se: desceu ao vale a tempo	Rose up: came down to the valley in time
+Não recuou para trás de um estandarte	Did not fall back behind a standard
+Lutou até a mão ficar pegada à espada e continuou	Fought until the hand clung to the sword and kept going
+Lutou sem esperar o povo	Fought without waiting for the people
+~Pas-Damim · 	Pas-dammim · 
+~Avanço · 3 linhas · 	Advance · 3 lines · 
+~ aparadas · 	 parried · 
+2 Sm 23:10	2 Sam 23:10
+Lugar: 1 Crônicas 11:13 diz que foi em Pas-Damim.	Place: 1 Chronicles 11:13 says it was at Pas-dammim.
+Janela de aparar folgada, cansaço lento e resistência de 60 s.	Generous parry window, slow fatigue and 60 s of endurance.
+Janela de aparar curta, cansaço rápido e resistência de 120 s.	Short parry window, fast fatigue and 120 s of endurance.
+Instrutor	Instructor
+A falange bloqueou. Golpe forte, a sequência completa ou pelo lado.	The phalanx blocked. Heavy strike, the full sequence, or from the side.
+Crítico!	Critical!
+O estandarte caiu. Os filisteus em volta perderam o ânimo.	The standard fell. The Philistines around it lost heart.
+Um filisteu acertou Eleazar.	A Philistine hit Eleazar.
+Sem fôlego! Respire entre os golpes. −100	Out of breath! Breathe between strikes. −100
+Treino 1 de 3: a sequência	Training 1 of 3: the sequence
+Acerte o boneco que brilhar com o golpe pedido: rápido, rápido, forte. A sequência completa acerta mais longe e mais forte.	Hit the dummy that glows with the strike asked for: quick, quick, heavy. The full sequence hits farther and harder.
+Treino 2 de 3: aparar e desviar	Training 2 of 3: parry and dodge
+O instrutor ataca com um bastão. Botão direito (Aparar) no instante do golpe, ou Espaço (Desviar).	The instructor attacks with a staff. Right button (Parry) at the moment of the blow, or Space (Dodge).
+Treino 3 de 3: o fôlego	Training 3 of 3: stamina
+Golpeie o poste por 40 s sem deixar o Cansaço chegar ao máximo. Respire entre as sequências.	Strike the post for 40 s without letting Fatigue reach the maximum. Breathe between sequences.
+Desviou +100	Dodged +100
+O bastão acertou Eleazar.	The staff hit Eleazar.
+Golpe forte	Heavy strike
+Golpe rápido	Quick strike
+~Faltam 	Only 
+~ s. Golpeie sem deixar o Cansaço chegar ao máximo.	 s left. Strike without letting Fatigue reach the maximum.
+Os homens de Israel sobem	The men of Israel go up
+Resista até o fim	Hold out to the end
+Avance	Advance
+~Linha 	Line 
+Os soldados recuam colina acima. Alguém precisa descer ao vale.	The soldiers fall back up the hill. Someone has to go down into the valley.
+"Quem vai descer?"	"Who will go down?"
+Lanceiros filisteus em linha. Use a sequência rápido, rápido, forte.	Philistine spearmen in a line. Use the sequence quick, quick, heavy.
+Uma falange: escudos lado a lado. Golpe forte ou a sequência completa abre brecha; ou ataque pelo lado.	A phalanx: shields side by side. A heavy strike or the full sequence opens a gap; or attack from the side.
+A última linha, com o porta-estandarte. Derrube-o e os filisteus em volta perdem o ânimo.	The last line, with the standard-bearer. Bring him down and the Philistines around him lose heart.
+~Avance · Linha 	Advance · Line 
+O estandarte de Israel foi plantado.	The standard of Israel was planted.
+A mão está pegada à espada. Continue lutando: o marcador avança enquanto você fica de pé e não recua.	The hand clings to the sword. Keep fighting: the counter advances while you stand and do not fall back.
+Uma tropa grande desce o vale. O cansaço vai chegar ao máximo: continue lutando.	A large troop comes down the valley. Fatigue will reach the maximum: keep fighting.
+Resista!	Hold out!
+Eleazar se levantou.	Eleazar rose up.
+Avance · Linha 1 de 3	Advance · Line 1 of 3
+Os filisteus sobem a colina.	The Philistines climb the hill.
+Os filisteus vieram até você. Lute.	The Philistines have come to you. Fight.
+Você recuou para trás do estandarte.	You fell back behind the standard.
+A linha caiu. Siga vale abaixo até a próxima.	The line fell. Go down the valley to the next one.
+Eleazar orou e encontrou coragem.	Eleazar prayed and found courage.
+Três soldados descem para ajudar.	Three soldiers come down to help.
+Soldado de Israel (reforço)	Soldier of Israel (reinforcement)
+Corpo	Body
+Uma sentinela viu vocês e corre para a trombeta!	A sentry saw you and runs for the horn!
+O guarda bloqueou. Golpe forte, a sequência completa ou pelo lado.	The guard blocked. Heavy strike, the full sequence, or from the side.
+O alarme soou no arraial!	The alarm sounded in the camp!
+Um filisteu acertou o valente.	A Philistine hit the mighty man.
+Um companheiro caiu! Segure E perto dele para levantá-lo.	A companion fell! Hold E near him to lift him up.
+O companheiro se levantou.	The companion got up.
+Davi	David
+Homem de Davi	David's man
+Esc · pausa · botão direito · escudo · Espaço · desviar · Q · ordem · E · ação · F · orar · M · música · N · narração	Esc · pause · right button · shield · Space · dodge · Q · order · E · action · F · pray · M · music · N · narration
+LS:Andar|RS:Olhar|RT:Golpe|LT:Escudo|A:Desviar|X:Ordem|B:Ação|Y:Orar|Start:Pausa	LS:Move|RS:Look|RT:Strike|LT:Shield|A:Dodge|X:Order|B:Action|Y:Pray|Start:Pause
+Escudo	Shield
+Ordem	Order
+"Comigo!" — os dois seguem você.	"With me!" — the two follow you.
+"Segurem aqui!" — os dois defendem este ponto.	"Hold here!" — the two defend this spot.
+Levantar	Lift
+Pegar o cântaro	Take the jar
+Tirar água	Draw water
+tirando água...	drawing water...
+Tirar água do poço	Draw water from the well
+~Ordem: 	Order: 
+Comigo	With me
+Segurem	Hold
+Ação: 	Action: 
+Fase 4 · Os três valentes	Phase 4 · The three mighty men
+2 Samuel 23:13-17. Davi só diz um desejo. Três valentes rompem pelo arraial filisteu, tiram água da cisterna junto à porta de Belém e a trazem a ele.	2 Samuel 23:13-17. David only voices a wish. Three mighty men break through the Philistine camp, draw water from the well of Bethlehem by the gate, and bring it to him.
+Só a missão	Mission only
+E (segurar)	E (hold)
+F (segurar) · Shift	F (hold) · Shift
+Golpe · três rápidos formam a sequência · segure e solte para o golpe forte	Strike · three quick ones form the sequence · hold and release for the heavy strike
+Segurar: escudo · no instante do golpe: aparar (com o cântaro na mão, só aparar)	Hold: shield · at the moment of the blow: parry (with the jar in hand, parry only)
+Desviar (com o cântaro, derrama um pouco)	Dodge (with the jar, spills a little)
+Ordem aos companheiros: "Comigo" ou "Segurem aqui"	Orders to the companions: "With me" or "Hold here"
+Ação: pegar o cântaro, tirar água, levantar um companheiro	Action: take the jar, draw water, lift a companion
+Orar · correr (com o cântaro, derrama)	Pray · run (with the jar, it spills)
+No celular: direcional, arrastar para olhar e os botões Golpe, Escudo, Desviar, Ordem, Orar e Ação. Modelos, sons e versículos provisórios.	On mobile: pad, drag to look, and the Strike, Shield, Dodge, Order, Pray and Action buttons. Models, sounds and verses are provisional.
+Missão	Mission
+Recomeçar a missão	Restart the mission
+Os três e o cântaro	The three and the jar
+Marcas seguradas	Marks held
+Água no fim do percurso	Water at the end of the course
+Companheiros levantados	Companions lifted
+Coragem inicial na missão	Starting courage in the mission
+Seguir para a missão	Go to the mission
+O poço no campo	The well in the field
+Tirar água deste poço?	Draw water from this well?
+Aqui não há guardas, e a água é a mesma para matar a sede. Mas Davi falou de um lugar:	There are no guards here, and the water quenches thirst just the same. But David spoke of a place:
+Tirar água daqui	Draw water here
+Seguir para a cisterna	Go on to the well
+A cisterna fica junto à porta de Belém.	The well is by the gate of Bethlehem.
+Tirar água deste poço faz perder o item de Fidelidade "Da cisterna junto à porta".	Drawing water from this well loses the Faithfulness item "From the well by the gate".
+~A volta · 	The way back · 
+O cântaro ficou vazio	The jar went empty
+Vocês voltam ao começo do vale para tentar de novo.	You go back to the start of the valley to try again.
+Vocês voltam para tirar água de novo.	You go back to draw water again.
+~Missão · 	Mission · 
+Vocês recomeçam na saída da caverna, com o cântaro vazio.	You restart at the cave exit, with an empty jar.
+Vocês recomeçam depois do arraial, com o cântaro vazio.	You restart past the camp, with an empty jar.
+Vocês recomeçam perto da cisterna, com o cântaro vazio.	You restart near the well, with an empty jar.
+Um dos três	One of the three
+O valente	The mighty man
+Romperam pelo arraial dos filisteus	Broke through the Philistine camp
+Tiraram água da cisterna junto à porta	Drew water from the well by the gate
+Os três voltaram juntos	The three came back together
+~A água chegou a Davi (	The water reached David (
+2 Sm 23:16	2 Sam 23:16
+2 Sm 23:17	2 Sam 23:17
+~Adulão · 	Adullam · 
+Derramou-a perante o Senhor	Poured it out before the Lord
+~Missão · água 	Mission · water 
+~ afastados · alarme 	 driven off · alarm 
+Os três não têm nome no texto ("três dos trinta cabeças"). Relato paralelo: 1 Crônicas 11:15-19.	The three have no names in the text ("three of the thirty chief"). Parallel account: 1 Chronicles 11:15-19.
+Repetir só a missão	Repeat only the mission
+Companheiros resistentes, alarme lento e 5 s para tirar a água.	Sturdy companions, slow alarm and 5 s to draw the water.
+Arraial cheio, alarme rápido e 9 s para tirar a água.	Full camp, fast alarm and 9 s to draw the water.
+Israelita	Israelite
+Uma flecha acertou o valente.	An arrow hit the mighty man.
+O valente caiu no vale.	The mighty man fell in the valley.
+A caverna de Adulão	The cave of Adullam
+Rumo a Belém	Toward Bethlehem
+A volta com a água	The way back with the water
+~ · Ordem: 	 · Order: 
+Um companheiro caiu. Chegue perto e segure E (Ação) para levantá-lo.	A companion fell. Get close and hold E (Action) to lift him.
+Um companheiro ficou para trás.	A companion fell behind.
+Os companheiros ficaram para trás. Q: "Comigo".	The companions fell behind. Q: "With me".
+Davi não deu ordem	David gave no order
+Ninguém mandou. Se quiser atender ao desejo de Davi, pegue o cântaro vazio na entrada da caverna (segure E).	Nobody ordered it. If you want to answer David's wish, take the empty jar at the cave entrance (hold E).
+A cisterna junto à porta	The well by the gate
+Romper pelo arraial	Break through the camp
+Tire a água de novo e volte para Adulão.	Draw the water again and go back to Adullam.
+A cisterna de Belém fica junto à porta, do outro lado do vale.	The well of Bethlehem is by the gate, across the valley.
+"Vamos." Os três saem da caverna.	"Let's go." The three leave the cave.
+A cisterna de Belém fica junto à porta, do outro lado do vale. O caminho do relato passa pelo meio do arraial filisteu. Q: ordens aos companheiros.	The well of Bethlehem is by the gate, across the valley. The way in the account goes through the middle of the Philistine camp. Q: orders to the companions.
+O cântaro está cheio.	The jar is full.
+Água da cisterna de Belém!	Water from the well of Bethlehem!
+Leve a água a Davi, na caverna de Adulão. Sem escudo: golpes, correria e desvios derramam água. Os companheiros protegem você.	Take the water to David, in the cave of Adullam. No shield: blows, running and dodging spill water. Your companions protect you.
+Os dois companheiros pegam as armas e olham para você.	The two companions take up their weapons and look at you.
+O desvio pelas colinas é mais seguro, mas o relato diz: romperam pelo arraial.	The detour through the hills is safer, but the account says: they broke through the camp.
+Pelo meio do arraial!	Through the middle of the camp!
+O valente orou e encontrou coragem.	The mighty man prayed and found courage.
+Faltou um dos três.	One of the three is missing.
+Levantou o companheiro! +100	Lifted the companion! +100
+O instrutor se rendeu. +150	The instructor yielded. +150
+Treino 1 de 3: ordens	Training 1 of 3: orders
+Leve os dois até a marca dourada e, lá dentro, mande segurar (Q ou Ordem). Depois chame de volta com "Comigo".	Lead the two to the golden mark and, once inside, order them to hold (Q or Order). Then call them back with "With me".
+Treino 2 de 3: o cântaro	Training 2 of 3: the jar
+Passe pelas quatro marcas com o cântaro cheio. Correr, desviar e ser atingido derramam água. Botão direito apara as flechas sem ponta.	Pass the four marks with the jar full. Running, dodging and being hit spill water. Right button parries the blunt arrows.
+Treino 3 de 3: os três juntos	Training 3 of 3: the three together
+Três instrutores atacam os seus companheiros. Proteja-os; se um cair, chegue perto e segure E (Ação) para levantá-lo.	Three instructors attack your companions. Protect them; if one falls, get close and hold E (Action) to lift him.
+~Aparou! +	Parried! +
+A flecha sem ponta derramou água.	The blunt arrow spilled water.
+~Seguraram a marca! +	Held the mark! +
+~Marca 	Mark 
+~ de 4 · 	 of 4 · 
+~ s · água 	 s · water 
+~%. Correr, desviar e ser atingido derramam água.	%. Running, dodging and being hit spill water.
+~Percurso: 	Course: 
+~ de 4 marcas, 	 of 4 marks, 
+~% de água. +	% of water. +
+~Tempo +	Time +
+Arrancou a lança da mão do egípcio!	Pulled the spear from the Egyptian's hand!
+O cajado não basta para derrubá-lo. Apare a estocada e arranque a lança (segure E).	The staff is not enough to bring him down. Parry the thrust and pull the spear away (hold E).
+A lança do egípcio derrubou Benaia.	The Egyptian's spear knocked Benaiah down.
+Aparou! Ele perdeu o equilíbrio: chegue perto e segure E para arrancar a lança!	Parried! He lost his balance: get close and hold E to pull the spear away!
+A varredura da lança derrubou Benaia.	The spear's sweep knocked Benaiah down.
+O soco do egípcio derrubou Benaia.	The Egyptian's punch knocked Benaiah down.
+Aparou o soco!	Parried the punch!
+Benaia	Benaiah
+Esc · pausa · botão direito · escudo e aparar · Espaço · desviar · E · ação · F · orar · M · música · N · narração	Esc · pause · right button · shield and parry · Space · dodge · E · action · F · pray · M · music · N · narration
+LS:Andar|RS:Olhar|RT:Golpe|LT:Escudo e aparar|A:Desviar|B:Ação|Y:Orar|Start:Pausa	LS:Move|RS:Look|RT:Strike|LT:Shield and parry|A:Dodge|B:Action|Y:Pray|Start:Pause
+Benaia orou e encontrou coragem.	Benaiah prayed and found courage.
+Arrancar a lança	Pull the spear away
+Esperar a neve passar	Wait for the snow to pass
+Atirar uma pedra	Throw a stone
+Pegar a espada	Take the sword
+O abrigo	The shelter
+Esperar a neve passar?	Wait for the snow to pass?
+Aqui dentro está quente, e sem neve o chão fica firme. Mas o texto guarda um detalhe:	It is warm in here, and without snow the ground is firm. But the text keeps a detail:
+Ir agora, na neve	Go now, in the snow
+No tempo da neve	In time of snow
+A borda da cova	The edge of the pit
+Atirar pedras de cima?	Throw stones from above?
+Daqui o leão não alcança você. Mas o texto conta outra coisa:	From here the lion cannot reach you. But the text tells another story:
+Atirar pedras	Throw stones
+Descer à cova	Go down into the pit
+Desceu à cova	Went down into the pit
+O suporte de armas	The weapon rack
+Pegar a espada?	Take the sword?
+Com a espada a luta fica mais fácil. Mas o texto diz:	With the sword the fight gets easier. But the text says:
+Ficar com o cajado	Keep the staff
+Desceu a ele com um cajado	Went down to him with a staff
+~Escolher "	Choosing "
+~" faz perder o item de Fidelidade "	" loses the Faithfulness item "
+O dia da neve	The day of the snow
+A neve passou	The snow has passed
+O leão	The lion
+O egípcio	The Egyptian
+O egípcio sem a lança	The Egyptian without the spear
+lança	spear
+Fase 5 · Benaia	Phase 5 · Benaiah
+2 Samuel 23:20-23. Num dia de neve, Benaia desce à cova onde está um leão. Depois desce ao egípcio gigante levando só um cajado, arranca-lhe a lança e vence com ela.	2 Samuel 23:20-23. On a snowy day, Benaiah goes down into a pit where a lion is. Then he goes down to the giant Egyptian carrying only a staff, pulls the spear from his hand and wins with it.
+Golpe (espada, cajado ou lança) · segure e solte para o golpe forte	Strike (sword, staff or spear) · hold and release for the heavy strike
+Segurar: escudo (com a espada) · no instante do golpe: aparar	Hold: shield (with the sword) · at the moment of the blow: parry
+Desviar: o bote do leão e a varredura do egípcio	Dodge: the lion's pounce and the Egyptian's sweep
+Ação: arrancar a lança do egípcio desequilibrado · outras escolhas do lugar	Action: pull the spear from the off-balance Egyptian · other choices of the place
+Orar · correr (na neve o chão escorrega)	Pray · run (on snow the ground is slippery)
+No celular: direcional, arrastar para olhar e os botões Golpe, Escudo/Aparar, Desviar, Orar e Ação. Modelos, sons e versículos provisórios.	On mobile: pad, drag to look, and the Strike, Shield/Parry, Dodge, Pray and Action buttons. Models, sounds and verses are provisional.
+O campo da guarda	The guard's field
+Botes evitados · contra-ataques	Pounces avoided · counterattacks
+Lanças arrancadas	Spears pulled away
+Coragem inicial	Starting courage
+Um leão caiu na cova junto ao caminho. Da borda há pedras; do lado, um abrigo com fogo. Benaia desceu.	A lion fell into the pit beside the road. From the edge there are stones; to the side, a shelter with a fire. Benaiah went down.
+"Um leão caiu na cova! Ninguém desce aí."	"A lion fell into the pit! Nobody goes down there."
+A neve desliza atrás de você. Não há volta.	The snow slides down behind you. There is no way back.
+O leão na cova	The lion in the pit
+Quando ele agachar e rosnar, vem o bote: desvie para o lado (Espaço). Depois do bote ele fica atordoado e os golpes valem o dobro. Escudo contra a patada.	When he crouches and growls, the pounce comes: dodge to the side (Space). After the pounce he is stunned and your strikes count double. Shield against the swipe.
+O leão caiu.	The lion fell.
+O leão caiu	The lion fell
+O leão caiu, mas não da maneira que o texto conta.	The lion fell, but not the way the text tells it.
+"...e feriu um leão no meio de uma cova, no tempo da neve."	"...and slew a lion in the midst of a pit in time of snow."
+Ele alcança longe com a lança. Apare a estocada com o cajado (botão direito) e, com ele desequilibrado, segure E para arrancar a lança. Da varredura, desvie.	He reaches far with the spear. Parry the thrust with the staff (right button) and, with him off balance, hold E to pull the spear away. Dodge the sweep.
+O egípcio caiu.	The Egyptian fell.
+O egípcio caiu	The Egyptian fell
+"...e o matou com a sua própria lança."	"...and slew him with his own spear."
+O egípcio caiu, mas não com a lança dele.	The Egyptian fell, but not with his own spear.
+Você recomeça no caminho da cova do leão.	You restart on the road to the lion's pit.
+Você recomeça a luta com o egípcio.	You restart the fight with the Egyptian.
+No tempo da neve (não esperou a neve passar)	In time of snow (did not wait for the snow to pass)
+Desceu à cova (não atirou pedras de cima)	Went down into the pit (did not throw stones from above)
+Desceu ao egípcio com um cajado	Went down to the Egyptian with a staff
+Matou-o com a sua própria lança	Slew him with his own spear
+2 Sm 23:20	2 Sam 23:20
+2 Sm 23:21	2 Sam 23:21
+~Benaia · 	Benaiah · 
+Davi o pôs sobre a sua guarda	David set him over his guard
+~Leão e egípcio · 	Lion and Egyptian · 
+~ desvios · 	 dodges · 
+Relato paralelo: 1 Crônicas 11:22-25 (o egípcio tinha cinco côvados de altura).	Parallel account: 1 Chronicles 11:22-25 (the Egyptian was five cubits tall).
+Leão mais fraco, aviso do bote longo e janela de aparar folgada.	Weaker lion, long pounce warning and a generous parry window.
+Leão forte, aviso curto e o egípcio mais resistente.	Strong lion, short warning and a sturdier Egyptian.
+Treino 1 de 3: o bote	Training 1 of 3: the pounce
+O instrutor vai correr contra você, como o leão. Quando ele se agachar, desvie para o lado (Espaço) e golpeie enquanto ele se recupera.	The instructor will run at you, like the lion. When he crouches, dodge to the side (Space) and strike while he recovers.
+Treino 2 de 3: o cajado	Training 2 of 3: the staff
+Apare a estocada com o cajado (botão direito no instante do golpe). Com ele desequilibrado, chegue perto e segure E para arrancar a lança.	Parry the thrust with the staff (right button at the moment of the blow). With him off balance, get close and hold E to pull the spear away.
+Treino 3 de 3: a lança	Training 3 of 3: the spear
+Estoque o boneco que brilhar. A lança alcança longe: mantenha distância.	Thrust at the dummy that glows. The spear reaches far: keep your distance.
+O bote acertou. Desvie quando ele se agachar.	The pounce landed. Dodge when he crouches.
+Escapou do bote! Agora golpeie. +60	Escaped the pounce! Now strike. +60
+Aparou! Segure E para arrancar a lança.	Parried! Hold E to pull the spear away.
+A lança sem ponta acertou. Apare no instante do golpe.	The blunt spear hit. Parry at the moment of the blow.
+O leão derrubou Benaia.	The lion knocked Benaiah down.
+Uma patada derrubou Benaia.	A swipe knocked Benaiah down.
+Aparou a patada! O leão está atordoado.	Parried the swipe! The lion is stunned.
+O rugido do leão abala a coragem. Segure F para orar.	The lion's roar shakes your courage. Hold F to pray.
+Morador	Villager
+Guarda de Davi	David's guard
+Forte de Moabe	Mighty man of Moab
+Abisai caiu.	Abishai fell.
+Abisai	Abishai
+Servo de Davi	David's servant
+Abisai ainda não chegou!	Abishai has not arrived yet!
+~ de 300!	 of 300!
+Esc · pausa · botão direito · aparar · Espaço · desviar · Q · espada/lança · F · orar · M · música · N · narração	Esc · pause · right button · parry · Space · dodge · Q · sword/spear · F · pray · M · music · N · narration
+LS:Andar|RS:Olhar|RT:Golpe|LT:Aparar|A:Desviar|X:Espada ou lança|Y:Orar|Start:Pausa	LS:Move|RS:Look|RT:Strike|LT:Parry|A:Dodge|X:Sword or spear|Y:Pray|Start:Pause
+Espada	Sword
+Lança	Spear
+A espada na cintura	The sword at the belt
+Trocar a lança pela espada?	Trade the spear for the sword?
+De perto, a espada é mais rápida. Mas o texto diz:	Up close, the sword is faster. But the text says:
+Usar a espada	Use the sword
+Ficar com a lança	Keep the spear
+Usar a espada na luta contra os trezentos faz perder o item de Fidelidade "Com a sua lança".	Using the sword in the fight against the three hundred loses the Faithfulness item "With his spear".
+Abisai orou e encontrou coragem.	Abishai prayed and found courage.
+~Varredura! 	Sweep! 
+~ de uma vez	 at once
+~Feridos: 	Felled: 
+~ de 300 · 	 of 300 · 
+Isbi-Benobe	Ishbi-benob
+varredura!	sweep!
+Fase 6 · Abisai	Phase 6 · Abishai
+2 Samuel 23:18-19 e 21:15-17. Abisai ergue a lança contra trezentos. Noutra batalha, quando Davi se cansa e o gigante Isbi-Benobe vai matá-lo, Abisai o socorre.	2 Samuel 23:18-19 and 21:15-17. Abishai lifts his spear against three hundred. In another battle, when David grows weary and the giant Ishbi-benob is about to kill him, Abishai comes to his aid.
+Estocada da lança (atravessa até dois) · segure e solte: varredura que acerta todos em volta	Spear thrust (pierces up to two) · hold and release: a sweep that hits everyone around
+Aparar no instante do golpe (também o golpe que vai para Davi, se você estiver perto do gigante)	Parry at the moment of the blow (also the blow aimed at David, if you are near the giant)
+Trocar entre a lança e a espada da cintura	Switch between the spear and the sword at the belt
+Orar · correr	Pray · run
+No celular: direcional, arrastar para olhar e os botões Golpe, Aparar, Desviar, Espada/Lança e Orar. Modelos, sons e versículos provisórios.	On mobile: pad, drag to look, and the Strike, Parry, Dodge, Sword/Spear and Pray buttons. Models, sounds and verses are provisional.
+A lança do chefe	The chief's spear
+Varreduras completas	Full sweeps
+Estocadas que atravessaram dois	Thrusts that pierced two
+Golpes aparados por "Davi"	Blows parried for "David"
+~ de 6	 of 6
+A lança contra trezentos	The spear against three hundred
+Os filisteus chegam em grupos. Estocada (clique) atravessa até dois; segure e solte para varrer todos em volta. Sem inimigos perto, a vida volta.	The Philistines come in groups. A thrust (click) pierces up to two; hold and release to sweep everyone around you. With no enemies near, your health returns.
+"Alçou a sua lança contra trezentos..."	"Lifted up his spear against three hundred..."
+Trezentos! "...e os feriu; e tinha nome entre os três."	Three hundred! "...and slew them, and had a name among three."
+Os homens de Israel chegam. A luta termina antes dos trezentos.	The men of Israel arrive. The fight ends before the three hundred.
+O socorro	The rescue
+Isbi-Benobe vai atrás de Davi. Corra até ele e fique entre os dois: perto do gigante e de frente para ele, apare (botão direito) o golpe que ia para Davi.	Ishbi-benob goes after David. Run to him and stand between them: near the giant and facing him, parry (right button) the blow meant for David.
+Davi está cansado!	David is weary!
+Abisai chegou ao lado de Davi.	Abishai reached David's side.
+O gigante acertou Davi!	The giant hit David!
+Davi caiu.	David fell.
+Isbi-Benobe caiu.	Ishbi-benob fell.
+O gigante caiu	The giant fell
+"Porém Abisai, filho de Zeruia, o socorreu, e feriu o filisteu..."	"But Abishai the son of Zeruiah succoured him, and smote the Philistine..."
+Você recomeça a luta contra os trezentos.	You restart the fight against the three hundred.
+Você recomeça o socorro a Davi.	You restart the rescue of David.
+Alçou a sua lança contra trezentos	Lifted up his spear against three hundred
+Com a sua lança (não usou a espada contra os trezentos)	With his spear (did not use the sword against the three hundred)
+Socorreu a tempo (chegou a Davi antes do primeiro golpe)	Came to the rescue in time (reached David before the first blow)
+Davi não foi ferido pelo gigante	David was not hurt by the giant
+2 Sm 23:18	2 Sam 23:18
+2 Sm 21:17	2 Sam 21:17
+~Abisai · 	Abishai · 
+Nunca mais sairás conosco à peleja	Thou shalt go no more out with us to battle
+~Combate · 	Combat · 
+~ feridos · 	 felled · 
+~ aparadas · Davi com 	 parried · David with 
+~ de vida	 health
+Relato paralelo: 1 Crônicas 11:20-21. O socorro a Davi está em 2 Samuel 21:15-17.	Parallel account: 1 Chronicles 11:20-21. The rescue of David is in 2 Samuel 21:15-17.
+Sete minutos para os trezentos, menos filisteus e Davi mais resistente.	Seven minutes for the three hundred, fewer Philistines and a sturdier David.
+Cinco minutos, multidão maior e Davi mais frágil.	Five minutes, a bigger crowd and a more fragile David.
+Os filisteus derrubaram Abisai.	The Philistines brought Abishai down.
+Capacete	Helmet
+Aparou o golpe que ia para Davi!	Parried the blow meant for David!
+O gigante derrubou Abisai.	The giant brought Abishai down.
+Aparou! O gigante perdeu o equilíbrio.	Parried! The giant lost his balance.
+Treino 1 de 3: a varredura	Training 1 of 3: the sweep
+Um grupo de bonecos brilha em volta de você. Segure e solte o golpe para varrer todos de uma vez.	A group of dummies glows around you. Hold and release the strike to sweep them all at once.
+Treino 2 de 3: a estocada	Training 2 of 3: the thrust
+Dois bonecos em fila acendem. Alinhe e estoque (clique): a lança atravessa os dois.	Two dummies in a line light up. Line up and thrust (click): the spear pierces both.
+Treino 3 de 3: entre os dois	Training 3 of 3: between the two
+O instrutor ataca o boneco "Davi". Fique perto do instrutor, de frente para ele, e apare o golpe (botão direito) que ia para o boneco.	The instructor attacks the "David" dummy. Stay near the instructor, facing him, and parry (right button) the blow meant for the dummy.
+~Todos de uma vez! (	All at once! (
+Atravessou os dois! +50	Pierced both! +50
+Aparou o golpe que ia para "Davi"! +150	Parried the blow meant for "David"! +150
+Uma flecha acertou o capitão.	An arrow hit the captain.
+Aparou a flecha!	Parried the arrow!
+O capitão caiu.	The captain fell.
+O capitão	The captain
+Soldado	Soldier
+Davi, o rei	David, the king
+Samá	Shammah
+Josebe-Bassebete	Josheb-basshebeth
+De perto, a espada é mais rápida. Mas o relato de Crônicas diz:	Up close, the sword is faster. But the account in Chronicles says:
+Usar a espada contra os oitocentos faz perder o item de Fidelidade "Brandindo a sua lança".	Using the sword against the eight hundred loses the Faithfulness item "Lifting up his spear".
+O capitão orou e encontrou coragem.	The captain prayed and found courage.
+~ de 800! A força volta um pouco.	 of 800! Strength returns a little.
+~ de 800 · 	 of 800 · 
+Fase 7 · Fase final	Phase 7 · Final phase
+2 Samuel 23:8. O principal dos capitães de Davi se opõe sozinho a oitocentos filisteus num desfiladeiro e os fere de uma só vez. No fim, a lista dos valentes.	2 Samuel 23:8. The chief of David's captains stands alone against eight hundred Philistines in a gorge and strikes them down at one time. At the end, the roll of the mighty men.
+Estocada da lança · segure e solte: varredura (derruba a fileira e os escudeiros)	Spear thrust · hold and release: a sweep (knocks down the rank and the shield-bearers)
+Aparar no instante do golpe (também as flechas)	Parry at the moment of the blow (also arrows)
+A prova do capitão	The captain's trial
+Escudeiros derrubados	Shield-bearers brought down
+Flechas desviadas	Arrows dodged
+Os oitocentos	The eight hundred
+As fileiras vêm pelo desfiladeiro. Varredura contra a fileira, golpe forte contra escudos; apare as flechas das encostas. Não recue para trás da pedra.	The ranks come through the gorge. Sweep against the rank, heavy strike against shields; parry the arrows from the slopes. Do not fall back behind the stone.
+"...que se opôs a oitocentos..."	"...against eight hundred..."
+Você recuou para trás da pedra.	You fell back behind the stone.
+Oitocentos! "...e os feriu de uma vez."	Eight hundred! "...whom he slew at one time."
+O exército de Israel avança. A batalha termina antes dos oitocentos.	The army of Israel advances. The battle ends before the eight hundred.
+~Levante-se: a batalha continua de onde parou (	Rise up: the battle continues where it stopped (
+~ de 800). O item "De uma vez" ficou perdido.	 of 800). The "At one time" item was lost.
+Levantar e continuar	Rise and continue
+Recomeçar do zero	Restart from zero
+Opôs-se a oitocentos (chegou aos 800 dentro do tempo)	Stood against eight hundred (reached 800 within the time)
+E os feriu de uma vez (sem cair)	And slew them at one time (without falling)
+Não recuou para trás da pedra	Did not fall back behind the stone
+Brandindo a sua lança (não usou a espada)	Lifting up his spear (did not use the sword)
+2 Sm 23:8	2 Sam 23:8
+1 Cr 11:11	1 Chr 11:11
+~Fase final · 	Final phase · 
+E os feriu de uma vez	And slew them at one time
+2 Samuel diz oitocentos; 1 Crônicas 11:11 diz trezentos e chama o capitão de Jasobeão.	2 Samuel says eight hundred; 1 Chronicles 11:11 says three hundred and calls the captain Jashobeam.
+Dez minutos para os oitocentos, menos filisteus e menos escudeiros.	Ten minutes for the eight hundred, fewer Philistines and fewer shield-bearers.
+Oito minutos, multidão maior e mais escudeiros.	Eight minutes, a bigger crowd and more shield-bearers.
+Pedra do capitão	The captain's stone
+Linha da pedra	Stone line
+O escudeiro bloqueou. Varredura, golpe forte ou pelo lado.	The shield-bearer blocked. Sweep, heavy strike, or from the side.
+As fileiras derrubaram o capitão.	The ranks brought the captain down.
+Escudeiro derrubado! +80	Shield-bearer down! +80
+Desviou +40	Dodged +40
+A flecha sem ponta acertou.	The blunt arrow hit.
+Treino 1 de 3: as fileiras	Training 1 of 3: the ranks
+Fileiras de filisteus de treino avançam. Segure e solte para varrer a fileira inteira de uma vez.	Training Philistine ranks advance. Hold and release to sweep the whole rank at once.
+Treino 2 de 3: os escudos	Training 2 of 3: the shields
+Escudeiros bloqueiam a estocada de frente. Use a varredura, o golpe forte ou ataque pelo lado.	Shield-bearers block the thrust from the front. Use the sweep, the heavy strike, or attack from the side.
+Treino 3 de 3: as flechas	Training 3 of 3: the arrows
+Arqueiros nas encostas atiram flechas sem ponta. Apare (botão direito no instante) ou desvie (Espaço).	Archers on the slopes shoot blunt arrows. Parry (right button at the moment) or dodge (Space).
+Vistes aquele homem que subiu? Subiu para afrontar a Israel; e ao que o ferir, o rei o enriquecerá com grandes riquezas,	Have ye seen this man that is come up? surely to defy Israel is he come up: and it shall be, that the man who killeth him, the king will enrich him with great riches,
+...e lhe dará sua filha, e a casa de seu pai fará livre em Israel.	...and will give him his daughter, and make his father's house free in Israel.
+Quem é, pois, este filisteu incircunciso, para afrontar os exércitos do Deus vivo?	Who is this uncircumcised Philistine, that he should defy the armies of the living God?
+Quarenta dias que ele desafia de manhã e de tarde, e ninguém sobe contra ele. O medo tomou o acampamento.	Forty days he has been defying us morning and evening, and no one goes up against him. Fear has taken the camp.
+Eliabe	Eliab
+Por que desceste aqui? E com quem deixaste aquelas poucas ovelhas no deserto? Bem conheço a tua soberba, e a malícia do teu coração.	Why camest thou down hither? and with whom hast thou left those few sheep in the wilderness? I know thy pride, and the naughtiness of thine heart.
+Que fiz eu agora? Não foi isto só uma palavra?	What have I now done? Is there not a cause?
+Chegada ao acampamento	Arrival at the camp
+Davi trouxe grãos tostados, pães e queijos aos irmãos (17:17-18). Leve o farnel a Eliabe, na tenda com a faixa vermelha. Ouça os soldados no caminho.	David brought parched corn, loaves and cheeses for his brothers (17:17-18). Take the provisions to Eliab, at the tent with the red band. Listen to the soldiers on the way.
+Ao longe, Golias grita o desafio.	Far off, Goliath shouts his challenge.
+"Davi é levado a Saul."	"David is brought to Saul."
+Esc · pausa e menu · botão direito · zoom da mira · H · ajuda de mira · M · música	Esc · pause and menu · right button · aim zoom · H · aim assist · M · music
+LS:Andar|RS:Olhar|RT:Funda|LT:Zoom da mira|DD:Ajuda de mira|Start:Pausa	LS:Move|RS:Look|RT:Sling|LT:Aim zoom|DD:Aim assist|Start:Pause
+Fase 1 · Davi × Golias	Phase 1 · David × Goliath
+Os Valentes de Davi	David's Mighty Men
+1 Samuel 17. Treine a funda nos campos de Belém, escolha as pedras no ribeiro e enfrente o gigante no Vale de Elá.	1 Samuel 17. Train the sling in the fields of Bethlehem, pick your stones at the brook and face the giant in the Valley of Elah.
+Só o duelo	Duel only
+Segurar botão esquerdo	Hold left button
+Setas	Arrows
+Olhar e mirar	Look and aim
+Girar a funda; soltar na faixa dourada é o tiro perfeito	Spin the sling; releasing in the golden band is the perfect shot
+Andar · Shift para correr	Walk · Shift to run
+Olhar sem mouse	Look without a mouse
+Pausa: continuar, recomeçar ou voltar ao menu	Pause: continue, restart or back to the menu
+Pular a cena animada	Skip the cutscene
+Ajuda de mira: trajetória e marcador de onde a pedra vai cair	Aim assist: path and a marker where the stone will land
+Ligar ou desligar a música	Turn the music on or off
+Modelos e sons provisórios. Os versículos são provisórios (Almeida, domínio público).	Models and sounds are provisional. The verses are provisional (public-domain text).
+Acampamento	Camp
+Duelo	Duel
+Recomeçar a chegada	Restart the arrival
+Recomeçar o duelo	Restart the duel
+No duelo, recomeçar mantém a armadura e as pedras escolhidas.	In the duel, restarting keeps the armor and the stones you chose.
+Prata	Silver
+Ouro	Gold
+Os campos de Belém	The fields of Bethlehem
+Pedras atiradas	Stones thrown
+Precisão	Accuracy
+Ovelhas salvas	Sheep saved
+Coragem inicial no duelo	Starting courage in the duel
+~ de 5	 of 5
+Seguir para o duelo	Go to the duel
+Antes do duelo	Before the duel
+A armadura de Saul	Saul's armor
+Vestir a armadura	Put on the armor
+Recebe metade do dano, mas anda devagar e a mira balança mais.	Takes half the damage, but you walk slowly and the aim sways more.
+Recusar, como Davi	Refuse it, like David
+Leve e ágil. Conta para a Fidelidade ao relato.	Light and agile. Counts for Faithfulness to the account.
+O ribeiro	The brook
+Cinco seixos lisos	Five smooth stones
+Escolha 5 pedras. As lisas e arredondadas voam mais retas; as ásperas desviam. A ordem da escolha é a ordem de uso.	Choose 5 stones. The smooth, rounded ones fly straighter; the rough ones veer. The order you choose is the order you use.
+~Guardar no alforje (	Put in the bag (
+Guardar no alforje (0/5)	Put in the bag (0/5)
+Voltar à armadura	Back to the armor
+~Duelo · 	Duel · 
+Golias prevaleceu desta vez	Goliath prevailed this time
+No nível Valente, você volta ao ribeiro para escolher as pedras de novo.	On Valiant, you go back to the brook to choose the stones again.
+Você recomeça no início do duelo, com as mesmas pedras.	You restart at the beginning of the duel, with the same stones.
+Recusou a armadura de Saul	Refused Saul's armor
+Escolheu pedras lisas no ribeiro	Chose smooth stones at the brook
+Correu em direção a Golias	Ran toward Goliath
+Venceu com uma única pedra	Won with a single stone
+~Vitória no Vale de Elá · 	Victory in the Valley of Elah · 
+Golias caiu sobre o seu rosto	Goliath fell upon his face
+ pedra · 	 stone · 
+ pedras · 	 stones · 
+~1 Sm 	1 Sam 
+Repetir só o duelo	Repeat only the duel
+Corda	Cord
+Trajetória	Path
+Sem pedras no alforje.	No stones in the bag.
+Tiro perfeito	Perfect shot
+Cuidado com as ovelhas! −50	Careful with the sheep! −50
+Etapa 1 de 4: jarros parados	Stage 1 of 4: still jars
+Acerte os 5 jarros. Segure o botão para girar a funda e solte na faixa dourada.	Hit the 5 jars. Hold the button to spin the sling and release in the golden band.
+Etapa 2 de 4: jarros em movimento	Stage 2 of 4: moving jars
+Acerte os 4 jarros balançando. Antecipe o movimento.	Hit the 4 swinging jars. Anticipate the movement.
+Etapa 3 de 4: o leão	Stage 3 of 4: the lion
+Defenda o rebanho. Na cabeça, uma pedra basta; no corpo, são duas.	Defend the flock. On the head, one stone is enough; on the body, it takes two.
+Etapa 4 de 4: o urso	Stage 4 of 4: the bear
+O urso é resistente: pedras no corpo não adiantam. Só a cabeça é o ponto fraco, e ele precisa de mais de uma pedra.	The bear is tough: stones on the body are no use. Only the head is the weak spot, and it takes more than one stone.
+Um leão vem para o rebanho!	A lion is coming for the flock!
+cabeça do leão	lion's head
+corpo do leão	lion's body
+Um urso vem para o rebanho!	A bear is coming for the flock!
+cabeça do urso	bear's head
+corpo do urso	bear's body
+O corpo do urso aguenta. Mire na cabeça.	The bear's body holds up. Aim for the head.
+Na cabeça! O urso caiu. +400	On the head! The bear fell. +400
+~Na cabeça! Ele ainda se mexe (	On the head! He is still moving (
+ pedra).	 stone).
+ pedras).	 stones).
+~Você livrou a ovelha da boca do 	You freed the sheep from the mouth of the 
+Na cabeça! +300	On the head! +300
+Derrubado! +200	Brought down! +200
+Você livrou a ovelha da boca do leão! +150	You freed the sheep from the lion's mouth! +150
+Ferido. Mais uma pedra!	Wounded. One more stone!
+O urso levou uma ovelha! Derrube-o antes que fuja.	The bear took a sheep! Bring him down before he flees.
+O leão levou uma ovelha! Derrube-o antes que fuja.	The lion took a sheep! Bring him down before he flees.
+Etapa concluída	Stage complete
+Som	Sound
+Música	Music
+Narração	Narration
+Olhar e mira	Look and aim
+Sensibilidade	Sensitivity
+~Olhar vertical invertido: 	Inverted vertical look: 
+não	no
+Tela	Screen
+~Tela: 	Screen: 
+em janela	windowed
+~Resolução: 	Resolution: 
+~Sincronia vertical: 	Vertical sync: 
+~Qualidade: 	Quality: 
+Controles	Controls
+Mouse e teclado	Mouse and keyboard
+Botão esquerdo · direito	Left button · right button
+Espaço · Q · F · E · T	Space · Q · F · E · T
+Controle: analógicos	Controller: sticks
+Controle: RT ou RB · LT ou LB	Controller: RT or RB · LT or LB
+Controle: A · X · Y · B	Controller: A · X · Y · B
+Controle: clique no analógico · D-pad · Start	Controller: stick click · D-pad · Start
+Golpe ou funda · escudo, aparar e zoom da mira	Strike or sling · shield, parry and aim zoom
+Desviar · trocar de arma ou ordem · orar (segurar) · ação (segurar) · trombeta	Dodge · switch weapon or give order · pray (hold) · action (hold) · trumpet
+Pausa · ajuda de mira · música · narração	Pause · aim assist · music · narration
+Esquerdo anda, direito olha	Left walks, right looks
+Desviar · trocar de arma ou ordem · orar (segurar) · ação (segurar)	Dodge · switch weapon or give order · pray (hold) · action (hold)
+Correr · cima trombeta, baixo ajuda de mira · pausa	Run · up trumpet, down aim assist · pause
+Nos menus, com o controle: D-pad ou analógico esquerdo escolhem, A confirma e esquerda e direita ajustam as barras.	In the menus, with the controller: D-pad or left stick choose, A confirms, and left and right adjust the bars.
+Voltar	Back
+Ação	Action
+Orar	Pray
+Trombeta	Trumpet
+Bem-vindo, valente	Welcome, mighty man
+Os Valentes de Davi conta, em primeira pessoa, as histórias dos guerreiros de Davi registradas na Bíblia. Cada fase é um relato que você vive por dentro: você é o valente.	David's Mighty Men tells, in first person, the stories of David's warriors recorded in the Bible. Each phase is an account you live from the inside: you are the mighty man.
+Estes são os nomes dos valentes que Davi teve...	These be the names of the mighty men whom David had...
+O texto é a sua missão	The text is your mission
+Toda fase começa com o texto bíblico, lido em voz alta. Preste atenção nele: o que o texto diz que o herói fez é o que a fase vai pedir de você.	Every phase begins with the biblical text, read aloud. Pay attention to it: what the text says the hero did is what the phase will ask of you.
+Davi recusou a armadura de Saul e venceu Golias com uma única pedra.	David refused Saul's armor and defeated Goliath with a single stone.
+Samá ficou no meio do campo de lentilhas quando todo o povo fugiu.	Shammah stood in the middle of the lentil field when all the people fled.
+Fidelidade ao relato	Faithfulness to the account
+Vencer não basta. Cada fase tem conquistas de Fidelidade ao relato: fazer o que o texto conta. Elas valem pontos, e só a fidelidade completa dá as três estrelas. Às vezes o caminho fácil vai contra o texto, como vestir a armadura ou fugir com o povo. O jogo deixa você escolher, mas sempre lembra o que está escrito.	Winning is not enough. Each phase has Faithfulness to the account achievements: doing what the text tells. They are worth points, and only full faithfulness gives the three stars. Sometimes the easy way goes against the text, like putting on the armor or fleeing with the people. The game lets you choose, but always reminds you what is written.
+Como cada fase funciona	How each phase works
+1. Abertura: o texto e a cena.  2. Treino: pratique a habilidade; a medalha define sua coragem inicial.  3. Missão: viva o relato.  4. Resultado: fidelidade, pontos e o versículo final.	1. Opening: the text and the scene.  2. Training: practice the skill; the medal sets your starting courage.  3. Mission: live the account.  4. Result: faithfulness, points and the closing verse.
+Coragem	Courage
+O medo é real: com pouca coragem, a mira treme e os golpes ficam lentos. Você ganha coragem agindo como no texto: avançando contra o gigante, permanecendo na posição, orando. Não é magia: é o que acontece dentro do herói quando ele confia em Deus e age.	Fear is real: with little courage, your aim shakes and your blows slow down. You gain courage by acting as the text does: advancing on the giant, holding your position, praying. It is not magic: it is what happens inside the hero when he trusts God and acts.
+Computador: mouse para olhar e mirar, W A S D para andar, botão esquerdo para usar a arma (segurar muda o golpe ou gira a funda).  Celular: direcional à esquerda, arraste à direita para olhar e botões de ação à direita, melhor na horizontal.  Controle: analógico esquerdo anda, direito olha, RT golpe, LT escudo, A desviar. Sempre: Esc ou Start pausa, H ajuda de mira, M música, N narração. Em Opções você ajusta volume e sensibilidade.	Computer: mouse to look and aim, W A S D to walk, left button to use the weapon (holding changes the strike or spins the sling).  Mobile: pad on the left, drag on the right to look and action buttons on the right, best in landscape.  Controller: left stick walks, right stick looks, RT strike, LT shield, A dodge. Always: Esc or Start pauses, H aim assist, M music, N narration. In Options you adjust volume and sensitivity.
+~Como jogar · 	How to play · 
+~ de 	 of 
+Começar	Begin
+Fechar	Close
+Próximo	Next
+Pular e começar	Skip and begin
+PEDRAS	STONES
+VIDA	HEALTH
+CORAGEM	COURAGE
+PONTOS	POINTS
+CAMPO	FIELD
+ARMA	WEAPON
+CANSAÇO	FATIGUE
+ÁGUA	WATER
+ALARME	ALARM
+DAVI	DAVID
+Samá se pôs no meio do campo. Volte para as lentilhas.	Shammah stepped into the middle of the field. Go back to the lentils.
+ABERTURA	OPENING
+segure para girar	hold to spin
+Esc · pausa e menu · H · ajuda de mira · M · música	Esc · pause and menu · H · aim assist · M · music
+Toque: avançar · ❚❚: pausa	Tap: advance · ❚❚: pause
+A: avançar · B: pular · Start: pausa	A: advance · B: skip · Start: pause
+Clique: avançar · Enter: pular · Esc: pausa	Click: advance · Enter: skip · Esc: pause
+Você recuou para trás do estandarte. Eleazar não voltou atrás.	You fell back behind the standard. Eleazar did not turn back.
+longe: gire mais	too far: spin longer
+ouça o giro	listen to the spin
+Escolha a fase	Choose a phase
+~Fase 	Phase 
+ · atual	 · current
+~Trancada: vença a fase 	Locked: win phase 
+~ para liberar	 to unlock
+~ de 3) · recorde 	 of 3) · record 
+Em breve na Unity (já jogável no navegador)	Soon in Unity (already playable in the browser)
+Você está aqui	You are here
+Liberada	Unlocked
+~Esta fase ainda está trancada. Vença a Fase 	This phase is still locked. Win Phase 
+~, para liberar.	, to unlock it.
+~Ir para a Fase 	Go to Phase 
+~ liberada!	 unlocked!
+~A Fase 	Phase 
+~) ainda não foi montada na Unity.	) has not been built in Unity yet.
+Os valentes de Davi	David's mighty men
+~Total: 	Total: 
+~ estrelas.	 stars.
+Golias	Goliath
+Escudeiro	Shield-bearer
+Idioma	Language
+O idioma vale por inteiro a partir da próxima fase.	The language applies fully from the next stage.
