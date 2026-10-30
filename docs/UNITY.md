@@ -128,8 +128,11 @@ No toque, os botões são **Golpe**, **Escudo/Aparar**, **Desviar**, **Ordem**, 
 | Start | Pausa |
 
 Nos menus: D-pad ou analógico esquerdo escolhem, A confirma e esquerda e direita ajustam as barras de Opções.
+As dicas na parte de baixo da tela trocam sozinhas: com teclado e mouse, mostram as teclas; assim que o jogador mexe
+no controle, mostram os ícones dos botões (círculos coloridos A, B, X, Y e pílulas RT, LT, LS, RS, D-pad, Start). A
+lista de cada fase está em `ui.SetPadHint(...)`, ao lado do `ui.SetHint(...)` de cada `FaseNGame`.
 Em Opções (menu e pausa) ficam também o volume de música, efeitos e narração, a sensibilidade, o olhar vertical
-invertido, a tela cheia e a qualidade. "Sair do jogo" aparece nos menus e na pausa (não no navegador nem no celular).
+invertido, a tela cheia, a resolução, a sincronia vertical e a qualidade. "Sair do jogo" aparece nos menus e na pausa (não no navegador nem no celular).
 O controle só funciona com o Input System novo ativo (Project Settings → Player → Active Input Handling).
 
 ### Controles da Fase 6

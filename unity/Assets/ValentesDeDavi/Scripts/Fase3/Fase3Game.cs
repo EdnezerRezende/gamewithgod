@@ -93,6 +93,7 @@ namespace Valentes
             cutscene.cam = cam; cutscene.ui = ui;
 
             ui.SetHint("Esc · pausa · botão direito · aparar · Espaço · desviar · F · orar · T · trombeta · M · música · N · narração");
+            ui.SetPadHint("LS:Andar|RS:Olhar|RT:Golpe|LT:Aparar|A:Desviar|Y:Orar|DU:Trombeta|Start:Pausa");
             ShowMenu();
         }
 

@@ -114,6 +114,7 @@ namespace Valentes
             cutscene.ui = ui;
 
             ui.SetHint("Esc · pausa e menu · botão direito · zoom da mira · H · ajuda de mira · M · música");
+            ui.SetPadHint("LS:Andar|RS:Olhar|RT:Funda|LT:Zoom da mira|DD:Ajuda de mira|Start:Pausa");
             ShowMenu();
         }
 

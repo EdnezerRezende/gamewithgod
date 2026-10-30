@@ -58,10 +58,18 @@ namespace Valentes
             set { PlayerPrefs.SetInt("valentes.quality", value); PlayerPrefs.Save(); QualitySettings.SetQualityLevel(value, true); }
         }
 
+        /// <summary>Sincronização vertical (evita rasgos na imagem; limita aos quadros por segundo do monitor).</summary>
+        public static bool VSync
+        {
+            get { return PlayerPrefs.GetInt("valentes.vsync", 1) == 1; }
+            set { PlayerPrefs.SetInt("valentes.vsync", value ? 1 : 0); PlayerPrefs.Save(); QualitySettings.vSyncCount = value ? 1 : 0; }
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Boot()
         {
             if (PlayerPrefs.HasKey("valentes.quality")) QualitySettings.SetQualityLevel(Quality, true);
+            if (PlayerPrefs.HasKey("valentes.vsync")) QualitySettings.vSyncCount = VSync ? 1 : 0;
         }
 
         static float Get(string key, float fallback) { return PlayerPrefs.GetFloat(key, fallback); }

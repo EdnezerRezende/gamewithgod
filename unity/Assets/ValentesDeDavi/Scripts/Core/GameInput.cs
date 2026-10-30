@@ -66,6 +66,13 @@ namespace Valentes
         // X trocar de arma ou ordem · Y orar · B ação · D-pad cima trombeta · clique do analógico esquerdo corre ·
         // Start pausa · D-pad baixo ajuda de mira. Nos menus: D-pad ou analógico navegam, A confirma.
 
+        /// <summary>O último dispositivo usado foi o controle (as dicas na tela mostram os botões dele).</summary>
+        public static bool UsingGamepad { get { return padMode; } }
+        static bool padMode;
+
+        /// <summary>Chamado uma vez por quadro (pela interface): descobre se o jogador está no controle ou no teclado e mouse.</summary>
+        public static void Poll() { PollDevices(); }
+
         /// <summary>Olhar com o analógico direito (-1 a 1, já com zona morta). Zero sem controle.</summary>
         public static Vector2 StickLook()
         {
@@ -91,6 +98,21 @@ namespace Valentes
         static Keyboard K { get { return Keyboard.current; } }
         static Mouse M { get { return Mouse.current; } }
         static Gamepad G { get { return Gamepad.current; } }
+
+        static void PollDevices()
+        {
+            if (G != null)
+            {
+                if (G.leftStick.ReadValue().sqrMagnitude > 0.36f || G.rightStick.ReadValue().sqrMagnitude > 0.36f
+                    || G.buttonSouth.wasPressedThisFrame || G.buttonEast.wasPressedThisFrame || G.buttonWest.wasPressedThisFrame || G.buttonNorth.wasPressedThisFrame
+                    || G.startButton.wasPressedThisFrame || G.leftShoulder.wasPressedThisFrame || G.rightShoulder.wasPressedThisFrame
+                    || G.leftTrigger.wasPressedThisFrame || G.rightTrigger.wasPressedThisFrame
+                    || G.dpad.up.wasPressedThisFrame || G.dpad.down.wasPressedThisFrame || G.dpad.left.wasPressedThisFrame || G.dpad.right.wasPressedThisFrame)
+                { padMode = true; return; }
+            }
+            if (K != null && K.anyKey.wasPressedThisFrame || M != null && (M.delta.ReadValue().sqrMagnitude > 4f || M.leftButton.wasPressedThisFrame || M.rightButton.wasPressedThisFrame)) padMode = false;
+            if (G == null) padMode = false;
+        }
 
         static Vector2 GamepadMove() { return G != null ? G.leftStick.ReadValue() : Vector2.zero; }
         static Vector2 RawStickLook() { return G != null ? G.rightStick.ReadValue() : Vector2.zero; }
@@ -168,6 +190,7 @@ namespace Valentes
         public static bool NarrationPressed() { return K != null && K.nKey.wasPressedThisFrame; }
 #else
         // Sem o Input System novo não há suporte a controle (ative o Input System em Project Settings → Player).
+        static void PollDevices() { padMode = false; }
         static Vector2 GamepadMove() { return Vector2.zero; }
         static Vector2 RawStickLook() { return Vector2.zero; }
         static bool GamepadFireDown() { return false; }

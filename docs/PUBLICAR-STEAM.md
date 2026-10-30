@@ -37,11 +37,11 @@ das fases 1 e 2 e ouvir os jogadores enquanto a página da Steam junta desejos.
 - [ ] **Equilíbrio de dificuldade** jogado de verdade (contadores 300/800, alarme, vida do leão e do urso).
 - [x] **Botão "Sair do jogo"** nos menus e na pausa (escrito; falta jogar no editor).
 - [x] **Opções** (menu e pausa): volume de música, efeitos e narração, sensibilidade, olhar vertical invertido,
-      ajuda de mira, tela cheia/janela e qualidade gráfica (escrito; falta jogar no editor). Falta a escolha de resolução.
+      ajuda de mira, tela cheia/janela e qualidade gráfica (escrito; falta jogar no editor). Também tem resolução e sincronia vertical.
 - [ ] **Teclas configuráveis** ou, pelo menos, tela de controles clara.
 - [x] **Controle (gamepad):** analógicos andam e olham, RT/RB golpe ou funda, LT/LB escudo, A desviar, X trocar,
       Y orar, B ação, Start pausa, menus navegáveis (escrito para o Input System; falta testar com um controle de
-      verdade). Para o Steam Deck "Verificado" ainda faltam ícones de botões do controle na interface.
+      verdade). A interface mostra os ícones dos botões do controle (A, B, X, Y, gatilhos, analógicos, D-pad, Start) quando o jogador usa o controle; para o selo "Verificado" do Steam Deck ainda falta testar no aparelho e conferir o tamanho do texto na tela de 7 polegadas.
 - [ ] **Idiomas:** português já; inglês amplia muito o público (a Steam deixa marcar os idiomas da interface,
       do áudio e das legendas). O texto bíblico em inglês precisa de uma edição de domínio público.
 - [ ] **Salvar e continuar:** conferir progresso, recordes e dificuldade escolhida ao fechar e abrir o jogo.

@@ -25,6 +25,7 @@ namespace Valentes
         float stuckAlpha;
         bool stuckOn;
         Label esc, cineHint;
+        VisualElement padBar;
         Label obj, sub, toast, opening, score, cineQuote, cineRef, gaugeText;
         ScrollView overlayScroll;
         Texture2D gaugeTex;
@@ -297,6 +298,11 @@ namespace Valentes
 
             esc = Text(hud, "Esc · pausa e menu · H · ajuda de mira · M · música", 14, ParchDim);
             Abs(esc, 24, null, null, 20);
+            padBar = new VisualElement();
+            padBar.style.flexDirection = FlexDirection.Row; padBar.style.flexWrap = Wrap.Wrap; padBar.style.alignItems = Align.Center;
+            Abs(padBar, 24, null, 24, 16);
+            padBar.style.display = DisplayStyle.None;
+            hud.Add(padBar);
 
             // Borda escura da "mão pegada à espada" (fase 3).
             stuckFx = Layer(hud);
@@ -346,10 +352,11 @@ namespace Valentes
         /// <summary>Mostra os controles de toque (só quando o toque está ativo) e ajusta as dicas.</summary>
         public void ShowTouch(bool playing)
         {
-            bool t = TouchControls.Active;
+            bool t = TouchControls.Active, pad = !t && GameInput.UsingGamepad && padBar.childCount > 0;
             TouchControls.Show(t && playing);
-            esc.style.display = t ? DisplayStyle.None : DisplayStyle.Flex;
-            cineHint.text = t ? "Toque: avançar · ❚❚: pausa" : "Clique: avançar · Enter: pular · Esc: pausa";
+            esc.style.display = t || pad ? DisplayStyle.None : DisplayStyle.Flex;
+            padBar.style.display = pad ? DisplayStyle.Flex : DisplayStyle.None;
+            cineHint.text = t ? "Toque: avançar · ❚❚: pausa" : GameInput.UsingGamepad ? "A: avançar · B: pular · Start: pausa" : "Clique: avançar · Enter: pular · Esc: pausa";
         }
 
         /// <summary>Mira dourada quando está sobre um alvo que conta.</summary>
@@ -518,8 +525,56 @@ namespace Valentes
 
         public void SetHint(string text) { esc.text = text; }
 
+        /// <summary>
+        /// Dicas do controle na parte de baixo: "CÓDIGO:texto" separados por "|". Códigos: A B X Y, LS RS (analógicos),
+        /// RT LT RB LB, DU DD DL DR (D-pad) e Start. Aparecem no lugar do texto do teclado quando o jogador usa o controle.
+        /// </summary>
+        public void SetPadHint(string spec)
+        {
+            padBar.Clear();
+            foreach (string part in spec.Split('|'))
+            {
+                int i = part.IndexOf(':');
+                if (i < 0) continue;
+                VisualElement item = new VisualElement();
+                item.style.flexDirection = FlexDirection.Row; item.style.alignItems = Align.Center;
+                item.style.marginRight = 16f; item.style.marginTop = 2f;
+                item.Add(Glyph(part.Substring(0, i)));
+                Label l = Text(item, part.Substring(i + 1), 14, ParchDim);
+                l.style.marginLeft = 6f;
+                padBar.Add(item);
+            }
+        }
+
+        /// <summary>Ícone de um botão do controle: círculo colorido (A, B, X, Y) ou pílula com o nome (gatilhos, analógicos, D-pad, Start).</summary>
+        public static VisualElement Glyph(string code)
+        {
+            Color bg = new Color(0.16f, 0.12f, 0.08f, 0.95f), fg = Parch;
+            bool face = true;
+            switch (code)
+            {
+                case "A": bg = U.Hex(0x4fae52); fg = U.Hex(0x10230f); break;
+                case "B": bg = U.Hex(0xd9534f); fg = U.Hex(0x2b0b0a); break;
+                case "X": bg = U.Hex(0x3b82d6); fg = U.Hex(0x081a30); break;
+                case "Y": bg = U.Hex(0xe8b730); fg = U.Hex(0x2d2204); break;
+                default: face = false; break;
+            }
+            string text = code == "DU" ? "D↑" : code == "DD" ? "D↓" : code == "DL" ? "D←" : code == "DR" ? "D→" : code;
+            VisualElement g = new VisualElement();
+            g.style.height = 24f;
+            g.style.minWidth = 24f;
+            g.style.alignItems = Align.Center; g.style.justifyContent = Justify.Center;
+            g.style.backgroundColor = bg;
+            Border(g, face ? bg : new Color(0.92f, 0.86f, 0.74f, 0.55f), face ? 0f : 1f, 12f);
+            if (!face) { g.style.paddingLeft = 8f; g.style.paddingRight = 8f; }
+            Label l = Text(g, text, face ? 14 : 12, fg, true);
+            l.style.unityTextAlign = TextAnchor.MiddleCenter;
+            return g;
+        }
+
         public void Tick(float unscaledDt)
         {
+            GameInput.Poll();
             NavUpdate(unscaledDt);
             if (toastT > 0f)
             {
